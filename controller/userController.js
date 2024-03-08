@@ -229,7 +229,7 @@ const loadLogout = async(req,res)=>{
     try {
 
         req.session.destroy();
-        res.redirect('/login')
+        res.redirect('/signUp')
     } catch (error) {
         console.log(error.message)
     }
