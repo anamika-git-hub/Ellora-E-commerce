@@ -1,6 +1,8 @@
 
 //Otp validation
 
+const { response } = require("../../../routes/usersRouter");
+
 function validate(){
     let fields = document.querySelectorAll(".form-control");
     let isValid=true;
@@ -33,7 +35,7 @@ function resend(){
     }, 1000);
 }
 
-//otp timer expairing
+//otp timer expiring
 
 let countdownInterval;
 
@@ -56,3 +58,29 @@ startCountdown(60);
 document.getElementById("resend").onclick = function (){
     resend()
 };
+
+//to send resend
+
+document.getElementById('resend').addEventListener('click',()=>{
+    try {
+       const currentUrl = window.location.href;
+       
+       const urlParams = new URLSearchParams(window.location.search);
+       const email = urlParams.get("email");
+
+       const postURL = '/resend'+ (email ? `?email=${encodeURIComponent(email)}`:"");
+       fetch(postURL,{
+        method:"POST"
+       }).then(response=>{
+        if(response.ok){
+            console.log('Resend request successful')
+        }else{
+            console.error('Resend request failed')
+        }
+       }).catch(error=>{
+        console.error("Error:",error);
+       })
+    } catch (error) {
+        console.log(error.message)
+    }
+})

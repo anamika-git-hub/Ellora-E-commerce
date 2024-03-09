@@ -13,6 +13,14 @@ const securePassword =async(password)=>{
     }
 }
 
+const loadHome = async(req,res)=>{
+    try {
+        res.render('home');
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
 
 const loadLogin=async(req,res)=>{
     try{
@@ -126,8 +134,6 @@ const loadOtp =async(req,res)=>{
 const verifyOtp =async(req,res)=>{
     try {
         const email =req.body.email;
-
-        console.log('email',req.body.email);
         const otp = req.body.digit1 + req.body.digit2 + req.body.digit3 + req.body.digit4 ;
         const userVerification = await userOtpVerification.findOne({email:email});
         console.log('userVerification',userVerification);
@@ -179,6 +185,8 @@ const verifyOtp =async(req,res)=>{
 
 const resendOtp=async(req,res)=>{
     try {
+        console.log('kljdfkljsd')
+        console.log(req.query.email)
         const userEmail= req.query.email
         await userOtpVerification.deleteMany({email:userEmail})
         if(userEmail){
@@ -205,6 +213,7 @@ const verifyLogin = async(req,res)=>{
                 res.redirect('/dashboard');
             }else{
                 res.render('login');
+
                 console.log('password is incorrect')
             }
         }else{
@@ -216,7 +225,7 @@ const verifyLogin = async(req,res)=>{
     }
 }
 
-const loadHome =async(req,res)=>{
+const loadDashboard =async(req,res)=>{
     try {
         res.render('dashboard')
     } catch (error) {
@@ -229,7 +238,7 @@ const loadLogout = async(req,res)=>{
     try {
 
         req.session.destroy();
-        res.redirect('/signUp')
+        res.redirect('/')
     } catch (error) {
         console.log(error.message)
     }
@@ -248,6 +257,7 @@ module.exports={
     loadOtp,
     verifyLogin,
     loadHome,
+    loadDashboard,
     loadLogout,
     resendOtp
     

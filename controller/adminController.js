@@ -1,14 +1,14 @@
 const User=require('../models/userModel');
 const bcrypt=require('bcrypt')
 
-const securePassword=async(req,res)=>{
-    try {
-        const sPassword=await bcrypt.hash(password,10);
-        return sPassword;
-    } catch (error) {
-        consloe.log(error.message);
-    }
-}
+// const securePassword=async(req,res)=>{
+//     try {
+//         const sPassword=await bcrypt.hash(password,10);
+//         return sPassword;
+//     } catch (error) {
+//         consloe.log(error.message);
+//     }
+// }
 
 const loadLogin=async(req,res)=>{
     try {
@@ -21,6 +21,7 @@ const loadLogin=async(req,res)=>{
 
 const verifyLogin=async(req,res)=>{
     try {
+        console.log('kjdfks')
         const admin=User.findOne({email:email})
         if(admin){
             if(admin.is_admin!==0){
