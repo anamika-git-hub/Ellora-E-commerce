@@ -41,10 +41,12 @@ const loadSignup=async(req,res)=>{
 
 const insertUser =async(req,res)=>{
     try {
-        console.log('kjklsdjf')
+        if(/^[A-Za-z]+(?:[A-Za-z]+)?$/.test(req.body.name)){
         if(/^[A-Za-z0-9.%+-]+@gmail\.com$/.test(req.body.email)){
             const emailCheck = await User.findOne({email:req.body.email});
             if(!emailCheck){
+                let moblength = (req.body.mobile).length;
+                if(moblength>0 && moblength<=10){
                     const spassword= await securePassword(req.body.password);
                     const user = new User({
                         name:req.body.name,
@@ -62,23 +64,29 @@ const insertUser =async(req,res)=>{
 
                 sendOTPverificationEmail(user,res);
 
-
                  if(userData){
-                  res.render('signUp');
+                  res.render('signUp',{message:'Your registration has been successfully completed.'});
+
                   console.log('success')
                  }else{
-                 res.render('signUp');
+                 res.render('signUp',{message:'Your registration has been failed'});
                  console.log('failed')
                  }
+                }else{
+                    res.render('singUp',{message:"mobile number should be 10 digit"})
+                }
               }else{
                 
-                res.render('signUp')
+                res.render('signUp',{message:'Email is already exists'})
                 console.log('email  already exists')
               }
         }else{
-            res.render('signUp');
+            res.render('signUp',{message:"Please check your email structure"});
         }
-    } catch (error) {
+    }else{
+        res.render('signUp',{message:"Invalid Name"})
+     } 
+    }catch (error) {
         console.log(error.message);
     }
 }
@@ -93,16 +101,16 @@ const sendOTPverificationEmail=async({email},res)=>{
               port:465,
               secure:true,
               auth:{
-                user:'anamikap6840@gmail.com',
-                pass:'yusw esca kpel drxf'
+                user:'anamikap9895@gmail.com',
+                pass:'icor drdl gelp qutd'
               }
         });
 
         otp=`${Math.floor(1000+Math.random() * 9000)}`;
 
         const mailOptions = {
-            from:'anamikap6480@gmail.com',
-            to:'anamikap9895@gmail.com',
+            from:'anamikap9895@gmail.com',
+            to:'anamikap6840@gmail.com',
             subject:'Verify your email',
             html:`Your OTP is:${otp}`
         };
@@ -232,6 +240,7 @@ const loadDashboard =async(req,res)=>{
         console.log(error.message)
     }
 }
+
 
 
 const loadLogout = async(req,res)=>{

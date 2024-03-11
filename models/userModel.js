@@ -18,6 +18,10 @@ const userSchema=new mongoose.Schema({
         type:String,
         required:true
     },
+    createdDate:{
+        type:Date,
+        default:Date.now
+    },
     is_admin:{
         type:Number,
     },
