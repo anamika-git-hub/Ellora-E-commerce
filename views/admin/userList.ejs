@@ -30,7 +30,7 @@
             <nav>
                 <ul class="menu-aside">
                     <li class="menu-item">
-                        <a class="menu-link" href="index.html">
+                        <a class="menu-link" href="home">
                             <i class="icon material-icons md-home"></i>
                             <span class="text">Dashboard</span>
                         </a>
@@ -80,9 +80,7 @@
                             <span class="text">Categories</span>
                         </a>
                         <div class="submenu">
-                            <a href="adminCategories">Category list</a>
-                            <a href="addCategories">Add category</a>
-                          
+                            <a href="Categories">Category list</a>
                         </div>
                     </li>
                     <li class="menu-item has-submenu">
@@ -209,6 +207,9 @@
                     <div>
                         <input type="text" placeholder="Search order ID" class="form-control bg-white" />
                     </div>
+                    <div>
+                        <a href="addUsers" class="btn btn-primary btn-sm rounded">Create new</a>
+                    </div>
                 </div>
                 <div class="card mb-4">
                     <header class="card-header">
@@ -264,14 +265,9 @@
                                                  <%
                                                 } %>
                                             </td>
-                                            <td> <div class="dropdown">
-                                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                               <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">View detail</a>
-                                                    <a class="dropdown-item" href="#">Edit info</a>
-                                                </div>
-                                            </div>
-                                        </td>
+                                            <td >
+                                                <a class="btn btn-sm font-sm rounded btn-primary" href='/admin/editUsers?id=<%= users[i]._id %>' >Edit</a>
+                                            </td>
                                         </tr>
                                    <%
                                 }

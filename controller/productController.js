@@ -1,33 +1,26 @@
 const User=require('../models/userModel');
-const category=require('../models/categoryModel')
+const category=require('../models/productsModel')
+const products= require('../models/productsModel')
 const loadProductList=async(req,res)=>{
     try {
-        res.render('productList')
+        const productData = await products.find()
+        res.render('productList',{products:productData})
     } catch (error) {
         console.log(error.message);
     }
 }
+const loadAddProducts = async(req,res)=>{
+    try {
+        res.render('addProducts');
+    } catch (error) {
+        console.log(error.message)
+    }
+}
 
-const loadCategories=async(req,res)=>{
-    try {
-        res.render('adminCategories')
-    } catch (error) {
-        console.log(error.message)
-    }
-}
-const deleteCategories = async(req,res)=>{
-    try {
-        const id = req.query.id;
-        await category.deleteOne({id:id});
-        res.redirect('/admin/adminCategories')
-    } catch (error) {
-        console.log(error.message)
-    }
-}
+
 
 
 module.exports={
     loadProductList,
-    loadCategories,
-    deleteCategories
+    loadAddProducts
 }

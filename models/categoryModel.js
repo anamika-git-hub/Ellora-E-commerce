@@ -7,9 +7,10 @@ const categorySchema = new mongoose.Schema({
    description:{
     type:String
    },
-   status:{
-    type:Boolean
+   is_listed:{
+      type:Boolean
    }
+   
 });
 
 module.exports = mongoose.model('category',categorySchema)

@@ -30,21 +30,27 @@
             <nav>
                 <ul class="menu-aside">
                     <li class="menu-item">
-                        <a class="menu-link" href="index.html">
+                        <a class="menu-link" href="home">
                             <i class="icon material-icons md-home"></i>
                             <span class="text">Dashboard</span>
                         </a>
                     </li>
-                    <li class="menu-item has-submenu active">
+                    <li class="menu-item has-submenu ">
                         <a class="menu-link" href="page-products-list.html">
                             <i class="icon material-icons md-shopping_bag"></i>
                             <span class="text">Products</span>
                         </a>
                         <div class="submenu">
-                            <a href="page-products-list.html">Product List</a>
-                            <a href="page-products-grid.html">Product grid</a>
-                            <a href="page-products-grid-2.html">Product grid 2</a>
-                            <a href="page-categories.html" class="active">Categories</a>
+                            <a href="productList">Product List</a>
+                        </div>
+                    </li>
+                    <li class="menu-item has-submenu">
+                        <a class="menu-link" href="page-orders-1.html">
+                            <i class="icon material-icons md-shopping_cart"></i>
+                            <span class="text">Users</span>
+                        </a>
+                        <div class="submenu">
+                            <a href="userList">User list </a>
                         </div>
                     </li>
                     <li class="menu-item has-submenu">
@@ -53,9 +59,8 @@
                             <span class="text">Orders</span>
                         </a>
                         <div class="submenu">
-                            <a href="page-orders-1.html">Order list 1</a>
-                            <a href="page-orders-2.html">Order list 2</a>
-                            <a href="page-orders-detail.html">Order detail</a>
+                            <a href="page-orders-1.html">Order list </a>
+                            
                         </div>
                     </li>
                     <li class="menu-item has-submenu">
@@ -69,16 +74,13 @@
                             <a href="page-seller-detail.html">Seller profile</a>
                         </div>
                     </li>
-                    <li class="menu-item has-submenu">
+                    <li class="menu-item has-submenu active">
                         <a class="menu-link" href="page-form-product-1.html">
                             <i class="icon material-icons md-add_box"></i>
-                            <span class="text">Add product</span>
+                            <span class="text">Categories</span>
                         </a>
                         <div class="submenu">
-                            <a href="page-form-product-1.html">Add product 1</a>
-                            <a href="page-form-product-2.html">Add product 2</a>
-                            <a href="page-form-product-3.html">Add product 3</a>
-                            <a href="page-form-product-4.html">Add product 4</a>
+                            <a href="Categories" >Categories list</a>
                         </div>
                     </li>
                     <li class="menu-item has-submenu">
@@ -202,36 +204,23 @@
                         <h2 class="content-title card-title">Categories</h2>
                         <p>Add, edit or delete a category</p>
                     </div>
-                    <div>
-                        <input type="text" placeholder="Search Categories" class="form-control bg-white" />
-                    </div>
+                   
                 </div>
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
-                                <form>
+                                <form action="" method="post">
                                     <div class="mb-4">
                                         <label for="product_name" class="form-label">Name</label>
-                                        <input type="text" placeholder="Type here" class="form-control" id="product_name" />
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="product_slug" class="form-label">Slug</label>
-                                        <input type="text" placeholder="Type here" class="form-control" id="product_slug" />
-                                    </div>
-                                    <div class="mb-4">
-                                        <label class="form-label">Parent</label>
-                                        <select class="form-select">
-                                            <option>Fruit</option>
-                                            <option>Snack</option>
-                                        </select>
+                                        <input type="text" placeholder="Type here" name="name" class="form-control" id="product_name" />
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Description</label>
-                                        <textarea placeholder="Type here" class="form-control"></textarea>
+                                        <input placeholder="Type here" name="description" class="form-control"></input>
                                     </div>
                                     <div class="d-grid">
-                                        <button class="btn btn-primary">Create category</button>
+                                        <button class="btn btn-primary" type="submit">Create category</button>
                                     </div>
                                 </form>
                             </div>

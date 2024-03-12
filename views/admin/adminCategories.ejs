@@ -30,7 +30,7 @@
             <nav>
                 <ul class="menu-aside">
                     <li class="menu-item">
-                        <a class="menu-link" href="adminHome">
+                        <a class="menu-link" href="home">
                             <i class="icon material-icons md-home"></i>
                             <span class="text">Dashboard</span>
                         </a>
@@ -79,9 +79,7 @@
                             <span class="text">Categories</span>
                         </a>
                         <div class="submenu">
-                            <a href="adminCategories">Categories list</a>
-                            <a href="addCategories">Add Categories</a>
-                            
+                            <a href="Categories" class="active">Categories list</a>
                         </div>
                     </li>
                     <li class="menu-item has-submenu">
@@ -208,6 +206,10 @@
                     <div>
                         <input type="text" placeholder="Search Categories" class="form-control bg-white" />
                     </div>
+                    <div>
+                        <a href="addCategories" class="btn btn-primary btn-sm rounded">Create new</a>
+                    </div>
+
                 </div>
                 <div class="card">
                     <div class="card-body">
@@ -243,196 +245,41 @@
                                     <table class="table table-hover">
                                         <thead>
                                             <tr>
-                                                <th class="text-center">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" value="" />
-                                                    </div>
-                                                </th>
-                                                <th>ID</th>
                                                 <th>Name</th>
                                                 <th>Description</th>
-                                                <th>Slug</th>
-                                                <th>Order</th>
                                                 <th class="text-end">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <%if(category.length>0){
+                                                for(let i=0;i<category.length;i++){
+                                             %>
                                             <tr>
-                                                <td class="text-center">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" value="" />
-                                                    </div>
+                                                
+                                                <td><b><%= category[i].name %></b></td>
+                                                <td><%= category[i].description %></td>
+                                                <td><%if(category[i].is_listed=== false){
+                                                    %>
+                                                    <button class="btn btn-sm font-sm rounded btn-danger" onclick="listCategory(this,'<%=category[i]._id %>')">Unlisted</button>
+                                                    <% 
+                                                }else{
+                                                     %> 
+                                                     <button class="btn btn-sm font-sm rounded btn-success" onclick="listCategory (this,'<%=category[i]._id%>')">Listed</button>
+                                                     <%
+                                                    } %>
                                                 </td>
-                                                <td>21</td>
-                                                <td><b>Cake & Milk</b></td>
-                                                <td>Cake & Milk</td>
-                                                <td>/cake</td>
-                                                <td>1</td>
-                                                <td class="text-end">
-                                                    <div class="dropdown">
-                                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                                        <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="#">View detail</a>
-                                                            <a class="dropdown-item" href="#">Edit info</a>
-                                                            <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                        </div>
-                                                    </div>
-                                                    <!-- dropdown //end -->
+                                                <td >
+                                                    <a class="btn btn-sm font-sm rounded btn-primary" href='/admin/editCategories?id=<%= category[i]._id %>' >Edit</a>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td class="text-center">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" value="" />
-                                                    </div>
-                                                </td>
-                                                <td>2</td>
-                                                <td><b>Oganic Kiwi</b></td>
-                                                <td>EU standard</td>
-                                                <td>/kiwi</td>
-                                                <td>2</td>
-                                                <td class="text-end">
-                                                    <div class="dropdown">
-                                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                                        <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="#">View detail</a>
-                                                            <a class="dropdown-item" href="#">Edit info</a>
-                                                            <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                        </div>
-                                                    </div>
-                                                    <!-- dropdown //end -->
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-center">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" value="" />
-                                                    </div>
-                                                </td>
-                                                <td>3</td>
-                                                <td><b>Peach</b></td>
-                                                <td>Peach</td>
-                                                <td>/peach</td>
-                                                <td>3</td>
-                                                <td class="text-end">
-                                                    <div class="dropdown">
-                                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                                        <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="#">View detail</a>
-                                                            <a class="dropdown-item" href="#">Edit info</a>
-                                                            <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                        </div>
-                                                    </div>
-                                                    <!-- dropdown //end -->
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-center"><i class="material-icons md-subdirectory_arrow_right text-muted"></i></td>
-                                                <td>4</td>
-                                                <td><b>Red Apple</b></td>
-                                                <td>Red Apple</td>
-                                                <td>/apple</td>
-                                                <td>4</td>
-                                                <td class="text-end">
-                                                    <div class="dropdown">
-                                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                                        <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="#">View detail</a>
-                                                            <a class="dropdown-item" href="#">Edit info</a>
-                                                            <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                        </div>
-                                                    </div>
-                                                    <!-- dropdown //end -->
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-center"><i class="material-icons md-subdirectory_arrow_right text-muted"></i></td>
-                                                <td>5</td>
-                                                <td><b>Snack</b></td>
-                                                <td>Snack</td>
-                                                <td>/snack</td>
-                                                <td>5</td>
-                                                <td class="text-end">
-                                                    <div class="dropdown">
-                                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                                        <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="#">View detail</a>
-                                                            <a class="dropdown-item" href="#">Edit info</a>
-                                                            <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                        </div>
-                                                    </div>
-                                                    <!-- dropdown //end -->
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-center">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" value="" />
-                                                    </div>
-                                                </td>
-                                                <td>6</td>
-                                                <td><b>Vegetables</b></td>
-                                                <td>Vegetables</td>
-                                                <td>/vegetables</td>
-                                                <td>6</td>
-                                                <td class="text-end">
-                                                    <div class="dropdown">
-                                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                                        <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="#">View detail</a>
-                                                            <a class="dropdown-item" href="#">Edit info</a>
-                                                            <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                        </div>
-                                                    </div>
-                                                    <!-- dropdown //end -->
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-center">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" value="" />
-                                                    </div>
-                                                </td>
-                                                <td>7</td>
-                                                <td><b>Strawberry</b></td>
-                                                <td>Strawberry</td>
-                                                <td>/strawberry</td>
-                                                <td>7</td>
-                                                <td class="text-end">
-                                                    <div class="dropdown">
-                                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                                        <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="#">View detail</a>
-                                                            <a class="dropdown-item" href="#">Edit info</a>
-                                                            <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                        </div>
-                                                    </div>
-                                                    <!-- dropdown //end -->
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-center">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" value="" />
-                                                    </div>
-                                                </td>
-                                                <td>8</td>
-                                                <td><b>Black plum</b></td>
-                                                <td>Black plum</td>
-                                                <td>/plum</td>
-                                                <td>8</td>
-                                                <td class="text-end">
-                                                    <div class="dropdown">
-                                                        <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                                        <div class="dropdown-menu">
-                                                            <a class="dropdown-item" href="#">View detail</a>
-                                                            <a class="dropdown-item" href="#">Edit info</a>
-                                                            <a class="dropdown-item text-danger" href="#">Delete</a>
-                                                        </div>
-                                                    </div>
-                                                    <!-- dropdown //end -->
-                                                </td>
-                                            </tr>
+                                        <%
+                                        }
+                                    } else { %>
+                                        <tr>
+                                            <td colspan="5" style="text-align: center; padding: 10px;">Category not found</td>
+                                        </tr>
+                                    <% } %>
+                                            
                                         </tbody>
                                     </table>
                                 </div>
@@ -467,5 +314,19 @@
         <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
         <!-- Main Script -->
         <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+        <script>
+            function listCategory(tag,categoryId){
+                if(tag.innerText=='Listed'){
+                    tag.innerText='Unlisted'
+                    tag.style.background='red'
+                    tag.style.color='white'
+                }else if(tag.innerText == 'Unlisted'){
+                    tag.innerText='Listed'
+                    tag.style.background='green'
+                    tag.style.color='black'
+                }
+                fetch(`/admin/listCategory?categoryId=${categoryId}`)
+            }
+        </script>
     </body>
 </html>
