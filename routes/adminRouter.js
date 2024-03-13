@@ -8,11 +8,15 @@ admin_route.use(session({secret:config.sessionSecret,resave:false,saveUninitiali
 
 const auth=require('../middleware/adminAuth');
 
+const imageUpload = require('../middleware/imageUploader');
+
 admin_route.use(express.json());
 admin_route.use(express.urlencoded()); 
 
+
+
 admin_route.set('view engine','ejs');
-admin_route.set('views','./views/admin')
+admin_route.set('views','./views/admin');
 
 const adminController=require('../controller/adminController')
 const productController=require('../controller/productController')
@@ -39,8 +43,10 @@ admin_route.post('/editUsers',adminController.updateUser);
 
 admin_route.get('/productList',productController.loadProductList);
 admin_route.get('/addProducts',productController.loadAddProducts);
-
-
+admin_route.post('/addProducts',imageUpload,productController.addProducts);
+admin_route.get('/listProduct',productController.listProduct);
+admin_route.get('/editproducts',productController.editProductLoad);
+admin_route.post('/editproducts',productController.updateProducts);
 
 
 admin_route.get('*',function(req,res){

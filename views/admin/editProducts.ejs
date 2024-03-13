@@ -203,12 +203,12 @@
             <div class="row">
                 <div class="col-6">
                     <div class="content-header">
-                        <h2 class="content-title">Add New Product</h2>
+                        <h2 class="content-title">Edit Product</h2>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <form action="/admin/addProducts" method="post" enctype="multipart/form-data">
+                <form action="" method="post">
                 <div class="col-lg-6">
                     <div class="card mb-4">
                         <div class="card-body">
@@ -219,17 +219,21 @@
                                 <div class="col-md-9">
                                     <div class="mb-4">
                                         <label class="form-label">Product title</label>
-                                        <input type="text" placeholder="Type here" name="name" class="form-control">
+                                        <input type="text" placeholder="Type here" value="<%= products.name %>" name="name" class="form-control">
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Description</label>
-                                        <textarea placeholder="Type here" name="description" class="form-control" rows="4"></textarea>
+                                        <textarea placeholder="Type here" name="description"   class="form-control" rows="4" ><%= products.description %></textarea>
+                                    </div>
+                                    <div class="mb-4">
+                                        <input type="hidden" name="id"  value="<%= products._id %>"  />
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Category</label>
                                         <select class="form-select" name="category">
+                                            <% console.log(categories) %>
                                             <% for (let i = 0; i < categories.length; i++) { %>
-                                                <option value="<%= categories[i].name %>"><%= categories[i].name %></option>
+                                                <option value="<%= categories[i]._id %>"><%= categories[i].name %></option>
                                             <% } %>
                                         </select>
                                     </div>
@@ -243,10 +247,11 @@
                                 <div class="col-md-9">
                                     <div class="mb-4">
                                         <label class="form-label">Cost in USD</label>
-                                        <input type="text" placeholder="$00.0" class="form-control" name="price">
+                                        <input type="text" placeholder="$00.0" class="form-control" name="price" value="<%= products.price %>">
                                     </div>
                                 </div> <!-- col.// -->
                             </div> <!-- row.// -->
+                            
                             
                             <hr class="mb-4 mt-0">
                             <div class="row">
@@ -260,7 +265,8 @@
                                                 <div class="rounded-image-preview">
                                                     <img id="imagePreview<%= i %>" alt="Preview">
                                                 </div>
-                                                <input name="image" type="file" accept="image/*" id="imageInput<%= i %>" class="imageInput" multiple onchange="previewImage(this, 'imagePreview<%= i %>')">
+                                                <input name="image" type="file" accept="image/*" id="imageInput<%= i %>" class="imageInput" value="<%= products.image[0]%>" onchange="previewImage(this, 'imagePreview<%= i %>')">
+                                                <% console.log(products.image[0]) %>
                                             </label>
                                         </div>
                                     <% } %>
@@ -269,7 +275,7 @@
                             </div> <!-- .row end// -->
                             <div class="row">
                             <div class="d-grid">
-                                <button class="btn btn-primary" type="submit">Add Product</button>
+                                <button class="btn btn-primary" type="submit">Edit Product</button>
                             </div>
                         </div>
                         </div>
