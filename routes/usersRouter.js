@@ -14,6 +14,8 @@ user_route.use(express.json());
 user_route.use(express.urlencoded({extended:true}))
 
 const userController=require('../controller/userController')
+const productController = require('../controller/productController');
+
 user_route.get('/',userController.loadHome);
 user_route.get('/login',userController.loadLogin);
 
@@ -29,6 +31,9 @@ user_route.post('/login',userController.verifyLogin);
 
 user_route.get('/dashboard',userController.loadDashboard);
 user_route.get('/logout',userController.loadLogout);
+
+user_route.get('/products',productController.productPage);
+user_route.get('/productDetail',productController.productDetails);
 
 module.exports = user_route;
  

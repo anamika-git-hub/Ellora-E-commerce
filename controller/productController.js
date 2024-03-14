@@ -1,4 +1,4 @@
-const User=require('../models/userModel');
+
 const category=require('../models/productsModel')
 const products= require('../models/productsModel')
 const sharp = require('sharp');
@@ -8,23 +8,26 @@ const path = require('path');
 
 const loadProductList=async(req,res)=>{
     try {
-        const productData = await products.find({})
-        res.render('productList',{products:productData})
+        const productData = await products.find({}).populate('categories')
+        const categoryData = await category.find({})
+        res.render('productList',{products:productData,categories:categoryData})
     } catch (error) {
         console.log(error.message);
     }
 }
 const loadAddProducts = async(req,res)=>{
     try {
-        const categoryData= await category.find({})
-        res.render('addProducts',{categories:categoryData});
+        const productData= await products.find({})
+        const categoryData = await category.find({}) 
+        
+        res.render('addProducts',{categories:categoryData,products:productData});
     } catch (error) {
         console.log(error.message)
     }
 }
 
 const addProducts = async(req,res)=>{
-    console.log('kljdfflk')
+   
     try {
         // let arrImages= [];
         // if(Array.isArray(req.files)){
@@ -34,7 +37,8 @@ const addProducts = async(req,res)=>{
         //         await sharp(req.files[i].path).resize(500,500).toFile(outputPath);
         //     }
         // }
-        console.log(req.body.category);
+       
+          
         const Product = new products({
             name:req.body.name,
             description:req.body.description,
@@ -43,6 +47,7 @@ const addProducts = async(req,res)=>{
             image:req.body.image,
             is_listed:true
         });
+        console.log(req.body.category)
         
         await Product.save();
         res.redirect('/admin/productList')
@@ -99,6 +104,25 @@ const updateProducts = async (req,res)=>{
     }
 }
 
+const productPage = async(req,res)=>{
+    try {
+        const productData = await products.find({})
+        res.render('products.ejs',{products:productData});
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const productDetails = async(req,res)=>{
+    try {
+        const id = req.query.id;
+        console.log(id);
+        const productData = await products.findById(id);
+        res.render('productDetail',{products:productData})
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 module.exports={
     loadProductList,
@@ -106,5 +130,7 @@ module.exports={
     addProducts,
     listProduct ,
     editProductLoad,
-    updateProducts
+    updateProducts,
+    productPage,
+    productDetails
 }

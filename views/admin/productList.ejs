@@ -230,14 +230,21 @@
             <tr>
                 <td>
                     <a href="/detailes?id=<%=products[i]._id%>">
-                        <img src="/admin/assets/imgs/products/<%=products[i].image[0]%>" class="img-sm img-thumbnail" alt="Item"  /></td>
+                        <img src="<%=products[i].image[0]%> "class="img-sm img-thumbnail" alt="Item"  /></td>
                     </a>
                     
                 
                 <td><%= products[i].name %></td>
-                <td><%= products[i].categories %></td>
+                
+               <% products.forEach(category => { %>
+                
+            
+                <td> <%= category.name %> </td>
+               <% }) %>
+        
                 <td><%= products[i].price %></td>
                 <td><%= products[i].description %></td>
+             
                 <td>
                     
                     <div class="col-lg-2 col-sm-2 col-4 col-action text-end">

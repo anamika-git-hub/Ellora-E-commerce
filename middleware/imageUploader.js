@@ -9,7 +9,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage, limits: { files: 3 } , preservePath: true});
 
-console.log(upload);
+
 const cloudinary = require("../utils/cloudinary");
 
 
@@ -18,23 +18,28 @@ const uploadMiddleware = (req, res, next) => {
     if (err) {
       return res.status(400).json({ message: err.message });
     }
-  console.log(req.files,'jhhhjkh')
+ 
     if (!req.files || req.files.length !== 3) {
       return res.status(400).json({ message: "Exactly 3 files are required." });
     }
 
     try {
-        const result = await cloudinary.uploader.upload(req.files.path, {
+      const uploadPromises = req.files.map(async (file) => {
+        const result = await cloudinary.uploader.upload(file.path, {
           folder: "product-images",
         });
-  
-        req.body.image = result.secure_url;
-        next();
-      } catch (error) {
-        return res
-          .status(500)
-          .json({ message: "Error uploading file to Cloudinary." });
-      }
+        return result.secure_url;
+      });
+
+      const uploadedImages = await Promise.all(uploadPromises);
+
+      req.body.image = uploadedImages;
+      next();
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ message: "Error uploading file to Cloudinary." });
+   }
     });
   };
   
