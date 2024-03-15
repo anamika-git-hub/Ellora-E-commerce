@@ -235,13 +235,8 @@
                     
                 
                 <td><%= products[i].name %></td>
-                
-               <% products.forEach(category => { %>
-                
+                <td><%=products[i].categories %></td>
             
-                <td> <%= category.name %> </td>
-               <% }) %>
-        
                 <td><%= products[i].price %></td>
                 <td><%= products[i].description %></td>
              

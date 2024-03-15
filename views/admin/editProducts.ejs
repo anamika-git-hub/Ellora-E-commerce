@@ -265,8 +265,8 @@
                                                 <div class="rounded-image-preview">
                                                     <img id="imagePreview<%= i %>" alt="Preview">
                                                 </div>
-                                                <input name="image" type="file" accept="image/*" id="imageInput<%= i %>" class="imageInput" value="<%= products.image[0]%>" onchange="previewImage(this, 'imagePreview<%= i %>')">
-                                                <% console.log(products.image[0]) %>
+                                                <input name="image" type="file" accept="image/*" id="image<%= i %>" class="imageInput" value="<%= products.image%>" onchange="previewImage(this, 'imagePreview<%= i %>')">
+                                            
                                             </label>
                                         </div>
                                     <% } %>

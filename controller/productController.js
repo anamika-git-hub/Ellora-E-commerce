@@ -1,5 +1,5 @@
 
-const category=require('../models/productsModel')
+const category=require('../models/categoryModel')
 const products= require('../models/productsModel')
 const sharp = require('sharp');
 const path = require('path');
@@ -17,10 +17,11 @@ const loadProductList=async(req,res)=>{
 }
 const loadAddProducts = async(req,res)=>{
     try {
-        const productData= await products.find({})
+    
         const categoryData = await category.find({}) 
+        console.log(categoryData)
         
-        res.render('addProducts',{categories:categoryData,products:productData});
+        res.render('addProducts',{categories:categoryData});
     } catch (error) {
         console.log(error.message)
     }
@@ -39,18 +40,21 @@ const addProducts = async(req,res)=>{
         // }
        
           
-        const Product = new products({
-            name:req.body.name,
-            description:req.body.description,
-            price:req.body.price,
-            categories:req.body.category,
-            image:req.body.image,
-            is_listed:true
-        });
-        console.log(req.body.category)
+        if(req.body.price>0){
+            const Product = new products({
+                name:req.body.name,
+                description:req.body.description,
+                price:req.body.price,
+                categories:req.body.category,
+                image:req.body.image,
+                is_listed:true
+            });
+            console.log(req.body.category)
+            
+            await Product.save();
+            res.redirect('/admin/productList')
+        }
         
-        await Product.save();
-        res.redirect('/admin/productList')
     } catch (error) {
         console.log(error.message)
     }
@@ -74,7 +78,7 @@ const editProductLoad = async(req,res)=>{
     try{
 
         const id=req.query.id;
-       console.log(id)
+       
         const productData=await products.findById({_id:id})
         const categoryData=await category.find()
         if(productData){
@@ -115,9 +119,10 @@ const productPage = async(req,res)=>{
 
 const productDetails = async(req,res)=>{
     try {
-        const id = req.query.id;
+        const {id} = req.query
         console.log(id);
-        const productData = await products.findById(id);
+        const productData = await products.findById({_id:id});
+        console.log(productData)
         res.render('productDetail',{products:productData})
     } catch (error) {
         console.log(error.message);

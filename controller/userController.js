@@ -2,6 +2,7 @@ const User=require('../models/userModel');
 const bcrypt=require('bcrypt');
 const userOtpVerification = require('../models/userOTPModel')
 const nodemailer=require('nodemailer');
+const {joiRegistrationSchema} = require('../models/ValidationSchema');
 
 
 const securePassword =async(password)=>{
@@ -41,51 +42,26 @@ const loadSignup=async(req,res)=>{
 
 const insertUser =async(req,res)=>{
     try {
-        if(/^[A-Za-z]+(?:[A-Za-z]+)?$/.test(req.body.name)){
-        if(/^[A-Za-z0-9.%+-]+@gmail\.com$/.test(req.body.email)){
-            const emailCheck = await User.findOne({email:req.body.email});
-            if(!emailCheck){
-                let moblength = (req.body.mobile).length;
-                if(moblength>0 && moblength<=10){
-                    const spassword= await securePassword(req.body.password);
-                    const user = new User({
-                        name:req.body.name,
-                        email:req.body.email,
-                        mobile:req.body.mobile,
-                        password:spassword,
-                        is_admin:0,
-                        is_blocked:0,
-                        is_verified:0
-                        
-                  });
-          
-                //  const userData = await user.save();
-                await user.save()
-
-                sendOTPverificationEmail(user,res);
-
-                 if(userData){
-                  res.render('signUp',{message:'Your registration has been successfully completed.'});
-
-                  console.log('success')
-                 }else{
-                 res.render('signUp',{message:'Your registration has been failed'});
-                 console.log('failed')
-                 }
-                }else{
-                    res.render('singUp',{message:"mobile number should be 10 digit"})
-                }
-              }else{
-                
-                res.render('signUp',{message:'Email is already exists'})
-                console.log('email  already exists')
-              }
-        }else{
-            res.render('signUp',{message:"Please check your email structure"});
+        const {value,error} = joiRegistrationSchema.validate(req.body)
+        console.log(value);
+        if(error){
+           return res.render('signUp',{message:'Invalid registraion'})
         }
-    }else{
-        res.render('signUp',{message:"Invalid Name"})
-     } 
+        const {name,email,mobile,password} = value;
+        
+            const emailCheck = await User.findOne({email});
+            if(!emailCheck){
+             
+                    const spassword= await securePassword(password);
+                    console.log(spassword);
+                  const user = await User.create( {name,email,mobile,password:spassword})
+                  console.log(user);
+                sendOTPverificationEmail(user,res);
+              }else{
+               return res.render('signUp',{message:'Email is already exists'})
+              }
+      
+   
     }catch (error) {
         console.log(error.message);
     }
@@ -131,8 +107,6 @@ const sendOTPverificationEmail=async({email},res)=>{
 const loadOtp =async(req,res)=>{
     try {
         const email =req.query.email;
-
-        console.log(email)
         res.render('otpVerification',{email:email});
     } catch (error) {
         console.log(error.message);
@@ -218,7 +192,7 @@ const verifyLogin = async(req,res)=>{
             const passwordMatch= await bcrypt.compare(password,userData.password);
             if(passwordMatch){
                 req.body.user_id= userData._id;
-                res.redirect('/dashboard');
+                res.redirect('/');
             }else{
                 res.render('login');
 

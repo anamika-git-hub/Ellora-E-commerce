@@ -1,7 +1,7 @@
 
 //Otp validation
 
-const { response } = require("../../../routes/usersRouter");
+
 
 function validate(){
     let fields = document.querySelectorAll(".form-control");
