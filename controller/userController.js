@@ -42,8 +42,9 @@ const loadSignup=async(req,res)=>{
 
 const insertUser =async(req,res)=>{
     try {
-        const {value,error} = joiRegistrationSchema.validate(req.body)
-        console.log(value);
+        const {value,error} = await joiRegistrationSchema.validate(req.body)
+        console.log("value:",value);
+        console.log("req.body:",req.body)
         if(error){
            return res.render('signUp',{message:'Invalid registraion'})
         }

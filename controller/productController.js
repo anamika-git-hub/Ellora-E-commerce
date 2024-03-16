@@ -9,8 +9,18 @@ const path = require('path');
 const loadProductList=async(req,res)=>{
     try {
         const productData = await products.find({}).populate('categories')
-        const categoryData = await category.find({})
-        res.render('productList',{products:productData,categories:categoryData})
+       const category = await products.aggregate([
+        {
+            $lookup : {
+                from: 'categories',
+                foreignField : '_id',
+                localField : 'categories.category',
+                as : 'categories.category'
+            }
+        }
+       ])
+       console.log("cat:",category)
+        res.render('productList',{products:productData,category})
     } catch (error) {
         console.log(error.message);
     }
@@ -19,7 +29,7 @@ const loadAddProducts = async(req,res)=>{
     try {
     
         const categoryData = await category.find({}) 
-        console.log(categoryData)
+        
         
         res.render('addProducts',{categories:categoryData});
     } catch (error) {

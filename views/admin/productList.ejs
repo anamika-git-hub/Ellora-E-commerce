@@ -223,35 +223,32 @@
                                 </thead>
                                 <tbody>
                                   
-        <%
-        if(products.length > 0){
-           for(let i=0;i<products.length;i++){
-            %>
+                                    <% products.forEach(element => { %>
             <tr>
                 <td>
-                    <a href="/detailes?id=<%=products[i]._id%>">
-                        <img src="<%=products[i].image[0]%> "class="img-sm img-thumbnail" alt="Item"  /></td>
+                    <a href="/detailes?id=<%=element._id%>">
+                        <img src="<%=element.image[0]%> "class="img-sm img-thumbnail" alt="Item"  /></td>
                     </a>
                     
                 
-                <td><%= products[i].name %></td>
-                <td><%=products[i].categories %></td>
+                <td><%= element.name %></td>
+                <td><%=category.name %></td>
             
-                <td><%= products[i].price %></td>
-                <td><%= products[i].description %></td>
+                <td><%= element.price %></td>
+                <td><%= element.description %></td>
              
                 <td>
                     
                     <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
-                        <a href="/admin/editProducts?id=<%= products[i]._id %>" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> Edit </a>
+                        <a href="/admin/editProducts?id=<%= element._id %>" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> Edit </a>
                         <%
-                        if(products[i].is_listed === true){
+                        if(element.is_listed === true){
                             %>
-                            <button class="btn btn-sm font-sm rounded text-white btn-success " onclick="listProduct(this,'<%=products[i]._id%>') "> List </button>
+                            <button class="btn btn-sm font-sm rounded text-white btn-success " onclick="listProduct(this,'<%=element._id%>') "> List </button>
                             <%
                         }else{
                             %>
-                            <button  class="btn btn-sm font-sm rounded text-white btn-danger " onclick="listProduct(this,'<%=products[i]._id%>') ">  Unlist </button>
+                            <button  class="btn btn-sm font-sm rounded text-white btn-danger " onclick="listProduct(this,'<%=element._id%>') ">  Unlist </button>
                             <%
                         }
                         %>   
@@ -260,14 +257,8 @@
                 
             </tr>
             <%
-           }
-        }else{
-            %>
-            <tr>
-                <td colspan="3">Products Not Found</td>
-            </tr>
-            <%
-        }
+                                      })
+        
         %>
                                 </tbody>
                             </table>
