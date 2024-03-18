@@ -361,8 +361,8 @@
 							    </div><!-- .End .tab-pane -->
 							    <div class="tab-pane fade show active" id="register-2" role="tabpanel" aria-labelledby="register-tab-2">
 							    	<form action="/signUp" method="post">
-                                        <% if (typeof message !== 'undefined') { %>
-                                            <h4><%= message %></h4>
+                                        <% if (messages.message) { %>
+                                            <h4><%= messages.message %></h4>
                                           <% } %>
 							    		<div class="form-group">
 							    			<label for="register-email-2">Your name</label>
@@ -379,7 +379,11 @@
 							    			<label for="register-password-2">Password </label>
 							    			<input type="password" class="form-control" id="register-password-2" name="password" required>
 							    		</div><!-- End .form-group -->
-
+                                        <div class="form-group">
+							    			<label for="register-password-2">Confirm Password </label>
+							    			<input type="password" class="form-control" id="register-password-2" name="confirmPassword" required>
+							    		</div><!-- End .form-group -->
+                                        
 							    		<div class="form-footer">
 							    			<button type="submit" class="btn btn-outline-primary-2">
 			                					<span>SIGN UP</span>

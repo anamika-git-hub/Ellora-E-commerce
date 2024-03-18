@@ -1,70 +1,59 @@
 
 const category=require('../models/categoryModel')
 const products= require('../models/productsModel')
-const sharp = require('sharp');
 const path = require('path');
+const {joiProductSchema} = require('../models/ValidationSchema')
 
 
 
 const loadProductList=async(req,res)=>{
-    try {
-        const productData = await products.find({}).populate('categories')
-       const category = await products.aggregate([
-        {
-            $lookup : {
-                from: 'categories',
-                foreignField : '_id',
-                localField : 'categories.category',
-                as : 'categories.category'
-            }
-        }
-       ])
-       console.log("cat:",category)
-        res.render('productList',{products:productData,category})
-    } catch (error) {
-        console.log(error.message);
+   try {
+
+    var page = 1;
+    if(req.query.page){
+        page = req.query.page;
     }
+    const limit = 2;
+    const productData = await products.find().populate({path:'categories',model:'categories'
+     })
+     .limit(limit * 1)
+      .skip((page-1)* limit)
+      .exec();
+      
+    const count = await products.find({
+    }).countDocuments();
+
+
+    res.render('productList',{products:productData,totalPages:Math.ceil(count/limit),currentPage:page})
+   } catch (error) {
+     console.log(error.message)
+   }
+    
 }
 const loadAddProducts = async(req,res)=>{
     try {
-    
         const categoryData = await category.find({}) 
-        
-        
-        res.render('addProducts',{categories:categoryData});
+        res.render('addProducts',{categoryData});
     } catch (error) {
         console.log(error.message)
     }
 }
 
 const addProducts = async(req,res)=>{
-   
     try {
-        // let arrImages= [];
-        // if(Array.isArray(req.files)){
-        //     for(let i=0;i<req.files.length;i++){
-        //         arrImages.push(req.files[i].images);
-        //         const outputPath=path.resolve(__dirname,'..','public','admin','assets','imgs','products',req.files[i].images)
-        //         await sharp(req.files[i].path).resize(500,500).toFile(outputPath);
-        //     }
-        // }
+       const value= await joiProductSchema.validateAsync(req.body)
+       const {name,description,price,categories,image} = value
+         await products.create(
+             {name:name,
+             description:description,
+             price:price,
+             categories:categories,
+             image:image,
+             is_listed:true,
+             size:['s','xs']
+             })
+                 res.redirect('/admin/productList')
        
-          
-        if(req.body.price>0){
-            const Product = new products({
-                name:req.body.name,
-                description:req.body.description,
-                price:req.body.price,
-                categories:req.body.category,
-                image:req.body.image,
-                is_listed:true
-            });
-            console.log(req.body.category)
-            
-            await Product.save();
-            res.redirect('/admin/productList')
-        }
-        
     } catch (error) {
         console.log(error.message)
     }
@@ -73,12 +62,9 @@ const addProducts = async(req,res)=>{
 const listProduct=async (req,res)=>{
     try {
         const {productId}= req.query
-        console.log(productId)
         const data = await products.findOne({_id:productId});
-        console.log(data)
         data.is_listed=!data.is_listed
-     const d1 =  await data.save();
-      console.log(d1) 
+        const d1 =  await data.save();
     } catch (error) {
         console.log(error.message)
     }
@@ -86,9 +72,7 @@ const listProduct=async (req,res)=>{
 
 const editProductLoad = async(req,res)=>{
     try{
-
         const id=req.query.id;
-       
         const productData=await products.findById({_id:id})
         const categoryData=await category.find()
         if(productData){
@@ -104,39 +88,35 @@ const editProductLoad = async(req,res)=>{
 const updateProducts = async (req,res)=>{
     try {
         const productData = await products.findOne({_id:req.body.id})
-        
         if(productData){
-            const productData = await products.findByIdAndUpdate({_id:req.body.id},{$set:{name:req.body.name,description:req.body.description,categories:req.body.category,price:req.body.price,image:req.body.image}});
-            console.log(productData);
+         await products.findByIdAndUpdate({_id:req.body.id},{$set:{name:req.body.name,description:req.body.description,categories:req.body.category,price:req.body.price,image:req.body.image}});
             res.redirect('/admin/productList')
         }else{
             res.render('editProducts',{products:productData,message:'Category already exists'})
         }
-        
     } catch (error) {
         console.log(error.message)
     }
 }
 
 const productPage = async(req,res)=>{
-    try {
-        const productData = await products.find({})
-        res.render('products.ejs',{products:productData});
-    } catch (error) {
-        console.log(error.message);
-    }
+   try {
+    const productData = await products.find({is_listed:true})
+    res.render('products.ejs',{products:productData});
+   } catch (error) {
+    console.log(error.message)
+   }
 }
 
 const productDetails = async(req,res)=>{
     try {
         const {id} = req.query
-        console.log(id);
         const productData = await products.findById({_id:id});
-        console.log(productData)
         res.render('productDetail',{products:productData})
     } catch (error) {
-        console.log(error.message);
+       console.log(error.message) 
     }
+        
 }
 
 module.exports={

@@ -2,8 +2,19 @@ const User=require('../models/userModel');
 const category=require('../models/categoryModel')
 const loadCategories=async(req,res)=>{
     try {
+        var page = 1;
+        if(req.query.page){
+            page = req.query.page;
+        }
+        const limit = 2;
         const categoryData = await category.find()
-        res.render('adminCategories',{category:categoryData})
+         .limit(limit * 1)
+          .skip((page-1)* limit)
+          .exec();
+          
+        const count = await category.find({
+        }).countDocuments();
+        res.render('adminCategories',{category:categoryData,totalPages:Math.ceil(count/limit),currentPage:page})
     } catch (error) {
         console.log(error.message)
     }
@@ -24,17 +35,14 @@ const insertCategory = async(req,res)=>{
        const existingCategory = await category.findOne({name:req.body.name});
        console.log(existingCategory)
        if(existingCategory){
-        res.redirect('/admin/createCategories');
+        res.redirect('/admin/addCategories');
         console.log('Category with this name already exists');
-
        }else{
-        console.log("hi")
         const Category = new category({
             name:req.body.name,
             description:req.body.description,
             is_listed:true
         });
-        console.log("byee")
        const data =  await Category.save();
        console.log(data)
         res.redirect('/admin/Categories')

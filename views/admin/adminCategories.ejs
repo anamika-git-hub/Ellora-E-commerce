@@ -204,9 +204,6 @@
                         <p>Add, edit or delete a category</p>
                     </div>
                     <div>
-                        <input type="text" placeholder="Search Categories" class="form-control bg-white" />
-                    </div>
-                    <div>
                         <a href="addCategories" class="btn btn-primary btn-sm rounded">Create new</a>
                     </div>
 
@@ -214,35 +211,13 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
-                            <!-- <div class="col-md-3">
-                                <form>
-                                    <div class="mb-4">
-                                        <label for="product_name" class="form-label">Name</label>
-                                        <input type="text" placeholder="Type here" class="form-control" id="product_name" />
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="product_slug" class="form-label">Slug</label>
-                                        <input type="text" placeholder="Type here" class="form-control" id="product_slug" />
-                                    </div>
-                                    <div class="mb-4">
-                                        <label class="form-label">Parent</label>
-                                        <select class="form-select">
-                                            <option>Fruit</option>
-                                            <option>Snack</option>
-                                        </select>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label class="form-label">Description</label>
-                                        <textarea placeholder="Type here" class="form-control"></textarea>
-                                    </div>
-                                    <div class="d-grid">
-                                        <button class="btn btn-primary">Create category</button>
-                                    </div>
-                                </form>
-                            </div> -->
                             <div class="col-md-12">
+                                <div class="col-lg-4 col-md-6 me-auto">
+                                    <input type="text" placeholder="Search..." class="form-control" id="inputThings" onkeyup="searchName()"/>
+                                </div>
+                                <br>
                                 <div class="table-responsive">
-                                    <table class="table table-hover">
+                                    <table id="tableId" class="table table-hover">
                                         <thead>
                                             <tr>
                                                 <th>Name</th>
@@ -256,13 +231,13 @@
                                              %>
                                             <tr>
                                                 
-                                                <td><b><%= category[i].name %></b></td>
+                                                <td><%= category[i].name %></td>
                                                 <td><%= category[i].description %></td>
                                                 <td><%if(category[i].is_listed=== false){
-                                                    %>
+                                                     %>
                                                     <button class="btn btn-sm font-sm rounded btn-danger" onclick="listCategory(this,'<%=category[i]._id %>')">Unlisted</button>
                                                     <% 
-                                                }else{
+                                                     }else{
                                                      %> 
                                                      <button class="btn btn-sm font-sm rounded btn-success" onclick="listCategory (this,'<%=category[i]._id%>')">Listed</button>
                                                      <%
@@ -272,13 +247,13 @@
                                                     <a class="btn btn-sm font-sm rounded btn-primary" href='/admin/editCategories?id=<%= category[i]._id %>' >Edit</a>
                                                 </td>
                                             </tr>
-                                        <%
-                                        }
-                                    } else { %>
-                                        <tr>
-                                            <td colspan="5" style="text-align: center; padding: 10px;">Category not found</td>
-                                        </tr>
-                                    <% } %>
+                                                 <%
+                                                }
+                                            } else { %>
+                                             <tr>
+                                                 <td colspan="5" style="text-align: center; padding: 10px;">Category not found</td>
+                                            </tr>
+                                             <% } %>
                                             
                                         </tbody>
                                     </table>
@@ -291,6 +266,18 @@
                     <!-- card body .// -->
                 </div>
                 <!-- card .// -->
+                <div class="pagination-area mt-15 mb-50">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-start">
+                            <% for(let j=1; j<=totalPages; j++){ %>
+                            <li class="page-item active"><a class="page-link" href="?page=<%= j%>"><%= j%></a></li>
+                            <% } %>
+                            <li class="page-item">
+                                <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
             </section>
             <!-- content-main end// -->
             <footer class="main-footer font-xs">
@@ -314,6 +301,31 @@
         <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
         <!-- Main Script -->
         <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+        <script>
+            function searchName(){
+        
+               var table,input,tr,i,filter
+               input = document.getElementById('inputThings')
+               table = document.getElementById('tableId')
+               filter = input.value.toUpperCase()
+
+               tr = table.getElementsByTagName('tr')
+               for(i=0;i<tr.length;i++){
+                    td=tr[i].getElementsByTagName('td')[0]
+                    if(td){
+                        txtValue=td.textContent
+                        console.log(txtValue)
+                        if(txtValue.toUpperCase().indexOf(filter)>-1){
+                             tr[i].style.display=""
+                        }else{
+                            tr[i].style.display="none"
+                        }
+                    }
+                }
+
+
+             }
+        </script>
         <script>
             function listCategory(tag,categoryId){
                 if(tag.innerText=='Listed'){

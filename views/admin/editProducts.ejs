@@ -259,14 +259,14 @@
                                     <h6>4. Media</h6>
                                 </div>
                                 <div class="col-md-9">
-                                    <% for (let i = 1; i <= 3; i++) { %>
+                                    <% for (let i = 0; i <= 3; i++) { %>
                                         <div class="col-lg-6 col-md-6 mb-3 rounded-image-preview">
-                                            <label for="imageInput<%= i %>" class="image-label">Image <%= i %>
+                                            <label for="imageInput<%= i %>" class="image-label">Image 
                                                 <div class="rounded-image-preview">
-                                                    <img id="imagePreview<%= i %>" alt="Preview">
+                                                    <img src="<%=products.image[i]%>" id="imagePreview<%= i %>" alt="Preview">
                                                 </div>
-                                                <input name="image" type="file" accept="image/*" id="image<%= i %>" class="imageInput" value="<%= products.image%>" onchange="previewImage(this, 'imagePreview<%= i %>')">
-                                            
+                                                <input name="image" type="file" accept="image/*" id="image<%= i %>" class="imageInput" value="asrrrrr" onchange="previewImage(this, 'imagePreview<%= i %>')">
+                                          
                                             </label>
                                         </div>
                                     <% } %>

@@ -4,14 +4,15 @@ const session= require('express-session');
 
 
 const config=require('../config/config');
+const tryCatch = require('../middleware/TryCatch');
 admin_route.use(session({secret:config.sessionSecret,resave:false,saveUninitialized:true}));
 
-const auth=require('../middleware/adminAuth');
+// const auth=require('../middleware/adminAuth');
 
 const imageUpload = require('../middleware/imageUploader');
 
 admin_route.use(express.json());
-admin_route.use(express.urlencoded()); 
+admin_route.use(express.urlencoded({extended:true})); 
 
 
 

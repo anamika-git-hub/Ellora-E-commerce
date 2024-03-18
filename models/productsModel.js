@@ -9,13 +9,13 @@ const productSchema= new mongoose.Schema({
     type:String,
     required:true
   },
-  categories:[{
-    category:{
+  categories:{
+    
     type:mongoose.Schema.Types.ObjectId,
     ref:'categories',
     required:true
-    }
-  }],
+    
+  },
   price:{
     type:Number,
     required:true
@@ -25,8 +25,7 @@ const productSchema= new mongoose.Schema({
     validate:[arrayLimit,'you can pass only 4 images']
   },
   size:{
-    type:Array,
-    required:true
+    type:Array
   },
   is_listed:{
     type:Boolean,

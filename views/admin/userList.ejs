@@ -215,7 +215,7 @@
                     <header class="card-header">
                         <div class="row gx-3">
                             <div class="col-lg-4 col-md-6 me-auto">
-                                <input type="text" placeholder="Search..." class="form-control" />
+                                <input type="text" placeholder="Search..." class="form-control" id="inputThings" onkeyup="searchName()"/>
                             </div>
                             <div class="col-lg-2 col-6 col-md-3">
                                 <select class="form-select">
@@ -237,7 +237,7 @@
                     <!-- card-header end// -->
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-hover">
+                            <table id="tableId" class="table table-hover">
                                 <thead>
                                     <tr>
                                         
@@ -288,11 +288,9 @@
                 <div class="pagination-area mt-15 mb-50">
                     <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-start">
-                            <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                            <li class="page-item"><a class="page-link" href="#">02</a></li>
-                            <li class="page-item"><a class="page-link" href="#">03</a></li>
-                            <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                            <li class="page-item"><a class="page-link" href="#">16</a></li>
+                            <% for(let j=1; j<=totalPages; j++){ %>
+                            <li class="page-item active"><a class="page-link" href="?page=<%= j%>"><%= j%></a></li>
+                            <% } %>
                             <li class="page-item">
                                 <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
                             </li>
@@ -322,6 +320,31 @@
         <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
         <!-- Main Script -->
         <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+        <script>
+            function searchName(){
+        
+               var table,input,tr,i,filter
+               input = document.getElementById('inputThings')
+               table = document.getElementById('tableId')
+               filter = input.value.toUpperCase()
+
+               tr = table.getElementsByTagName('tr')
+               for(i=0;i<tr.length;i++){
+                    td=tr[i].getElementsByTagName('td')[0]
+                    if(td){
+                        txtValue=td.textContent
+                        console.log(txtValue)
+                        if(txtValue.toUpperCase().indexOf(filter)>-1){
+                             tr[i].style.display=""
+                        }else{
+                            tr[i].style.display="none"
+                        }
+                    }
+                }
+
+
+             }
+        </script>
         <script>
             function BlockUser(tag,userId){
                 if(tag.innerText=='Block'){

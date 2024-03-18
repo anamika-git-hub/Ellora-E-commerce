@@ -18,6 +18,7 @@ const userSchema=new mongoose.Schema({
         type:String,
         required:true
     },
+   
     createdDate:{
         type:Date,
         default:Date.now
@@ -26,10 +27,12 @@ const userSchema=new mongoose.Schema({
         type:Number,
     },
     is_blocked:{
-        type:Boolean
+        type:Boolean,
+        default:false
     },
     is_varified:{
-        type:Boolean
+        type:Boolean,
+        default:false
     }
 });
 

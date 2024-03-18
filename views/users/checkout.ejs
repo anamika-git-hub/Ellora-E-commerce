@@ -2,7 +2,7 @@
 <html lang="en">
 
 
-<!-- molla/dashboard.html  22 Nov 2019 10:03:13 GMT -->
+<!-- molla/checkout.html  22 Nov 2019 09:55:06 GMT -->
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -90,12 +90,18 @@
                             <ul class="menu sf-arrows">
                                 <li class="megamenu-container active">
                                     <a href="index.html" class="sf-with-ul">Home</a>
+
+                                    
                                 </li>
                                 <li>
                                     <a href="category.html" class="sf-with-ul">Shop</a>
+
+                                    
                                 </li>
                                 <li>
                                     <a href="product.html" class="sf-with-ul">Product</a>
+
+                                    
                                 </li>
                                 <li>
                                     <a href="#" class="sf-with-ul">Pages</a>
@@ -291,138 +297,217 @@
         <main class="main">
         	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
         		<div class="container">
-        			<h1 class="page-title">My Account<span>Shop</span></h1>
+        			<h1 class="page-title">Checkout<span>Shop</span></h1>
         		</div><!-- End .container -->
         	</div><!-- End .page-header -->
-            <nav aria-label="breadcrumb" class="breadcrumb-nav mb-3">
+            <nav aria-label="breadcrumb" class="breadcrumb-nav">
                 <div class="container">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="index.html">Home</a></li>
                         <li class="breadcrumb-item"><a href="#">Shop</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">My Account</li>
+                        <li class="breadcrumb-item active" aria-current="page">Checkout</li>
                     </ol>
                 </div><!-- End .container -->
             </nav><!-- End .breadcrumb-nav -->
 
             <div class="page-content">
-            	<div class="dashboard">
+            	<div class="checkout">
 	                <div class="container">
-	                	<div class="row">
-	                		<aside class="col-md-4 col-lg-3">
-	                			<ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
-								    <li class="nav-item">
-								        <a class="nav-link active" id="tab-dashboard-link" data-toggle="tab" href="#tab-dashboard" role="tab" aria-controls="tab-dashboard" aria-selected="true">Dashboard</a>
-								    </li>
-								    <li class="nav-item">
-								        <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
-								    </li>
-								    <li class="nav-item">
-								        <a class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads" role="tab" aria-controls="tab-downloads" aria-selected="false">Downloads</a>
-								    </li>
-								    <li class="nav-item">
-								        <a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address" role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
-								    </li>
-								    <li class="nav-item">
-								        <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
-								    </li>
-								    <li class="nav-item">
-								        <a class="nav-link" href="/logout">Sign Out</a>
-								    </li>
-								</ul>
-	                		</aside><!-- End .col-lg-3 -->
+            			<div class="checkout-discount">
+            				<form action="#">
+        						<input type="text" class="form-control" required id="checkout-discount-input">
+            					<label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
+            				</form>
+            			</div><!-- End .checkout-discount -->
+            			<form action="#">
+		                	<div class="row">
+		                		<div class="col-lg-9">
+		                			<h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
+		                				<div class="row">
+		                					<div class="col-sm-6">
+		                						<label>First Name *</label>
+		                						<input type="text" class="form-control" required>
+		                					</div><!-- End .col-sm-6 -->
 
-	                		<div class="col-md-8 col-lg-9">
-	                			<div class="tab-content">
-								    <div class="tab-pane fade show active" id="tab-dashboard" role="tabpanel" aria-labelledby="tab-dashboard-link">
-								    	<p>Hello <span class="font-weight-normal text-dark">User</span> (not <span class="font-weight-normal text-dark">User</span>? <a href="#">Log out</a>) 
-								    	<br>
-								    	From your account dashboard you can view your <a href="#tab-orders" class="tab-trigger-link link-underline">recent orders</a>, manage your <a href="#tab-address" class="tab-trigger-link">shipping and billing addresses</a>, and <a href="#tab-account" class="tab-trigger-link">edit your password and account details</a>.</p>
-								    </div><!-- .End .tab-pane -->
+		                					<div class="col-sm-6">
+		                						<label>Last Name *</label>
+		                						<input type="text" class="form-control" required>
+		                					</div><!-- End .col-sm-6 -->
+		                				</div><!-- End .row -->
 
-								    <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
-								    	<p>No order has been made yet.</p>
-								    	<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
-								    </div><!-- .End .tab-pane -->
+	            						<label>Company Name (Optional)</label>
+	            						<input type="text" class="form-control">
 
-								    <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
-								    	<p>No downloads available yet.</p>
-								    	<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
-								    </div><!-- .End .tab-pane -->
+	            						<label>Country *</label>
+	            						<input type="text" class="form-control" required>
 
-								    <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
-								    	<p>The following addresses will be used on the checkout page by default.</p>
+	            						<label>Street address *</label>
+	            						<input type="text" class="form-control" placeholder="House number and Street name" required>
+	            						<input type="text" class="form-control" placeholder="Appartments, suite, unit etc ..." required>
 
-								    	<div class="row">
-								    		<div class="col-lg-6">
-								    			<div class="card card-dashboard">
-								    				<div class="card-body">
-								    					<h3 class="card-title">Billing Address</h3><!-- End .card-title -->
+	            						<div class="row">
+		                					<div class="col-sm-6">
+		                						<label>Town / City *</label>
+		                						<input type="text" class="form-control" required>
+		                					</div><!-- End .col-sm-6 -->
 
-														<p>User Name<br>
-														User Company<br>
-														John str<br>
-														New York, NY 10001<br>
-														1-234-987-6543<br>
-														yourmail@mail.com<br>
-														<a href="#">Edit <i class="icon-edit"></i></a></p>
-								    				</div><!-- End .card-body -->
-								    			</div><!-- End .card-dashboard -->
-								    		</div><!-- End .col-lg-6 -->
+		                					<div class="col-sm-6">
+		                						<label>State / County *</label>
+		                						<input type="text" class="form-control" required>
+		                					</div><!-- End .col-sm-6 -->
+		                				</div><!-- End .row -->
 
-								    		<div class="col-lg-6">
-								    			<div class="card card-dashboard">
-								    				<div class="card-body">
-								    					<h3 class="card-title">Shipping Address</h3><!-- End .card-title -->
+		                				<div class="row">
+		                					<div class="col-sm-6">
+		                						<label>Postcode / ZIP *</label>
+		                						<input type="text" class="form-control" required>
+		                					</div><!-- End .col-sm-6 -->
 
-														<p>You have not set up this type of address yet.<br>
-														<a href="#">Edit <i class="icon-edit"></i></a></p>
-								    				</div><!-- End .card-body -->
-								    			</div><!-- End .card-dashboard -->
-								    		</div><!-- End .col-lg-6 -->
-								    	</div><!-- End .row -->
-								    </div><!-- .End .tab-pane -->
+		                					<div class="col-sm-6">
+		                						<label>Phone *</label>
+		                						<input type="tel" class="form-control" required>
+		                					</div><!-- End .col-sm-6 -->
+		                				</div><!-- End .row -->
 
-								    <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
-								    	<form action="#">
-			                				<div class="row">
-			                					<div class="col-sm-6">
-			                						<label>First Name *</label>
-			                						<input type="text" class="form-control" required>
-			                					</div><!-- End .col-sm-6 -->
+	                					<label>Email address *</label>
+	        							<input type="email" class="form-control" required>
 
-			                					<div class="col-sm-6">
-			                						<label>Last Name *</label>
-			                						<input type="text" class="form-control" required>
-			                					</div><!-- End .col-sm-6 -->
-			                				</div><!-- End .row -->
+	        							<div class="custom-control custom-checkbox">
+											<input type="checkbox" class="custom-control-input" id="checkout-create-acc">
+											<label class="custom-control-label" for="checkout-create-acc">Create an account?</label>
+										</div><!-- End .custom-checkbox -->
 
-		            						<label>Display Name *</label>
-		            						<input type="text" class="form-control" required>
-		            						<small class="form-text">This will be how your name will be displayed in the account section and in reviews</small>
+										<div class="custom-control custom-checkbox">
+											<input type="checkbox" class="custom-control-input" id="checkout-diff-address">
+											<label class="custom-control-label" for="checkout-diff-address">Ship to a different address?</label>
+										</div><!-- End .custom-checkbox -->
 
-		                					<label>Email address *</label>
-		        							<input type="email" class="form-control" required>
+	                					<label>Order notes (optional)</label>
+	        							<textarea class="form-control" cols="30" rows="4" placeholder="Notes about your order, e.g. special notes for delivery"></textarea>
+		                		</div><!-- End .col-lg-9 -->
+		                		<aside class="col-lg-3">
+		                			<div class="summary">
+		                				<h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
 
-		            						<label>Current password (leave blank to leave unchanged)</label>
-		            						<input type="password" class="form-control">
+		                				<table class="table table-summary">
+		                					<thead>
+		                						<tr>
+		                							<th>Product</th>
+		                							<th>Total</th>
+		                						</tr>
+		                					</thead>
 
-		            						<label>New password (leave blank to leave unchanged)</label>
-		            						<input type="password" class="form-control">
+		                					<tbody>
+		                						<tr>
+		                							<td><a href="#">Beige knitted elastic runner shoes</a></td>
+		                							<td>$84.00</td>
+		                						</tr>
 
-		            						<label>Confirm new password</label>
-		            						<input type="password" class="form-control mb-2">
+		                						<tr>
+		                							<td><a href="#">Blue utility pinafore denimdress</a></td>
+		                							<td>$76,00</td>
+		                						</tr>
+		                						<tr class="summary-subtotal">
+		                							<td>Subtotal:</td>
+		                							<td>$160.00</td>
+		                						</tr><!-- End .summary-subtotal -->
+		                						<tr>
+		                							<td>Shipping:</td>
+		                							<td>Free shipping</td>
+		                						</tr>
+		                						<tr class="summary-total">
+		                							<td>Total:</td>
+		                							<td>$160.00</td>
+		                						</tr><!-- End .summary-total -->
+		                					</tbody>
+		                				</table><!-- End .table table-summary -->
 
-		                					<button type="submit" class="btn btn-outline-primary-2">
-			                					<span>SAVE CHANGES</span>
-			            						<i class="icon-long-arrow-right"></i>
-			                				</button>
-			                			</form>
-								    </div><!-- .End .tab-pane -->
-								</div>
-	                		</div><!-- End .col-lg-9 -->
-	                	</div><!-- End .row -->
+		                				<div class="accordion-summary" id="accordion-payment">
+										    <div class="card">
+										        <div class="card-header" id="heading-1">
+										            <h2 class="card-title">
+										                <a role="button" data-toggle="collapse" href="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
+										                    Direct bank transfer
+										                </a>
+										            </h2>
+										        </div><!-- End .card-header -->
+										        <div id="collapse-1" class="collapse show" aria-labelledby="heading-1" data-parent="#accordion-payment">
+										            <div class="card-body">
+										                Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.
+										            </div><!-- End .card-body -->
+										        </div><!-- End .collapse -->
+										    </div><!-- End .card -->
+
+										    <div class="card">
+										        <div class="card-header" id="heading-2">
+										            <h2 class="card-title">
+										                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-2" aria-expanded="false" aria-controls="collapse-2">
+										                    Check payments
+										                </a>
+										            </h2>
+										        </div><!-- End .card-header -->
+										        <div id="collapse-2" class="collapse" aria-labelledby="heading-2" data-parent="#accordion-payment">
+										            <div class="card-body">
+										                Ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. 
+										            </div><!-- End .card-body -->
+										        </div><!-- End .collapse -->
+										    </div><!-- End .card -->
+
+										    <div class="card">
+										        <div class="card-header" id="heading-3">
+										            <h2 class="card-title">
+										                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
+										                    Cash on delivery
+										                </a>
+										            </h2>
+										        </div><!-- End .card-header -->
+										        <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
+										            <div class="card-body">Quisque volutpat mattis eros. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. 
+										            </div><!-- End .card-body -->
+										        </div><!-- End .collapse -->
+										    </div><!-- End .card -->
+
+										    <div class="card">
+										        <div class="card-header" id="heading-4">
+										            <h2 class="card-title">
+										                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
+										                    PayPal <small class="float-right paypal-link">What is PayPal?</small>
+										                </a>
+										            </h2>
+										        </div><!-- End .card-header -->
+										        <div id="collapse-4" class="collapse" aria-labelledby="heading-4" data-parent="#accordion-payment">
+										            <div class="card-body">
+										                Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum.
+										            </div><!-- End .card-body -->
+										        </div><!-- End .collapse -->
+										    </div><!-- End .card -->
+
+										    <div class="card">
+										        <div class="card-header" id="heading-5">
+										            <h2 class="card-title">
+										                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
+										                    Credit Card (Stripe)
+										                    <img src="assets/images/payments-summary.png" alt="payments cards">
+										                </a>
+										            </h2>
+										        </div><!-- End .card-header -->
+										        <div id="collapse-5" class="collapse" aria-labelledby="heading-5" data-parent="#accordion-payment">
+										            <div class="card-body"> Donec nec justo eget felis facilisis fermentum.Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Lorem ipsum dolor sit ame.
+										            </div><!-- End .card-body -->
+										        </div><!-- End .collapse -->
+										    </div><!-- End .card -->
+										</div><!-- End .accordion -->
+
+		                				<button type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+		                					<span class="btn-text">Place Order</span>
+		                					<span class="btn-hover-text">Proceed to Checkout</span>
+		                				</button>
+		                			</div><!-- End .summary -->
+		                		</aside><!-- End .col-lg-3 -->
+		                	</div><!-- End .row -->
+            			</form>
 	                </div><!-- End .container -->
-                </div><!-- End .dashboard -->
+                </div><!-- End .checkout -->
             </div><!-- End .page-content -->
         </main><!-- End .main -->
 
@@ -801,5 +886,5 @@
 </body>
 
 
-<!-- molla/dashboard.html  22 Nov 2019 10:03:13 GMT -->
+<!-- molla/checkout.html  22 Nov 2019 09:55:06 GMT -->
 </html>

@@ -41,22 +41,23 @@ const loadSignup=async(req,res)=>{
 }
 
 const insertUser =async(req,res)=>{
+   
     try {
-        const {value,error} = await joiRegistrationSchema.validate(req.body)
-        console.log("value:",value);
-        console.log("req.body:",req.body)
-        if(error){
-           return res.render('signUp',{message:'Invalid registraion'})
-        }
-        const {name,email,mobile,password} = value;
+       
+        const value = await joiRegistrationSchema.validateAsync(req.body)
+        
+       
+        const {name,email,mobile,password,confirmPassword} = value;
+       
+
         
             const emailCheck = await User.findOne({email});
             if(!emailCheck){
              
                     const spassword= await securePassword(password);
-                    console.log(spassword);
-                  const user = await User.create( {name,email,mobile,password:spassword})
-                  console.log(user);
+                    
+                  const user = await User.create( {name:name,email:email,mobile:mobile,password:spassword})
+                 
                 sendOTPverificationEmail(user,res);
               }else{
                return res.render('signUp',{message:'Email is already exists'})
@@ -78,7 +79,7 @@ const sendOTPverificationEmail=async({email},res)=>{
               port:465,
               secure:true,
               auth:{
-                user:'anamikap9895@gmail.com',
+                user:process.env.EMAIL,
                 pass:'icor drdl gelp qutd'
               }
         });
@@ -86,7 +87,7 @@ const sendOTPverificationEmail=async({email},res)=>{
         otp=`${Math.floor(1000+Math.random() * 9000)}`;
 
         const mailOptions = {
-            from:'anamikap9895@gmail.com',
+            from:process.env.EMAIL,
             to:'anamikap6840@gmail.com',
             subject:'Verify your email',
             html:`Your OTP is:${otp}`
@@ -119,42 +120,40 @@ const verifyOtp =async(req,res)=>{
         const email =req.body.email;
         const otp = req.body.digit1 + req.body.digit2 + req.body.digit3 + req.body.digit4 ;
         const userVerification = await userOtpVerification.findOne({email:email});
-        console.log('userVerification',userVerification);
-
         if(!userVerification){
-            console.log('Otp expired')
-            res.render('signUp',{message:"otp expired"})
+            
+            res.redirect('/otp',{message:"otp expired"})
             return;
         }
 
         const {otp:hashedOTP}=userVerification;
 
         const validOtp =await bcrypt.compare (otp,hashedOTP);
-        console.log(validOtp);
+       
 
         if(validOtp){
             const userData=await User.findOne({email:email});
-
+               
             if(userData){
                 await User.findByIdAndUpdate({
                     _id:userData._id
                 },{
-                    $set:{verified:true}
+                    $set:{is_varified:true}
                 })
             }
 
             const user= await User.findOne({email:email})
             await userOtpVerification.deleteOne({email:email});
-            if(user.verified){
+            if(user.is_varified){
                 if(!user.is_blocked){
                     req.session.user={
                         _id:user._id,
                         email:user.email,
                         name:user.name
                     }
-                    console.log(user.name)
+                    console.log("user",req.session.user);
+                    res.redirect('/login')
                 }else{
-                    console.log('user is blocked');
                     res.redirect('/login')
                 }
             }else{
@@ -168,14 +167,11 @@ const verifyOtp =async(req,res)=>{
 
 const resendOtp=async(req,res)=>{
     try {
-        console.log('kljdfkljsd')
-        console.log(req.query.email)
         const userEmail= req.query.email
         await userOtpVerification.deleteMany({email:userEmail})
         if(userEmail){
             sendOTPverificationEmail({email:userEmail},res);
         }else{
-            console.log('user email is not provided in the query')
         }
     } catch (error) {
         console.log(error.message)
@@ -188,17 +184,22 @@ const verifyLogin = async(req,res)=>{
         const email=req.body.email;
         const password=req.body.password;
         const userData = await User.findOne({email:email})
-        console.log(email,req.body.email)
+        
         if(userData){
+            if(userData.is_blocked===false){
             const passwordMatch= await bcrypt.compare(password,userData.password);
             if(passwordMatch){
                 req.body.user_id= userData._id;
                 res.redirect('/');
+                console.log('userId',req.session.user_id);
             }else{
                 res.render('login');
 
                 console.log('password is incorrect')
             }
+        }else{
+            console.log('user is blocked')
+        }
         }else{
             res.render('login');
             console.log('email is incorrect');
@@ -208,7 +209,7 @@ const verifyLogin = async(req,res)=>{
     }
 }
 
-const loadDashboard =async(req,res)=>{
+const loadDashboard =   async(req,res)=>{
     try {
         res.render('dashboard')
     } catch (error) {
@@ -243,6 +244,6 @@ module.exports={
     loadHome,
     loadDashboard,
     loadLogout,
-    resendOtp
+    resendOtp,
     
 }

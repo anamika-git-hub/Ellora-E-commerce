@@ -214,6 +214,9 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-3">
+                                    <% if (typeof message !== 'undefined') { %>
+                                        <h4><%= message %></h4>
+                                      <% } %>
                                     <h6>1. General info</h6>
                                 </div>
                                 <div class="col-md-9">
@@ -227,9 +230,9 @@
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Category</label>
-                                        <select  class="form-select" name="category">
-                                            <% for (let i = 0; i < categories.length; i++) { %>
-                                                <option value="<%= categories[i]._id %>"><%= categories[i].name %></option>
+                                        <select  class="form-select" name="categories">
+                                            <% for (let i = 0; i < categoryData.length; i++) { %>
+                                                <option value="<%= categoryData[i]._id %>"><%= categoryData[i].name %></option>
                                             <% } %>
                                         </select>
                                     </div>
@@ -254,7 +257,7 @@
                                     <h6>4. Media</h6>
                                 </div>
                                 <div class="col-md-9">
-                                    <% for (let i = 1; i <= 3; i++) { %>
+                                    <% for (let i = 1; i <= 4; i++) { %>
                                         <div class="col-lg-6 col-md-6 mb-3 rounded-image-preview">
                                             <label for="imageInput<%= i %>" class="image-label">Image <%= i %>
                                                 <div class="rounded-image-preview">
