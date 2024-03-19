@@ -189,9 +189,8 @@ const verifyLogin = async(req,res)=>{
             if(userData.is_blocked===false){
             const passwordMatch= await bcrypt.compare(password,userData.password);
             if(passwordMatch){
-                req.body.user_id= userData._id;
+                req.session.user_id= userData._id;
                 res.redirect('/');
-                console.log('userId',req.session.user_id);
             }else{
                 res.render('login');
 
@@ -211,7 +210,7 @@ const verifyLogin = async(req,res)=>{
 
 const loadDashboard =   async(req,res)=>{
     try {
-        res.render('dashboard')
+        res.render('profile')
     } catch (error) {
         console.log(error.message)
     }
@@ -229,8 +228,32 @@ const loadLogout = async(req,res)=>{
     }
 }
 
+const loadContact = async(req,res)=>{
+    try {
+        res.render('contact')
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
+const loadAbout = async(req,res)=>{
+    try {
+        res.render('about')
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
+const loadProfile = async(req,res)=>{
+    try {
+        const userId = req.session.user_id;
+        const userData = await User.findById(userId)
+        res.render('profile',{userData})
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 
 
@@ -245,5 +268,7 @@ module.exports={
     loadDashboard,
     loadLogout,
     resendOtp,
-    
+    loadContact,
+    loadAbout,
+    loadProfile
 }
