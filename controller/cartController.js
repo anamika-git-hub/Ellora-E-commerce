@@ -12,7 +12,6 @@ const loadCart = async(req,res)=>{
 
             const userId = req.session.user_id
             const cartData = await Cart.findOne({userId:userId}).populate('userId').populate({path:'products.productId'});
-            console.log("cart",cartData);
             let initialAmount = 0;
             if(cartData){
                 cartData.products.forEach((item)=>{
@@ -30,45 +29,44 @@ const loadCart = async(req,res)=>{
 
 const addtoCart = async(req,res)=>{
     try {
-        const productId = req.query.id;
+        const {productId,productQuantity} = req.body;
         const productData = await Product.findById({_id:productId});
         const cartData = await Cart.findOne({userId:req.session.user_id});
         if(cartData){
             const existProduct = cartData.products.find((pro)=>pro.productId.toString()== productId);
             if(existProduct){
-                await Cart.findOneAndUpdate({
-                    userId : req.session.user_id,
-                    "products.productId" : productId
-                },{
-                    $inc : {
+                // await Cart.findOneAndUpdate({
+                //     userId : req.session.user_id,
+                //     "products.productId" : productId
+                // },{
+                //     $inc : {
                         
-                    }
-                })
+                //     }
+                // })
+                console.log('This product already exists in cart');
             } else{
-                console.log('quantity',req.body.productQuantity);
             await Cart.findOneAndUpdate({
                 userId :req.session.user_id
             },{
                 $push: {
                     products:{
                         productId : productId,
-                        quantity :req.body.productQuantity,
+                        quantity :productQuantity,
                         productPrice : productData.price,
-                        totalPrice :  productData.price
+                        totalPrice : productQuantity* productData.price
                     }
                 }
             })
         }
     }else{
-        console.log(req.session.user_id);
         const newCart = new Cart ({
             userId : req.session.user_id,
             products : [
                 {
                     productId : productId,
-                    quantity : req.body.productQuantity,
+                    quantity : productQuantity,
                     productPrice : productData.price,
-                    totalPrice :  productData.price
+                    totalPrice : productQuantity* productData.price
                 }
             ]
            
@@ -81,27 +79,11 @@ const addtoCart = async(req,res)=>{
     }
 }
 
-const updateCart = async (req, res) => {
-    try {
-        const { productId, productQuantity } = await req.body;
-        const userId = req.session.user_id;
 
-        // Update the quantity of the product in the cart
-        const updatedCart = await Cart.findOneAndUpdate(
-            { userId: userId, "products.productId": productId },
-            { $set: { "products.$.quantity": productQuantity } },
-            { new: true } // To return the updated document
-        );
-        console.log(updateCart);
-    } catch (error) {
-        console.log(error.message)
-    }
-}
 
 
 
 module.exports = {
     loadCart,
     addtoCart,
-    updateCart
 }

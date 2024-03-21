@@ -3,6 +3,7 @@ const bcrypt=require('bcrypt');
 const userOtpVerification = require('../models/userOTPModel')
 const nodemailer=require('nodemailer');
 const {joiRegistrationSchema} = require('../models/ValidationSchema');
+const Boom = require('boom');
 
 
 const securePassword =async(password)=>{
@@ -43,17 +44,20 @@ const loadSignup=async(req,res)=>{
 const insertUser =async(req,res)=>{
    
     try {
-       
+        const { error } = joiRegistrationSchema.validate(req.body, {
+            abortEarly: false
+          });
+    if(error){ 
+        console.log('Invalid registration');
+    }
+    // console.log(error.message,1111111111111111111111111111);
+    // const errorsArray =  error.message.split('.')
+    // console.log(errorsArray)
         const value = await joiRegistrationSchema.validateAsync(req.body)
-        
-       
+        console.log(value)
         const {name,email,mobile,password,confirmPassword} = value;
-       
-
-        
             const emailCheck = await User.findOne({email});
             if(!emailCheck){
-             
                     const spassword= await securePassword(password);
                     
                   const user = await User.create( {name:name,email:email,mobile:mobile,password:spassword})
@@ -62,13 +66,10 @@ const insertUser =async(req,res)=>{
               }else{
                return res.render('signUp',{message:'Email is already exists'})
               }
-      
-   
     }catch (error) {
         console.log(error.message);
     }
 }
-
 
 const sendOTPverificationEmail=async({email},res)=>{
     try {
@@ -125,12 +126,8 @@ const verifyOtp =async(req,res)=>{
             res.redirect('/otp',{message:"otp expired"})
             return;
         }
-
         const {otp:hashedOTP}=userVerification;
-
         const validOtp =await bcrypt.compare (otp,hashedOTP);
-       
-
         if(validOtp){
             const userData=await User.findOne({email:email});
                
@@ -255,7 +252,58 @@ const loadProfile = async(req,res)=>{
     }
 }
 
+const editProfile = async(req,res)=>{
+    try {
+         const email = req.body.userEmail;
+         const newUserName = req.body.updatedName;
+         const newMobile = req.body.updatedMobile;
+         console.log(email,newUserName,newMobile);
+         const findUsernameExist = await User.find({name:newUserName});
+         if(!findUsernameExist.length>0){
+            const user = await User.findOneAndUpdate({
+                email:email
+            },{
+                $set: {
+                    name:newUserName,
+                    mobile: newMobile,
+                    
+                }
+            },{
+                new:true
+            })
+            console.log(user);
+         }
+         
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
+const resetPasswithOld = async(req,res)=>{
+    try {
+        const {confirmPass,userEmail,oldPass}= req.body;
+        const user = await User.findOne({email:userEmail});
+
+        const passwordMatch = await bcrypt.compare(oldPass,user.password);
+        if(!passwordMatch){
+            console.log("The password is incorrect");
+        }else{
+            const passwordSame = await bcrypt.compare(oldPass,confirmPass);
+            if(passwordSame || confirmPass===oldPass){
+                console.log('reset failed');
+            }else{
+                const securePass = await securePassword(confirmPass);
+                await User.findOneAndUpdate({email:userEmail},{
+                    $set:{
+                        password:securePass
+                    }
+                })
+            }
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 module.exports={
     loadLogin,
@@ -270,5 +318,7 @@ module.exports={
     resendOtp,
     loadContact,
     loadAbout,
-    loadProfile
+    loadProfile,
+    editProfile,
+    resetPasswithOld
 }

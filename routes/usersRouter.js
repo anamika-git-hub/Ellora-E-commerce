@@ -33,16 +33,17 @@ user_route.get('/logout',userController.loadLogout);
 user_route.get('/contact',userController.loadContact);
 user_route.get('/about',userController.loadAbout);
 
-user_route.get('/profile',userController.loadProfile)
+user_route.get('/profile',userController.loadProfile);
+user_route.post('/profile',userController.editProfile);
+user_route.post('/profile',userController.resetPasswithOld);
 
 user_route.get('/products',productController.productPage);
 user_route.get('/productDetail',productController.productDetails)
 
 
 user_route.get('/cart',cartController.loadCart);
-user_route.get('/addtoCart',cartController.addtoCart);
+user_route.post('/cart',cartController.addtoCart);
 
-user_route.post('/updateCart',cartController.updateCart);
 
 module.exports = user_route;
  

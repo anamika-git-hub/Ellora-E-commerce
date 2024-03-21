@@ -200,7 +200,7 @@
                                 </div><!-- End .dropdown-cart-total -->
 
                                 <div class="dropdown-cart-action">
-                                    <a href="cart.html" class="btn btn-primary">View Cart</a>
+                                    <a href="/cart" class="btn btn-primary">View Cart</a>
                                     <a href="checkout.html" class="btn btn-outline-primary-2"><span>Checkout</span><i class="icon-long-arrow-right"></i></a>
                                 </div><!-- End .dropdown-cart-total -->
                             </div><!-- End .dropdown-menu -->
@@ -305,22 +305,32 @@
 								    </div><!-- .End .tab-pane -->
 
 								    <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
-								    	<form action="#">
+								    	<form action="/profile" method="post">
+                                            <h2 class="checkout-title" style="margin-top: 0rem;margin-bottom: 1rem;">Account Details</h2>
 		            						<label> Name </label>
-		            						<input type="text" class="form-control" value="<%= userData.name  %>" required>
+		            						<input type="text" class="form-control" name="updatedName" value="<%= userData.name  %>" required>
 		            						<small class="form-text"></small>
+                                            <div class="row">
+                                                <div class="col-sm-6">
+                                                    <label>Email address </label>
+                                                    <input type="email" class="form-control" name="userEmail" value="<%= userData.email  %>" required>
+                                                </div><!-- End .col-sm-6 -->
+    
+                                                <div class="col-sm-6">
+                                                    <label>Mobile</label>
+                                                    <input type="number" class="form-control" name="updatedMobile" value="<%= userData.mobile %>" required>
+                                                </div><!-- End .col-sm-6 -->
+                                            </div><!-- End .row -->
 
-		                					<label>Email address </label>
-		        							<input type="email" class="form-control" value="<%= userData.email  %>" required>
-
+                                            <h2 class="checkout-title" style="margin-top: 0rem;margin-bottom: 1rem;">Password Change</h2>
 		            						<label>Current password (leave blank to leave unchanged)</label>
-		            						<input type="password" class="form-control">
+		            						<input type="password" class="form-control" name="currentPassword">
 
 		            						<label>New password (leave blank to leave unchanged)</label>
-		            						<input type="password" class="form-control">
+		            						<input type="password" class="form-control" name="newPassword">
 
 		            						<label>Confirm new password</label>
-		            						<input type="password" class="form-control mb-2">
+		            						<input type="password" class="form-control mb-2" name="confirmPassword">
 
 		                					<button type="submit" class="btn btn-outline-primary-2">
 			                					<span>SAVE CHANGES</span>
