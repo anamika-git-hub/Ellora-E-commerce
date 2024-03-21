@@ -252,12 +252,12 @@ const loadProfile = async(req,res)=>{
     }
 }
 
+
 const editProfile = async(req,res)=>{
     try {
          const email = req.body.userEmail;
          const newUserName = req.body.updatedName;
          const newMobile = req.body.updatedMobile;
-         console.log(email,newUserName,newMobile);
          const findUsernameExist = await User.find({name:newUserName});
          if(!findUsernameExist.length>0){
             const user = await User.findOneAndUpdate({
@@ -271,7 +271,6 @@ const editProfile = async(req,res)=>{
             },{
                 new:true
             })
-            console.log(user);
          }
          
     } catch (error) {
@@ -305,6 +304,70 @@ const resetPasswithOld = async(req,res)=>{
     }
 }
 
+const addAddress = async(req,res)=>{
+    try{
+        const{
+            name,
+            country,
+            streetName,
+            landMark,
+            town,
+            state,
+            pin,
+            phone,
+            email
+        } = req.body;
+
+        await User.findOneAndUpdate({
+            email:email
+        },{
+            $push:{
+                addresses:{
+                    name:name,
+                    streetAddress:streetName   ,
+                    city:town,
+                    state: state,
+                    country:country,
+                    pincode: pin,
+                    mobile:phone,
+                    email:email,
+                    landMark:landMark
+                }
+            }
+        })
+    }catch(error){
+        console.log(error.message);
+    }
+}
+
+const editAddress = async(req,res)=>{
+    try {
+         const {name,country,streetName,LandMark,town,state,pin,phone,email} = req.body;
+         console.log(email);
+        const user = await User.findOneAndUpdate({
+            email:email
+         },{
+            $set:{
+                    "addresses.$.name": name,
+                    "addresses.$.streetAddress": streetName,
+                    "addresses.$.city": town,
+                    "addresses.$.state": state,
+                    "addresses.$.country": country,
+                    "addresses.$.pincode": pin,
+                    "addresses.$.mobile": phone,
+                    "addresses.$.landMark": LandMark
+                  
+         }
+        },{
+            new:true
+         })
+         console.log(user);
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
 module.exports={
     loadLogin,
     loadSignup,
@@ -320,5 +383,7 @@ module.exports={
     loadAbout,
     loadProfile,
     editProfile,
-    resetPasswithOld
+    resetPasswithOld,
+    addAddress,
+    editAddress
 }

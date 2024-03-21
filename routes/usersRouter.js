@@ -36,13 +36,19 @@ user_route.get('/about',userController.loadAbout);
 user_route.get('/profile',userController.loadProfile);
 user_route.post('/profile',userController.editProfile);
 user_route.post('/profile',userController.resetPasswithOld);
+user_route.post('/addAddress',userController.addAddress);
+user_route.post('/editAddress',userController.editAddress);
 
 user_route.get('/products',productController.productPage);
-user_route.get('/productDetail',productController.productDetails)
+user_route.get('/productDetail',productController.productDetails);
 
 
 user_route.get('/cart',cartController.loadCart);
 user_route.post('/cart',cartController.addtoCart);
+user_route.post('/cartUpdate',cartController.updatequantity);
+user_route.post('/deleteCartItem',cartController.deleteCartItem);
+
+user_route.get('/CheckOut',cartController.loadCheckOut);
 
 
 module.exports = user_route;
