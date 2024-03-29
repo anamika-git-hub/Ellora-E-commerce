@@ -4,6 +4,7 @@ const userOtpVerification = require('../models/userOTPModel')
 const nodemailer=require('nodemailer');
 const {joiRegistrationSchema} = require('../models/ValidationSchema');
 const Boom = require('boom');
+const Order = require('../models/orderModel')
 
 
 const securePassword =async(password)=>{
@@ -44,17 +45,24 @@ const loadSignup=async(req,res)=>{
 const insertUser =async(req,res)=>{
    
     try {
-        const { error } = joiRegistrationSchema.validate(req.body, {
+        const { error } = joiRegistrationSchema.validate(req.body,{password:2}, {
             abortEarly: false
           });
     if(error){ 
-        console.log('Invalid registration');
+        console.log('Invalid registration',error.message);
+        req.flash('exist', error.message);
+                res.redirect('/signUp').query({
+                name:name,
+                email:email,
+                mobile:mobile
+               })
+        // return res.json(error.message)
     }
     // console.log(error.message,1111111111111111111111111111);
     // const errorsArray =  error.message.split('.')
     // console.log(errorsArray)
         const value = await joiRegistrationSchema.validateAsync(req.body)
-        console.log(value)
+        console.log('v',value)
         const {name,email,mobile,password,confirmPassword} = value;
             const emailCheck = await User.findOne({email});
             if(!emailCheck){
@@ -64,7 +72,9 @@ const insertUser =async(req,res)=>{
                  
                 sendOTPverificationEmail(user,res);
               }else{
-               return res.render('signUp',{message:'Email is already exists'})
+                
+              req.flash('exist', 'User already exists with this email');
+               return res.redirect('/signUp')
               }
     }catch (error) {
         console.log(error.message);
@@ -122,8 +132,8 @@ const verifyOtp =async(req,res)=>{
         const otp = req.body.digit1 + req.body.digit2 + req.body.digit3 + req.body.digit4 ;
         const userVerification = await userOtpVerification.findOne({email:email});
         if(!userVerification){
-            
-            res.redirect('/otp',{message:"otp expired"})
+            req.flash('otp','Otp expired')
+            res.redirect('/otp')
             return;
         }
         const {otp:hashedOTP}=userVerification;
@@ -148,7 +158,6 @@ const verifyOtp =async(req,res)=>{
                         email:user.email,
                         name:user.name
                     }
-                    console.log("user",req.session.user);
                     res.redirect('/login')
                 }else{
                     res.redirect('/login')
@@ -189,16 +198,21 @@ const verifyLogin = async(req,res)=>{
                 req.session.user_id= userData._id;
                 res.redirect('/');
             }else{
-                res.render('login');
+                
+                req.flash('login', 'Password is incorrect');
+                console.log(req.flash());
+               res.redirect('/login')
+               return ;
 
-                console.log('password is incorrect')
             }
         }else{
-            console.log('user is blocked')
+            req.flash('login', 'User is blocked');
+             res.redirect('/login');
+             return;
         }
         }else{
-            res.render('login');
-            console.log('email is incorrect');
+           req.flash('login', 'Invalid user');
+               return res.redirect('/login')
         }
     } catch (error) {
         console.log(error.message)
@@ -245,7 +259,14 @@ const loadProfile = async(req,res)=>{
     try {
         const userId = req.session.user_id;
         const userData = await User.findById(userId)
-        res.render('profile',{userData})
+        const user = await User.findById(userId);
+        
+        const orderData = await Order.findOne({userId:userId}).populate('products.productId').populate('userId');
+        const addressId = orderData.delivery_address;
+        const address= user.addresses.find(address=>{
+            return address._id.equals(addressId)
+        })
+        res.render('profile',{userData,orderData,address})
 
     } catch (error) {
         console.log(error.message);
@@ -280,16 +301,19 @@ const editProfile = async(req,res)=>{
 
 const resetPasswithOld = async(req,res)=>{
     try {
+        console.log('try');
         const {confirmPass,userEmail,oldPass}= req.body;
         const user = await User.findOne({email:userEmail});
 
         const passwordMatch = await bcrypt.compare(oldPass,user.password);
         if(!passwordMatch){
-            console.log("The password is incorrect");
+            req.flash('exist', 'The passwod is incorrect');
+            return res.redirect('/signUp')
         }else{
             const passwordSame = await bcrypt.compare(oldPass,confirmPass);
             if(passwordSame || confirmPass===oldPass){
-                console.log('reset failed');
+                req.flash('exist', 'reset failed');
+                return res.redirect('/signUp');
             }else{
                 const securePass = await securePassword(confirmPass);
                 await User.findOneAndUpdate({email:userEmail},{
@@ -305,6 +329,7 @@ const resetPasswithOld = async(req,res)=>{
 }
 
 const addAddress = async(req,res)=>{
+    console.log('try');
     try{
         const{
             name,
@@ -317,9 +342,8 @@ const addAddress = async(req,res)=>{
             phone,
             email
         } = req.body;
-
         await User.findOneAndUpdate({
-            email:email
+           _id:req.session.user_id
         },{
             $push:{
                 addresses:{
@@ -330,8 +354,8 @@ const addAddress = async(req,res)=>{
                     country:country,
                     pincode: pin,
                     mobile:phone,
-                    email:email,
-                    landMark:landMark
+                    landMark:landMark,
+                    email:email
                 }
             }
         })
@@ -342,26 +366,35 @@ const addAddress = async(req,res)=>{
 
 const editAddress = async(req,res)=>{
     try {
-         const {name,country,streetName,LandMark,town,state,pin,phone,email} = req.body;
-         console.log(email);
-        const user = await User.findOneAndUpdate({
-            email:email
-         },{
-            $set:{
-                    "addresses.$.name": name,
-                    "addresses.$.streetAddress": streetName,
-                    "addresses.$.city": town,
-                    "addresses.$.state": state,
-                    "addresses.$.country": country,
-                    "addresses.$.pincode": pin,
-                    "addresses.$.mobile": phone,
-                    "addresses.$.landMark": LandMark
-                  
-         }
-        },{
-            new:true
-         })
-         console.log(user);
+         const {name,country,streetName,landMark,town,state,pin,phone,email,_id} = req.body;
+        const user = await User.findById({_id:req.session.user_id})
+       const address= user.addresses.find(address=>{
+            return address._id.equals(_id)
+        })
+        address.name=name;
+        address.country=country;
+        address.streetAddress=streetName;
+        address.city=town;
+        address.state=state;
+        address.pincode=pin;
+        address.mobile=phone;
+        address.landMark=landMark;
+        address.email = email;
+        user.save();
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const deleteAddress = async(req,res)=>{
+    try {
+        const user = await User.findOne({_id:req.session.user_id});
+        const {addressId} = req.body
+        await User.findOneAndUpdate({_id: req.session.user_id},
+            {$pull:{addresses:{_id:addressId}}
+        }
+        )
+
     } catch (error) {
         console.log(error.message);
     }
@@ -385,5 +418,6 @@ module.exports={
     editProfile,
     resetPasswithOld,
     addAddress,
-    editAddress
+    editAddress,
+    deleteAddress
 }

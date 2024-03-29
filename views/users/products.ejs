@@ -270,7 +270,7 @@
                                         </div><!-- End .product-cat -->
                                         <h3 class="product-title"><a href="product.html"><%= %></a></h3><!-- End .product-title -->
                                         <div class="product-price">
-                                            $50.00
+                                            <%=products[i].price%>
                                         </div><!-- End .product-price -->
                                         <div class="ratings-container">
                                             <div class="ratings">
@@ -933,12 +933,19 @@
     <script src="assets/js/nouislider.min.js"></script>
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
-    <script>
-        function addtoCart(productId){
-        fetch(`/addtoCart?id=${productId}`)
-        console.log(productId);
-        }
-        </script>
+    
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+ <script>
+  async function addtoCart (productId){
+        axios.post('/addtoCart', { productId })
+            .then(function(response){
+                console.log(response.data);
+            }).catch(function(error){
+                console.error('Error:', error);
+        });
+    }
+</script>
 </body>
 
 

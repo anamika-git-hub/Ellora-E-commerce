@@ -27,6 +27,10 @@ const productSchema= new mongoose.Schema({
   size:{
     type:Array
   },
+  stock:{
+     type: Number,
+     required:true
+  },
   is_listed:{
     type:Boolean,
     required:true

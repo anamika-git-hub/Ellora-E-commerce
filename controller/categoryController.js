@@ -30,10 +30,8 @@ const loadAddCategories = async(req,res)=>{
 
 const insertCategory = async(req,res)=>{
     try {
-       console.log(req.body.name)
 
        const existingCategory = await category.findOne({name:req.body.name});
-       console.log(existingCategory)
        if(existingCategory){
         res.redirect('/admin/addCategories');
         console.log('Category with this name already exists');
@@ -44,7 +42,6 @@ const insertCategory = async(req,res)=>{
             is_listed:true
         });
        const data =  await Category.save();
-       console.log(data)
         res.redirect('/admin/Categories')
        }
     } catch (error) {
@@ -55,12 +52,9 @@ const insertCategory = async(req,res)=>{
 const listCategory=async (req,res)=>{
     try {
         const {categoryId}= req.query
-        console.log(categoryId)
         const data = await category.findOne({_id:categoryId});
-        console.log(data)
         data.is_listed=!data.is_listed
-     const d1 =  await data.save();
-      console.log(d1) 
+      await data.save();
     } catch (error) {
         console.log(error.message)
     }
@@ -70,7 +64,6 @@ const editCategoryLoad = async(req,res)=>{
     try{
 
         const id=req.query.id;
-       console.log(id)
         const categoryData=await category.findById({_id:id});
         if(categoryData){
             res.render('editCategories',{category:categoryData})
@@ -88,7 +81,7 @@ const updateCategories = async (req,res)=>{
         const existingCategory = await category.findOne({name:req.body.name});
         if(!existingCategory){
             const categoryData = await category.findByIdAndUpdate({_id:req.body.id},{$set:{name:req.body.name,description:req.body.description}});
-            console.log(categoryData);
+           
             res.redirect('/admin/Categories')
         }else{
             res.render('editCategories',{category:Category,message:'Category already exists'})

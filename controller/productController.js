@@ -42,13 +42,14 @@ const loadAddProducts = async(req,res)=>{
 const addProducts = async(req,res)=>{
     try {
        const value= await joiProductSchema.validateAsync(req.body)
-       const {name,description,price,categories,image} = value
+       const {name,description,price,categories,image,stock} = value
          await products.create(
              {name:name,
              description:description,
              price:price,
              categories:categories,
              image:image,
+             stock:stock,
              is_listed:true,
              size:['s','xs']
              })
@@ -87,10 +88,12 @@ const editProductLoad = async(req,res)=>{
 
 const updateProducts = async (req,res)=>{
     try {
-        const productData = await products.findOne({_id:req.body.id})
+        const productData = await products.findOne({_id:req.body.id});
+        console.log('pd',productData);
         if(productData){
-         await products.findByIdAndUpdate({_id:req.body.id},{$set:{name:req.body.name,description:req.body.description,categories:req.body.category,price:req.body.price,image:req.body.image}});
-            res.redirect('/admin/productList')
+        const pro = await products.findByIdAndUpdate({_id:req.body.id},{$set:{name:req.body.name,description:req.body.description,categories:req.body.category,price:req.body.price,stock:req.body.stock,image:req.body.image}});
+           console.log("pro",pro);
+        res.redirect('/admin/productList')
         }else{
             res.render('editProducts',{products:productData,message:'Category already exists'})
         }

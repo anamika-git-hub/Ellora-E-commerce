@@ -21,7 +21,8 @@ admin_route.set('views','./views/admin');
 
 const adminController=require('../controller/adminController')
 const productController=require('../controller/productController')
-const categoryController=require('../controller/categoryController')
+const categoryController=require('../controller/categoryController');
+const orderController = require('../controller/orderController');
 
 admin_route.get('/',adminController.loadLogin);
 
@@ -48,6 +49,11 @@ admin_route.post('/addProducts',imageUpload,productController.addProducts);
 admin_route.get('/listProduct',productController.listProduct);
 admin_route.get('/editproducts',productController.editProductLoad);
 admin_route.post('/editproducts',productController.updateProducts);
+
+admin_route.get('/orderList',orderController.loadOrderList);
+
+
+
 
 
 admin_route.get('*',function(req,res){

@@ -30,36 +30,32 @@
             <nav>
                 <ul class="menu-aside">
                     <li class="menu-item">
-                        <a class="menu-link" href="home">
+                        <a class="menu-link" href="index.html">
                             <i class="icon material-icons md-home"></i>
                             <span class="text">Dashboard</span>
                         </a>
                     </li>
-                    <li class="menu-item has-submenu active">
+                    <li class="menu-item has-submenu">
                         <a class="menu-link" href="page-products-list.html">
                             <i class="icon material-icons md-shopping_bag"></i>
                             <span class="text">Products</span>
                         </a>
                         <div class="submenu">
-                            <a href="productList" class="active">Product List</a>
+                            <a href="page-products-list.html">Product List</a>
+                            <a href="page-products-grid.html">Product grid</a>
+                            <a href="page-products-grid-2.html">Product grid 2</a>
+                            <a href="page-categories.html">Categories</a>
                         </div>
                     </li>
-                    <li class="menu-item has-submenu">
-                        <a class="menu-link" href="page-orders-1.html">
-                            <i class="icon material-icons md-shopping_cart"></i>
-                            <span class="text">Users</span>
-                        </a>
-                        <div class="submenu">
-                            <a href="userList">User list </a>
-                        </div>
-                    </li>
-                    <li class="menu-item has-submenu">
+                    <li class="menu-item has-submenu active">
                         <a class="menu-link" href="page-orders-1.html">
                             <i class="icon material-icons md-shopping_cart"></i>
                             <span class="text">Orders</span>
                         </a>
                         <div class="submenu">
-                            <a href="orderList">Order list</a>
+                            <a href="page-orders-1.html" class="active">Order list 1</a>
+                            <a href="page-orders-2.html">Order list 2</a>
+                            <a href="page-orders-detail.html">Order detail</a>
                         </div>
                     </li>
                     <li class="menu-item has-submenu">
@@ -73,13 +69,16 @@
                             <a href="page-seller-detail.html">Seller profile</a>
                         </div>
                     </li>
-                    <li class="menu-item has-submenu ">
+                    <li class="menu-item has-submenu">
                         <a class="menu-link" href="page-form-product-1.html">
                             <i class="icon material-icons md-add_box"></i>
-                            <span class="text">Categories</span>
+                            <span class="text">Add product</span>
                         </a>
                         <div class="submenu">
-                            <a href="Categories">Categories list</a>
+                            <a href="page-form-product-1.html">Add product 1</a>
+                            <a href="page-form-product-2.html">Add product 2</a>
+                            <a href="page-form-product-3.html">Add product 3</a>
+                            <a href="page-form-product-4.html">Add product 4</a>
                         </div>
                     </li>
                     <li class="menu-item has-submenu">
@@ -147,7 +146,7 @@
                 <div class="col-search">
                     <form class="searchform">
                         <div class="input-group">
-                            <input list="search_terms" type="text" class="form-control"  placeholder="Search term" />
+                            <input list="search_terms" type="text" class="form-control" placeholder="Search term" />
                             <button class="btn btn-light bg" type="button"><i class="material-icons md-search"></i></button>
                         </div>
                         <datalist id="search_terms">
@@ -165,7 +164,7 @@
                             <a class="nav-link btn-icon" href="#">
                                 <i class="material-icons md-notifications animation-shake"></i>
                                 <span class="badge rounded-pill">3</span>
-                            <!-- </a> -->
+                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
@@ -200,74 +199,81 @@
             <section class="content-main">
                 <div class="content-header">
                     <div>
-                        <h2 class="content-title card-title">Products List</h2>
+                        <h2 class="content-title card-title">Order List</h2>
                         <p>Lorem ipsum dolor sit amet.</p>
                     </div>
                     <div>
-                        <a href="addProducts" class="btn btn-primary btn-sm rounded">Create new</a>
+                        <input type="text" placeholder="Search order ID" class="form-control bg-white" />
                     </div>
                 </div>
                 <div class="card mb-4">
-                    <div class="card-body">
-                        <div class="col-lg-4 col-md-6 me-auto">
-                            <input type="text" placeholder="Search..." class="form-control" id="inputThings" onkeyup="searchName()" />
+                    <header class="card-header">
+                        <div class="row gx-3">
+                            <div class="col-lg-4 col-md-6 me-auto">
+                                <input type="text" placeholder="Search..." class="form-control" />
+                            </div>
+                            <div class="col-lg-2 col-6 col-md-3">
+                                <select class="form-select">
+                                    <option>Status</option>
+                                    <option>Active</option>
+                                    <option>Disabled</option>
+                                    <option>Show all</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-2 col-6 col-md-3">
+                                <select class="form-select">
+                                    <option>Show 20</option>
+                                    <option>Show 30</option>
+                                    <option>Show 40</option>
+                                </select>
+                            </div>
                         </div>
-                        <br>
+                    </header>
+                    <!-- card-header end// -->
+                    <div class="card-body">
                         <div class="table-responsive">
-                            <table id="tableId" class="table table-hover">
-                                <thead >
+                            <table class="table table-hover">
+                                <thead>
                                     <tr>
                                         <th scope="col">Image</th>
                                         <th scope="col">Name</th>
-                                        <th scope="col">Category</th>
-                                        <th scope="col" >Price</th>
-                                        <th scope="col" >Stock</th>
-                                        <th scope="col" >Description</th>
-                                        <th scope="col" >Actions</th>
+                                        <th scope="col">Payment</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col" class="text-end">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                  
-          <% products.forEach(element => { %>
-            <tr>
-                <td>
-                    <a href="/detailes?id=<%=element._id%>">
-                        <img src="<%=element.image[0]%> "class="img-sm img-thumbnail" alt="Item"  />
-                    </a>
-                </td>
-                    
-                
-                <td class="nameSearch"><%= element.name %></td>
-                
-                <td class="nameSearch"><%=element.categories.name %></td>
-            
-                <td><%= element.price %></td>
-                <td><%= element.stock %></td>
-                <td><%= element.description %></td>
-             
-                <td>
-                    
-                    <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
-                        <a href="/admin/editProducts?id=<%= element._id %>" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> Edit </a>
-                        <%
-                        if(element.is_listed === true){
-                            %>
-                            <button class="btn btn-sm font-sm rounded text-white btn-success " onclick="listProduct(this,'<%=element._id%>') "> List </button>
-                            <%
-                        }else{
-                            %>
-                            <button  class="btn btn-sm font-sm rounded text-white btn-danger " onclick="listProduct(this,'<%=element._id%>') ">  Unlist </button>
-                            <%
-                        }
-                        %>   
-                        </div>
-               </td>
-                
-            </tr>
-            <%
-                                      })
-        
-        %>
+
+                                    <%if(orderData.length>0){%>
+                                 
+                                  <% orderData.products.forEach((value)=>{%>
+                                    <tr>
+                                        <td><b><img src="<%= value.productId.image[0]%>" alt="Product image"></b></td>
+                                        <td>marvin@example.com</td>
+                                        <td>$9.00</td>
+                                        <td><span class="badge rounded-pill alert-warning">Pending</span></td>
+                                        <td>03.12.2020</td>
+                                        <td class="text-end">
+                                            <a href="#" class="btn btn-md rounded font-sm">Detail</a>
+                                            <div class="dropdown">
+                                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="#">View detail</a>
+                                                    <a class="dropdown-item" href="#">Edit info</a>
+                                                    <a class="dropdown-item text-danger" href="#">Delete</a>
+                                                </div>
+                                            </div>
+                                            <!-- dropdown //end -->
+                                        </td>
+                                    </tr>
+                                    <%}) %>
+                               <% } else { %>
+                                <tr>
+                                    <td colspan="5" style="text-align: center; padding: 10px;">Orders not found</td>
+                                </tr>
+                            <% } %>
+                                    
                                 </tbody>
                             </table>
                         </div>
@@ -276,12 +282,14 @@
                     <!-- card-body end// -->
                 </div>
                 <!-- card end// -->
-                <div class="pagination-area mt-30 mb-50">
+                <div class="pagination-area mt-15 mb-50">
                     <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-start">
-                            <% for(let j=1; j<=totalPages; j++){ %>
-                            <li class="page-item active"><a class="page-link" href="?page=<%= j%>"><%= j%></a></li>
-                            <% } %>
+                            <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                            <li class="page-item"><a class="page-link" href="#">02</a></li>
+                            <li class="page-item"><a class="page-link" href="#">03</a></li>
+                            <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                            <li class="page-item"><a class="page-link" href="#">16</a></li>
                             <li class="page-item">
                                 <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
                             </li>
@@ -310,45 +318,6 @@
         <script src="assets/js/vendors/perfect-scrollbar.js"></script>
         <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
         <!-- Main Script -->
-        <script src="assets/js/main.js" type="text/javascript"></script>
-        <script>
-            function searchName(){
-        
-               var table,input,tr,i,filter
-               input = document.getElementById('inputThings')
-               table = document.getElementById('tableId')
-               filter = input.value.toUpperCase()
-
-               tr = table.getElementsByTagName('tr')
-               for(i=0;i<tr.length;i++){
-                    td=tr[i].getElementsByClassName('nameSearch')[0]
-                    if(td){
-                        txtValue=td.textContent
-                        console.log(txtValue)
-                        if(txtValue.toUpperCase().indexOf(filter)>-1){
-                             tr[i].style.display=""
-                        }else{
-                            tr[i].style.display="none"
-                        }
-                    }
-                }
-
-
-             }
-        </script>
-        <script>
-            function listProduct(tag,productId){
-                if(tag.innerText=='List'){
-                    tag.innerText='Unlist'
-                    tag.style.background='red'
-                    tag.style.color='white'
-                }else if(tag.innerText == 'Unlist'){
-                    tag.innerText='List'
-                    tag.style.background='green'
-                    tag.style.color='black'
-                }
-                fetch(`/admin/listProduct?productId=${productId}`)
-            }
-        </script>
+        <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
     </body>
 </html>

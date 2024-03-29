@@ -2,67 +2,68 @@ const { string, number } = require('joi');
 const mongoose=require('mongoose');
 
 
-const userSchema=new mongoose.Schema({
-    name:{
-        type:String,
-        required:true
-    },
-    email:{
-        type:String,
-        required:true
-    },
-    mobile:{
-        type:String,
-        required:true
-    },
-    password:{
-        type:String,
-        required:true
-    },
-    createdDate:{
-        type:Date,
-        default:Date.now
-    },
-    is_admin:{
-        type:Number,
-    },
-    is_blocked:{
-        type:Boolean,
-        default:false
-    },
-    is_varified:{
-        type:Boolean,
-        default:false
-    },
-    addresses:[{
+    const userSchema=new mongoose.Schema({
         name:{
-            type:String
-        },
-        streetAddress:{
-            type:String
-        },
-        city:{
-            type:String
-        },
-        state:{
-            type:String
-        },
-        country:{
-            type:String
-        },
-        pincode:{
-            type:Number
-        },
-        mobile:{
-            type:Number
+            type:String,
+            required:true
         },
         email:{
-            type:String
+            type:String,
+            required:true
         },
-        landMark:{
-            type:String
-        }
-    }]
-});
+        mobile:{
+            type:String,
+            required:true
+        },
+        password:{
+            type:String,
+            required:true
+        },
+        createdDate:{
+            type:Date,
+            default:Date.now
+        },
+        is_admin:{
+            type:Number,
+            default:0
+        },
+        is_blocked:{
+            type:Boolean,
+            default:false
+        },
+        is_varified:{
+            type:Boolean,
+            default:false
+        },
+        addresses:[{
+            name:{
+                type:String
+            },
+            streetAddress:{
+                type:String
+            },
+            city:{
+                type:String
+            },
+            state:{
+                type:String
+            },
+            country:{
+                type:String
+            },
+            pincode:{
+                type:Number
+            },
+            mobile:{
+                type:Number
+            },
+            landMark:{
+                type:String
+            },
+            email:{
+                type:String
+            }
+        }]
+    });
 
 module.exports=mongoose.model('User',userSchema);

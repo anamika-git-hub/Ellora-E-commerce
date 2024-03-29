@@ -4,7 +4,7 @@ const session = require('express-session');
 
 const config = require('../config/config')
 const tryCatch = require('../middleware/TryCatch')
-user_route.use(session({secret:"abc",resave:false,saveUninitialized:true}));
+user_route.use(session({secret:config,resave:false,saveUninitialized:true}));
 
 const {isLogin,isLogout} = require('../middleware/userAuth')
 
@@ -17,6 +17,7 @@ user_route.use(express.urlencoded({extended:true}))
 const userController=require('../controller/userController')
 const productController = require('../controller/productController');
 const cartController = require('../controller/cartController');
+const orderController = require('../controller/orderController');
 
 user_route.get('/',isLogin,userController.loadHome);
 user_route.get('/login',isLogout,userController.loadLogin);
@@ -30,7 +31,7 @@ user_route.post('/resend',userController.resendOtp);
 user_route.post('/login',isLogout,userController.verifyLogin);
 user_route.get('/logout',userController.loadLogout);
 
-user_route.get('/contact',userController.loadContact);
+user_route.get('/contact',isLogin,userController.loadContact);
 user_route.get('/about',userController.loadAbout);
 
 user_route.get('/profile',userController.loadProfile);
@@ -38,6 +39,7 @@ user_route.post('/profile',userController.editProfile);
 user_route.post('/profile',userController.resetPasswithOld);
 user_route.post('/addAddress',userController.addAddress);
 user_route.post('/editAddress',userController.editAddress);
+user_route.post('/deleteAddress',userController.deleteAddress);
 
 user_route.get('/products',productController.productPage);
 user_route.get('/productDetail',productController.productDetails);
@@ -49,6 +51,7 @@ user_route.post('/cartUpdate',cartController.updatequantity);
 user_route.post('/deleteCartItem',cartController.deleteCartItem);
 
 user_route.get('/CheckOut',cartController.loadCheckOut);
+user_route.post('/placeOrder',orderController.placeOrder);
 
 
 module.exports = user_route;

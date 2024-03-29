@@ -28,7 +28,7 @@ const verifyLogin=async(req,res)=>{
         const admin=await User.findOne({email:email})
         console.log(admin)
         if(admin){
-            if(admin.is_admin!==0){
+            if(admin.is_admin!==process.env.EMAIL){
                 const passwordMatch=await bcrypt.compare(password,admin.password);
                 if(passwordMatch){
                     req.session.admin={
@@ -69,10 +69,12 @@ const loadUserList=async(req,res)=>{
         page = req.query.page;
     }
     const limit = 5;
-    const userData=await User.find({is_admin:0})
+    const userData=await User.find({email:{$ne:process.env.EMAIL}})
+    
      .limit(limit * 1)
       .skip((page-1)* limit)
       .exec();
+      console.log(userData);
       
     const count = await User.find({
     }).countDocuments();
@@ -88,9 +90,7 @@ const loadUserList=async(req,res)=>{
 const blockUser=async (req,res)=>{
     try {
         const {userId}= req.query
-        console.log(userId)
         const data = await User.findOne({_id:userId});
-        console.log(data)
         data.is_blocked=!data.is_blocked
        await data.save()
     } catch (error) {

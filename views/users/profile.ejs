@@ -260,12 +260,92 @@
 								    	<br>
 								    	From your account dashboard you can view your <a href="#tab-orders" class="tab-trigger-link link-underline">recent orders</a>, manage your <a href="#tab-address" class="tab-trigger-link">shipping and billing addresses</a>, and <a href="#tab-account" class="tab-trigger-link">edit your password and account details</a>.</p>
 								    </div><!-- .End .tab-pane -->
+                                    
+                                    <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
+                                    
+                                            <% if(orderData){%> 
+                                        <table id="orderList" class="table table-cart table-mobile">
+                                            <thead>
+                                                <tr>
+                                                    <th>Product</th>
+                                                    <th>Payment</th>
+                                                    <th>Date</th>
+                                                    <th></th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                         
+                                            <tbody>
+                                                
+                                                    <% orderData.products.forEach((value,index)=>{
+                                                        %>
+                                                    <tr>
+                                                        <input type="hidden" name="productId" value="<%= value.productId %>">
+                                                        <td class="product-col">
+                                                            <div class="product">
+                                                                <figure class="product-media">
+                                                                    <a href="#" onclick="toOrder('<%= value.productId %>')" id="toOrderDetails">
+                                                                        <img src="<%= value.productId.image[0]%>" alt="Product image">
+                                                                    </a>
+                                                                </figure>
+                                                                <h3 class="product-title">
+                                                                     <a href="#"><%= value.productId.name %></a>
+                                                                </h3><!-- End .product-title -->
+                                                            </div><!-- End .product -->
+                                                        </td>
+                                                        <td  class="product-title"><%= orderData.payment %></td>
+                                                      
+                                                        <td class="price-col" id="totalPrice"><%= new Date(orderData.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %></td>
+                                                       
+                                                    </tr>
+                                                    <%
+                                                    }) %>
+                                            </tbody>
+                                        </table><!-- End .table table-wishlist  -->
+                                    <div class="row" id="orderDetails"  style="display: none;">
+                                        <div class="col-lg-4">
+                                                    <div class="card card-dashboard">
+                                                        <div class="card-body">
+                                                            <h3 class="card-title">Customer</h3><!-- End .card-title -->
+    
+                                                            <p><%= orderData.userId.name%><br>
+                                                                <%= orderData.userId.email%><br>
+                                                                <%= orderData.userId.mobile%><br>
+                                                         
+                                                        </div><!-- End .card-body -->
+                                                    </div><!-- End .card-dashboard -->
+                                                </div><!-- End .col-lg-4 -->
+                                                <div class="col-lg-4">
+                                                    <div class="card card-dashboard">
+                                                        <div class="card-body">
+                                                            <h3 class="card-title">Order info</h3><!-- End .card-title -->
+    
+                                                            <p>Shipping:Fargo Express<br>
+                                                                Pay method:<%= orderData.payment%><br>
+                                                                Status:<%= orderData.status%><br>
+                                                         
+                                                        </div><!-- End .card-body -->
+                                                    </div><!-- End .card-dashboard -->
+                                                </div><!-- End .col-lg-4 -->
+                                                <div class="col-lg-4">
+                                                    <div class="card card-dashboard">
+                                                        <div class="card-body">
+                                                            <h3 class="card-title">Deliver to</h3><!-- End .card-title -->
 
-								    <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
-								    	<p>No order has been made yet.</p>
-								    	<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
-								    </div><!-- .End .tab-pane -->
+                                                            <p><%=address.streetAddress%><br>
+                                                                <%=address.city%>,<%=address.pincode%><br>
+                                                                <%= address.state%><br>
+                                                               
+                                                        </div><!-- End .card-body -->
+                                                    </div><!-- End .card-dashboard -->
+                                                </div><!-- End .col-lg-4 -->
+                                        </div>
+                                        <%}else{%>
+                                            <p>No order has been made yet.</p>
+                                            <a href="/products" class="btn btn-outline-primary-2"><span>GO SHOP </span><i class="icon-long-arrow-right"></i></a>
+                                        <%} %>
 
+                                    </div><!-- .End .tab-pane -->
 								    <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
 								    	<p>No downloads available yet.</p>
 								    	<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
@@ -291,17 +371,19 @@
                                                                 <%= value.landMark%><br>
                                                                 <%= value.mobile%><br>
                                                                 <%= value.email%><br>
-                                                            <a href="#" id="showeditAddress" aria-controls="editAddress" aria-selected="false">Edit <i class="icon-edit"></i></a></p>
-                                                            <a href="#" id="showAddAddress" aria-controls="addAddress" aria-selected="false">Add address <i class="icon-edit"></i></a></p>
+                                                            <button onclick="showEditAddress('<%=value._id%>')" id="showeditAddress" aria-controls="editAddress" aria-selected="false">Edit <i class="icon-edit"></i></button></p>
+                                                            
+                                                            <button onclick="deleteAddress('<%= value._id %>')" >Delete</button></p>
+                                                            <a href="" id="showAddAddress" aria-controls="addAddress" aria-selected="false">Add address <i class="icon-edit"></i></a></p>
                                                         </div><!-- End .card-body -->
                                                     </div><!-- End .card-dashboard -->
                                                 </div><!-- End .col-lg-6 -->
-                                                <div class="row" id="editAddress"  style="display: none;" >
+                                                <div class="row" id="editAddress<%=value._id%>"  style="display: none;" >
                                                     <form action="/editAddress" method="post">
                                                     <div class="col-lg-9">
                                                         <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
                                       
-                    
+                                                            <input type="hidden" name="_id" value="<%=value._id%>">
                                                             <label>User Name </label>
                                                             <input name="name" type="text" class="form-control" value="<%= value.name%>">
                     
@@ -310,7 +392,7 @@
                     
                                                             <label>Street address </label>
                                                             <input name="streetName" type="text" class="form-control" placeholder="House number and Street name" value="<%= value.streetAddress%>" required>
-                                                            <input name="LandMark" type="text" class="form-control" placeholder="LandMark" value="<%= value.landMark%>" required>
+                                                            <input name="landMark" type="text" class="form-control" placeholder="LandMark" value="<%= value.landMark%>" required>
                     
                                                             <div class="row">
                                                                 <div class="col-sm-6">
@@ -335,16 +417,15 @@
                                                                     <input name="phone" type="tel" class="form-control" value="<%= value.mobile%>" required>
                                                                 </div><!-- End .col-sm-6 -->
                                                             </div><!-- End .row -->
-                    
-                                                            <label>Email address </label>
+                                                            
+                                                            <label>Email </label>
                                                             <input name="email" type="email" class="form-control" value="<%= value.email%>" required>
                     
-                                                           
                                                             <button type="submit" class="btn btn-outline-primary-2">
                                                                 <span>Edit address</span>
                                                                 <i class="icon-long-arrow-right"></i>
                                                             </button>
-                                                    </div><!-- End .col-lg-9 -->
+                                                    </div>
                                                     </form>
                                                 </div>
                                               <%
@@ -358,7 +439,7 @@
 								    					<h3 class="card-title">Billing Address</h3><!-- End .card-title -->
 
 														<p>You have not set up this type of address yet.<br>
-														<a href="#" id="showAddAddress" aria-controls="addAddress" aria-selected="false">Add address <i class="icon-edit"></i></a></p>
+														<a href="" id="showAddAddress" aria-controls="addAddress" aria-selected="false">Add address <i class="icon-edit"></i></a></p>
 								    				</div><!-- End .card-body -->
 								    			</div><!-- End .card-dashboard -->
 								    		</div><!-- End .col-lg-6 -->
@@ -379,7 +460,7 @@
             
                                                     <label>Street address </label>
                                                     <input name="streetName" type="text" class="form-control" placeholder="House number and Street name" required>
-                                                    <input name="LandMark" type="text" class="form-control" placeholder="LandMark" required>
+                                                    <input name="landMark" type="text" class="form-control" placeholder="LandMark" required>
             
                                                     <div class="row">
                                                         <div class="col-sm-6">
@@ -404,11 +485,10 @@
                                                             <input name="phone" type="tel" class="form-control" required>
                                                         </div><!-- End .col-sm-6 -->
                                                     </div><!-- End .row -->
-            
-                                                    <label>Email address </label>
+                                                    
+                                                    <label>Email </label>
                                                     <input name="email" type="email" class="form-control" required>
-            
-                                                   
+
                                                     <button type="submit" class="btn btn-outline-primary-2">
                                                         <span>Add address</span>
                                                         <i class="icon-long-arrow-right"></i>
@@ -836,21 +916,59 @@
 <script>
     $(document).ready(function() {
         $('#showAddAddress').click(function(e) {
-            e.preventDefault(); // Prevent default anchor behavior
-            $('.card-dashboard').hide(); // Hide the card with class 'card-dashboard'
-            $('#addAddress').show(); // Show the div with ID 'addAddress'
+            e.preventDefault(); 
+            $('.card-dashboard').hide(); 
+            $('#addAddress').show();
         });
     });
 </script>
 <script>
+    function showEditAddress(id){
+        $('.col-lg-6').hide();
+        $(`#editAddress${id}`).show();
+        
+
+    }
+</script>
+<script>
     $(document).ready(function() {
         $('#showeditAddress').click(function(e) {
-            e.preventDefault(); // Prevent default anchor behavior
-            $('.col-lg-6').hide(); // Hide the card with class 'card-dashboard'
-            $('#editAddress').show(); // Show the div with ID 'addAddress'
+            e.preventDefault(); 
+            $('.col-lg-6').hide(); 
+            $('#editAddress').show(); 
         });
     });
 </script>
+<script>
+    function toOrder(id){
+        $('#orderList').hide();
+        $(`#orderDetails${id}`).show();
+        
+
+    }
+</script>
+<script>
+    $(document).ready(function() {
+        $('#toOrderDetails').click(function(e) {
+            e.preventDefault(); 
+            $('#orderList').hide(); 
+            $('#orderDetails').show(); 
+        });
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  async function deleteAddress (addressId){
+        axios.post('/deleteAddress', { addressId })
+            .then(function(response){
+                console.log(response.data);
+                // Update the UI if needed
+            }).catch(function(error){
+                console.error('Error:', error);
+        });
+    }
+</script>   
 </body>
 
 

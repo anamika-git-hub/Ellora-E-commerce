@@ -6,8 +6,10 @@ const { query } = require('express');
 const loadCart = async(req,res)=>{
     try {
         if(!req.session.user_id){
+
             console.log('please login to get our service')
-            res.redirect('/login')
+            req.flash('cart','Please login to get our service')
+           return res.redirect('/login')
         }else{
 
             const userId = req.session.user_id;
@@ -59,59 +61,71 @@ const addtoCart = async(req,res)=>{
                     productId : productId,
                     quantity : productQuantity,
                     productPrice : productData.price,
-                    totalPrice : productQuantity* productData.price
+                    totalPrice : productQuantity* productData.price,
+                    
                 }
             ]
+            // ,
+            // subTotal:products.totalPrice.forEach((item,index)=>{item*index})
            
         })
         
         await newCart.save();
     }
+
     } catch (error) {
         console.log(error.message);
-    }
+    }   
 }
 
 const updatequantity = async(req,res)=>{
     try {
         const {productId,productQuantity} = req.body;
+        console.log(productQuantity);
         const cartData = await Cart.findOne({userId:req.session.user_id});
         
         const products = cartData.products.find((product)=>product.productId.equals(productId))
         products.quantity=productQuantity
-        products.totalPrice=productQuantity* products.productPrice
-        await cartData.save()
+       const totalPrice = products.totalPrice=productQuantity* products.productPrice
+        await cartData.save();
+        res.status(200).json({ status: 'success', message: 'Quantity updated successfully',totalPrice});
+
     } catch (error) {
         console.log(error.message);
     }
 }
 
 const deleteCartItem = async(req,res)=>{
-    console.log('try');
     try {
-        console.log('kldjl');
-        const userId = req.session.user_id;
-        console.log('userId',userId);
-        const productId = req.body.product;
+        const {productId} = req.body;
+        const cartData = await Cart.findOneAndUpdate({userId: req.session.user_id},{$pull:{products:{productId}}} )
 
-        console.log('proId',productId);
-        const cartData = await Cart.findOne({userId:userId});
-
-        if(cartData){
-            await Cart.findOneAndUpdate(
-                {userId:userId},
-                {$pull:{products:{productId:productId}},
-            }
-            );
-        }
     } catch (error) {
         console.log(error.message);
+        
     }
 }
 
 const loadCheckOut = async(req,res)=>{
    try {
-      res.render('checkout');
+      const userId = req.session.user_id;
+      const user = await User.findById(userId);
+      const addresses = user.addresses;
+
+      const cartData = await Cart.findOne({userId:userId}).populate({path:'products.productId'});
+      if(cartData.products.length<=0){
+        res.redirect('/cart'); 
+      }else{
+        let initialAmount = 0;
+        if(cartData){
+            cartData.products.forEach((item)=>{
+                let itemPrice = item.productPrice;
+                initialAmount += itemPrice*item.quantity
+            })
+        }
+        res.render('checkout',{cartData,subTotal:initialAmount,addresses:addresses});
+      }
+     
    } catch (error) {
     console.log(error.message);
    }
