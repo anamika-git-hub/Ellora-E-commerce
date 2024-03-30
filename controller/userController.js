@@ -262,10 +262,13 @@ const loadProfile = async(req,res)=>{
         const user = await User.findById(userId);
         
         const orderData = await Order.findOne({userId:userId}).populate('products.productId').populate('userId');
-        const addressId = orderData.delivery_address;
-        const address= user.addresses.find(address=>{
-            return address._id.equals(addressId)
-        })
+       console.log('ods',orderData);
+            const addressId = orderData.delivery_address;
+            const address= user.addresses.find(address=>{
+                return address._id.equals(addressId)
+            })
+        
+       
         res.render('profile',{userData,orderData,address})
 
     } catch (error) {

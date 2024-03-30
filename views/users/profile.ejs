@@ -262,8 +262,10 @@
 								    </div><!-- .End .tab-pane -->
                                     
                                     <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
-                                    
-                                            <% if(orderData){%> 
+                                        <% console.log('or')%>
+
+                                            <% if(orderData && orderData.length>0){%> 
+                                               
                                         <table id="orderList" class="table table-cart table-mobile">
                                             <thead>
                                                 <tr>
@@ -342,6 +344,7 @@
                                         </div>
                                         <%}else{%>
                                             <p>No order has been made yet.</p>
+                                            <% console.log('akdls')%>
                                             <a href="/products" class="btn btn-outline-primary-2"><span>GO SHOP </span><i class="icon-long-arrow-right"></i></a>
                                         <%} %>
 
@@ -355,7 +358,9 @@
 								    	<p>The following addresses will be used on the checkout page by default.</p>
                                        
 								    	<div class="row">
+                                            <% console.log(userData)%>
                                             <%  if(userData && userData.addresses.length>0){ %>
+                                                
                                               <%  userData.addresses.forEach((value)=>{%>
                                                 <div class="col-lg-6">
                                                     <div class="card card-dashboard">
