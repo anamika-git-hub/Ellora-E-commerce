@@ -53,9 +53,39 @@ const placeOrder = async(req,res)=>{
 
 const loadOrderList = async(req,res)=>{
     try {
+        var page = 1;
+    if(req.query.page){
+        page = req.query.page;
+    }
+    const limit = 2;
         const orderData = await Order.find().populate('products.productId').populate('userId')
+        .limit(limit * 1)
+        .skip((page-1)* limit)
+        .exec();
+      
+    const count = await Order.find({
+    }).countDocuments();
+
         console.log('od',orderData);
-        res.render('orderList',{orderData})
+        res.render('orderList',{orderData,totalPages:Math.ceil(count/limit),currentPage:page})
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const cancelOrder = async(req,res)=>{
+    try {
+        const {orderId} = req.query;
+        console.log(orderId);
+        
+        const orderData = await Order.findOne({userId:req.session.user_id});
+        const a = orderData.products.find((p)=>{
+           return p.productId.equals(orderId);
+        });
+        console.log(a)
+        a.status="cancelled";
+        await orderData.save()
+       
     } catch (error) {
         console.log(error.message);
     }
@@ -63,5 +93,6 @@ const loadOrderList = async(req,res)=>{
 
 module.exports={
     placeOrder,
-    loadOrderList
+    loadOrderList,
+    cancelOrder
 }

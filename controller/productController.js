@@ -14,8 +14,7 @@ const loadProductList=async(req,res)=>{
         page = req.query.page;
     }
     const limit = 2;
-    const productData = await products.find().populate({path:'categories',model:'categories'
-     })
+    const productData = await products.find().populate({path:'categories',model:'categories'})
      .limit(limit * 1)
       .skip((page-1)* limit)
       .exec();

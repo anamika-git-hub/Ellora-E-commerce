@@ -54,6 +54,7 @@ user_route.post('/deleteCartItem',cartController.deleteCartItem);
 
 user_route.get('/CheckOut',cartController.loadCheckOut);
 user_route.post('/placeOrder',orderController.placeOrder);
+user_route.get('/cancelOrder',orderController.cancelOrder);
 
 
 module.exports = user_route;

@@ -46,7 +46,7 @@
                     </li>
                     <li class="menu-item has-submenu">
                         <a class="menu-link" href="page-orders-1.html">
-                            <i class="icon material-icons md-shopping_cart"></i>
+                            <i class="icon material-icons md-people"></i>
                             <span class="text">Users</span>
                         </a>
                         <div class="submenu">
@@ -280,7 +280,7 @@
                     <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-start">
                             <% for(let j=1; j<=totalPages; j++){ %>
-                            <li class="page-item active"><a class="page-link" href="?page=<%= j%>"><%= j%></a></li>
+                            <li class="page-item <%= j === currentPage ? "active":" "%>"><a class="page-link" href="?page=<%= j%>"><%= j%></a></li>
                             <% } %>
                             <li class="page-item">
                                 <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>

@@ -22,13 +22,11 @@ const loadLogin=async(req,res)=>{
 
 const verifyLogin=async(req,res)=>{
     try {
-        console.log('kjdfks')
         const email = req.body.email;
         const password = req.body.password;
         const admin=await User.findOne({email:email})
-        console.log(admin)
         if(admin){
-            if(admin.is_admin!==process.env.EMAIL){
+            if(admin.email==process.env.EMAIL){
                 const passwordMatch=await bcrypt.compare(password,admin.password);
                 if(passwordMatch){
                     req.session.admin={
@@ -39,15 +37,18 @@ const verifyLogin=async(req,res)=>{
                     res.redirect('/admin/home')
                 }else{
                     console.log('password is incorrect')
-                    res.redirect('/')
+                    req.flash('login','Password is incorrect')
+                    res.redirect('/admin/')
                 }
             }else{
                 console.log('You are not the admin');
-                res.redirect('/')
+                req.flash('login','You are not the admin')
+                res.redirect('/admin/')
             }
         }else{
             console.log('You not even registered');
-            res.redirect('/')
+            req.flash('login','You not even registered')
+            res.redirect('/admin/')
         }
     } catch (error) {
         console.log(error.message);

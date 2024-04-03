@@ -272,7 +272,7 @@
                                                     <th>Product</th>
                                                     <th>Payment</th>
                                                     <th>Date</th>
-                                                    <th></th>
+                                                    <th>Action</th>
                                                     <th></th>
                                                 </tr>
                                             </thead>
@@ -300,7 +300,18 @@
                                                         <td  class="product-title"><%= order.payment %></td>
                                                       
                                                         <td class="price-col" id="totalPrice"><%= new Date(order.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %></td>
-                                                      
+                                                        <td>
+                                                            <% if(value.status === 'cancelled'){%>
+                                                                <button type="submit" class="btn btn-outline-primary-2 disabled" onclick="cancelOrder(this,'<%= value.productId._id %>')">
+                                                                    <span>Cancelled</span>
+                                                                    </button>
+                                                                <%}else{%>
+                                                                    <button type="submit"  class="btn btn-outline-primary-2 " onclick="cancelOrder(this,'<%= value.productId._id %>')">
+                                                                        <span>Cancel</span>
+                                                                        </button>
+                                                                <%}%>
+                                                            
+                                                       </td>
                                                     </tr>
                                                     <%}) %>
                                               
@@ -312,7 +323,6 @@
                                         
 
                                         <% orderData.forEach(order=>{ %>
-                                            <% order.products.forEach((value,index)=>{ %>
                                         <div class="row" id="orderDetails"  style="display: none;">
                                           
                                             <div class="col-lg-4">
@@ -353,7 +363,7 @@
                                                     </div><!-- End .card-dashboard -->
                                                 </div><!-- End .col-lg-4 -->
                                         </div>
-                                        <% }) %>
+                                       
                                         <% }) %>
                                         <%}else{%>
                                             <p>No order has been made yet.</p>
@@ -988,7 +998,17 @@
                 console.error('Error:', error);
         });
     }
-</script>   
+</script> 
+<script>
+    function cancelOrder(tag,orderId){
+      
+            tag.innerText = 'Cancelled'
+            tag.disabled=true
+        
+        fetch(`/cancelOrder?orderId=${orderId}`)
+    }
+</script>
+
 </body>
 
 
