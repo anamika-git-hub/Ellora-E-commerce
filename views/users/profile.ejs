@@ -286,11 +286,11 @@
                                                         <input type="hidden" name="productId" value="<%= value.productId %>">
                                                         <td class="product-col">
                                                             <div class="product">
-                                                                <figure class="product-media">
-                                                                    <a href="#"  data-order-id="<%= value.productId %>" id="toOrderDetails">
-                                                                        <img src="<%= value.productId.image[0]%>" alt="Product image">
-                                                                    </a>
-                                                                </figure>
+                                                                    <figure class="product-media">
+                                                                        <a href="#"  data-order-id="<%= value.productId %>" id="toOrderDetails">
+                                                                            <img src="<%= value.productId.image[0]%>" alt="Product image">
+                                                                        </a>
+                                                                    </figure>
                                                                 <h3 class="product-title">
                                                                      <a href="#"><%= value.productId.name %></a>
                                                                 </h3><!-- End .product-title -->
@@ -311,9 +311,9 @@
                                         <!-- End .table table-wishlist  -->
                                         
 
-                                        <% orderData.forEach(order=>{%>
+                                        <% orderData.forEach(order=>{ %>
                                             <% order.products.forEach((value,index)=>{ %>
-                                        <div class="row" id="orderDetails<%= value.productId %>"  style="display: none;">
+                                        <div class="row" id="orderDetails"  style="display: none;">
                                           
                                             <div class="col-lg-4">
                                                     <div class="card card-dashboard">
@@ -345,9 +345,9 @@
                                                         <div class="card-body">
                                                             <h3 class="card-title">Deliver to</h3><!-- End .card-title -->
                                                            
-                                                            <p><%=addressData.streetAddress%><br>
-                                                                <%=addressData.city%>,<%=addressData.pincode%><br>
-                                                                <%= addressData.state%><br>
+                                                            <p><%=order.delivery_address.streetAddress%><br>
+                                                                <%=order.delivery_address.city%>,<%=order.delivery_address.pincode%><br>
+                                                                <%= order.delivery_address.state%><br>
                                                                
                                                         </div><!-- End .card-body -->
                                                     </div><!-- End .card-dashboard -->
@@ -972,7 +972,7 @@
             const orderId = $(this).data('orderId'); // Access the ID from the data attribute
     console.log('Order ID:', orderId); 
             $('#orderList').hide(); 
-            $(`#orderDetails${orderId}`).show(); 
+            $(`#orderDetails`).show(); 
         });
     });
 </script>

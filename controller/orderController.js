@@ -8,7 +8,12 @@ const placeOrder = async(req,res)=>{
         const userId = req.session.user_id;
         const {shippingAddress,subTotal,shippingMethod} = req.body;
        console.log('sh',shippingAddress);
+       
         const userData = await User.findById({_id:userId});
+        const address = userData.addresses.find((address=>{
+            return address._id.equals(shippingAddress)
+        }))
+        console.log('add',address);
         const name = userData.name;
         const cartData = await Cart.findOne({userId:userId})
         const productData = cartData.products;
@@ -27,7 +32,7 @@ const placeOrder = async(req,res)=>{
 
         const myOrders = await Order.create({
             userId:userId,
-            delivery_address:shippingAddress,
+            delivery_address:address,
             user_name:name,
             total_amount:subTotal,
             date:date,

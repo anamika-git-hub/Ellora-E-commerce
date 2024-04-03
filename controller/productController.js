@@ -125,7 +125,35 @@ const productDetails = async(req,res)=>{
 const sortProduct = async(req,res)=>{
     try {
         const {sortValue} = req.body;
-        console.log('sr',sortValue);
+        let sort;
+        switch(sortValue){
+            case 'Latest':
+            console.log('dks');
+            sort = await products.find().sort({'_id':-1});
+            console.log('srr',sort);
+            res.send({ status: 'success', message: 'sorted successfully',sort});
+            break;
+            case 'Price high to low':
+            console.log('dslk');
+            sort = await products.find().sort({'price':-1});
+            console.log(sort);
+            res.send({ status: 'success', message: 'sorted successfully',sort});
+            break;
+            case'Price low to high':
+            sort = await products.find().sort({'price':1});
+            res.send({ status: 'success', message: 'sorted successfully',sort});
+            break;
+            case'a to z':
+            sort = await products.find().collation({ locale: 'en', strength: 1 }).sort({ 'name': 1 });
+            res.send({ status: 'success', message: 'sorted successfully',sort});
+            break;
+            case'z to a':
+            sort = await products.find().collation({ locale: 'en', strength: 1 }).sort({ 'name': -1 });
+            res.send({ status: 'success', message: 'sorted successfully',sort});
+            break;
+            default:
+                break;
+        }
     } catch (error) {
         console.log(error.message);
     }
