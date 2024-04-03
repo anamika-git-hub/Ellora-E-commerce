@@ -230,9 +230,11 @@
         						<label for="sortby">Sort by:</label>
         						<div class="select-custom">
 									<select name="sortby" id="sortby" class="form-control">
-										<option value="popularity" selected="selected">Most Popular</option>
-										<option value="rating">Most Rated</option>
-										<option value="date">Date</option>
+										<option >Latest</option>
+										<option >Price high to low</option>
+										<option >Price low to high</option>
+                                        <option >a to z</option>
+                                        <option >z to a</option>
 									</select>
 								</div>
         					</div><!-- End .toolbox-sort -->
@@ -241,10 +243,8 @@
         <!-- product details -->
                     <div class="products">
                         <div class="row">
-                            <%
-        if(products.length > 0){
-           for(let i=0;i<products.length;i++){
-            %>
+                            <% if(products.length > 0){ %>
+                                <% for(let i=0;i<products.length;i++){ %>
                             <div class="col-6 col-md-4 col-lg-4 col-xl-3">
                                 <div class="product">
                                     <figure class="product-media">
@@ -270,7 +270,7 @@
                                         </div><!-- End .product-cat -->
                                         <h3 class="product-title"><a href="product.html"><%= %></a></h3><!-- End .product-title -->
                                         <div class="product-price">
-                                            <%=products[i].price%>
+                                            $<%=products[i].price%>
                                         </div><!-- End .product-price -->
                                         <div class="ratings-container">
                                             <div class="ratings">
@@ -286,16 +286,12 @@
                                     </div><!-- End .product-body -->
                                 </div><!-- End .product -->
                             </div><!-- End .col-sm-6 col-lg-4 col-xl-3 -->
-                            <%
-           }
-        }else{
-            %>
+                            <% }%>
+                   <% }else{ %>
             <tr>
                 <td colspan="3">Products Not Found</td>
             </tr>
-            <%
-        }
-        %>
+            <%} %>
                         </div><!-- End .row -->
 
                         <div class="load-more-container text-center">
@@ -921,6 +917,7 @@
     </div><!-- End .modal -->
 
     <!-- Plugins JS File -->
+    
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/jquery.hoverIntent.min.js"></script>
@@ -936,15 +933,32 @@
     
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
- <script>
+
+<script>
   async function addtoCart (productId){
-        axios.post('/addtoCart', { productId })
+        axios.post('/cart', { productId })
             .then(function(response){
                 console.log(response.data);
             }).catch(function(error){
                 console.error('Error:', error);
         });
     }
+</script>
+<script>
+const sortInput = document.getElementById('sortby');
+sortInput.addEventListener('change',handleChange);
+function handleChange(event){
+    const sortValue = event.target.value
+    console.log('sort',sortValue);
+    axios.post('/sort',{sortValue})
+        .then(function(response){
+            console.log(response.data);
+        }).catch(function(error){
+            console.error('Error:', error);
+    });
+}
+
+
 </script>
 </body>
 

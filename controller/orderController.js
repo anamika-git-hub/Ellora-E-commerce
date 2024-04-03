@@ -7,9 +7,7 @@ const placeOrder = async(req,res)=>{
     try {
         const userId = req.session.user_id;
         const {shippingAddress,subTotal,shippingMethod} = req.body;
-        console.log('re',req.body);
-        console.log('ad',shippingAddress);
-        console.log(typeof(shippingAddress));
+       console.log('sh',shippingAddress);
         const userData = await User.findById({_id:userId});
         const name = userData.name;
         const cartData = await Cart.findOne({userId:userId})

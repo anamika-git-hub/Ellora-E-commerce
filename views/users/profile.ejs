@@ -262,9 +262,9 @@
 								    </div><!-- .End .tab-pane -->
                                     
                                     <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
-                                        <% console.log('or')%>
-
-                                            <% if(orderData && orderData.length>0){%> 
+                                        
+                                            <% if(orderData){%> 
+                                                
                                                
                                         <table id="orderList" class="table table-cart table-mobile">
                                             <thead>
@@ -278,15 +278,16 @@
                                             </thead>
                                          
                                             <tbody>
-                                                
-                                                    <% orderData.products.forEach((value,index)=>{
-                                                        %>
+                                                <% orderData.forEach((order)=>{%>
+                                                    <% order.products.forEach((value,index)=>{ %>
+                                               
                                                     <tr>
+                                                        
                                                         <input type="hidden" name="productId" value="<%= value.productId %>">
                                                         <td class="product-col">
                                                             <div class="product">
                                                                 <figure class="product-media">
-                                                                    <a href="#" onclick="toOrder('<%= value.productId %>')" id="toOrderDetails">
+                                                                    <a href="#"  data-order-id="<%= value.productId %>" id="toOrderDetails">
                                                                         <img src="<%= value.productId.image[0]%>" alt="Product image">
                                                                     </a>
                                                                 </figure>
@@ -295,56 +296,68 @@
                                                                 </h3><!-- End .product-title -->
                                                             </div><!-- End .product -->
                                                         </td>
-                                                        <td  class="product-title"><%= orderData.payment %></td>
+                                                        
+                                                        <td  class="product-title"><%= order.payment %></td>
                                                       
-                                                        <td class="price-col" id="totalPrice"><%= new Date(orderData.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %></td>
-                                                       
+                                                        <td class="price-col" id="totalPrice"><%= new Date(order.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %></td>
+                                                      
                                                     </tr>
-                                                    <%
-                                                    }) %>
+                                                    <%}) %>
+                                              
+                                                
+                                                    <%  }) %>
                                             </tbody>
-                                        </table><!-- End .table table-wishlist  -->
-                                    <div class="row" id="orderDetails"  style="display: none;">
-                                        <div class="col-lg-4">
+                                        </table> 
+                                        <!-- End .table table-wishlist  -->
+                                        
+
+                                        <% orderData.forEach(order=>{%>
+                                            <% order.products.forEach((value,index)=>{ %>
+                                        <div class="row" id="orderDetails<%= value.productId %>"  style="display: none;">
+                                          
+                                            <div class="col-lg-4">
                                                     <div class="card card-dashboard">
                                                         <div class="card-body">
                                                             <h3 class="card-title">Customer</h3><!-- End .card-title -->
-    
-                                                            <p><%= orderData.userId.name%><br>
-                                                                <%= orderData.userId.email%><br>
-                                                                <%= orderData.userId.mobile%><br>
+                                                            <p><%= order.userId.name%><br>
+                                                                <%= order.userId.email%><br>
+                                                                <%= order.userId.mobile%><br>
+                                                           
                                                          
                                                         </div><!-- End .card-body -->
                                                     </div><!-- End .card-dashboard -->
-                                                </div><!-- End .col-lg-4 -->
-                                                <div class="col-lg-4">
-                                                    <div class="card card-dashboard">
-                                                        <div class="card-body">
+                                            </div><!-- End .col-lg-4 -->
+                                            <div class="col-lg-4">
+                                                <div class="card card-dashboard">
+                                                    <div class="card-body">
                                                             <h3 class="card-title">Order info</h3><!-- End .card-title -->
     
                                                             <p>Shipping:Fargo Express<br>
-                                                                Pay method:<%= orderData.payment%><br>
-                                                                Status:<%= orderData.status%><br>
+                                                                Pay method:<%= order.payment%><br>
+                                                                Status:<%= order.status%><br>
                                                          
-                                                        </div><!-- End .card-body -->
-                                                    </div><!-- End .card-dashboard -->
-                                                </div><!-- End .col-lg-4 -->
+                                                    </div><!-- End .card-body -->
+                                                </div><!-- End .card-dashboard -->
+                                            </div><!-- End .col-lg-4 -->
+                                           
                                                 <div class="col-lg-4">
                                                     <div class="card card-dashboard">
                                                         <div class="card-body">
                                                             <h3 class="card-title">Deliver to</h3><!-- End .card-title -->
-
-                                                            <p><%=address.streetAddress%><br>
-                                                                <%=address.city%>,<%=address.pincode%><br>
-                                                                <%= address.state%><br>
+                                                           
+                                                            <p><%=addressData.streetAddress%><br>
+                                                                <%=addressData.city%>,<%=addressData.pincode%><br>
+                                                                <%= addressData.state%><br>
                                                                
                                                         </div><!-- End .card-body -->
                                                     </div><!-- End .card-dashboard -->
                                                 </div><!-- End .col-lg-4 -->
                                         </div>
+                                        <% }) %>
+                                        <% }) %>
                                         <%}else{%>
                                             <p>No order has been made yet.</p>
-                                            <% console.log('akdls')%>
+                                           
                                             <a href="/products" class="btn btn-outline-primary-2"><span>GO SHOP </span><i class="icon-long-arrow-right"></i></a>
                                         <%} %>
 
@@ -358,7 +371,6 @@
 								    	<p>The following addresses will be used on the checkout page by default.</p>
                                        
 								    	<div class="row">
-                                            <% console.log(userData)%>
                                             <%  if(userData && userData.addresses.length>0){ %>
                                                 
                                               <%  userData.addresses.forEach((value)=>{%>
@@ -946,6 +958,7 @@
 </script>
 <script>
     function toOrder(id){
+        console.log('id',id);
         $('#orderList').hide();
         $(`#orderDetails${id}`).show();
         
@@ -956,8 +969,10 @@
     $(document).ready(function() {
         $('#toOrderDetails').click(function(e) {
             e.preventDefault(); 
+            const orderId = $(this).data('orderId'); // Access the ID from the data attribute
+    console.log('Order ID:', orderId); 
             $('#orderList').hide(); 
-            $('#orderDetails').show(); 
+            $(`#orderDetails${orderId}`).show(); 
         });
     });
 </script>

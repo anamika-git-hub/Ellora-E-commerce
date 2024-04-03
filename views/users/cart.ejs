@@ -250,9 +250,8 @@
                                  
 									<tbody>
                                         
-                                            <% cartData.products.forEach((value,index)=>{
-                                                %>
-                                            <tr>
+                                            <% cartData.products.forEach((value,index)=>{ %>
+                                            <tr id="cartDelete<%= value.productId._id %>">
                                                 <input type="hidden" name="productId" value="<%= value.productId %>">
                                                 <td class="product-col">
                                                     <div class="product">
@@ -274,10 +273,9 @@
                                                     </div><!-- End .cart-product-quantity -->
                                                 </td>
                                                 <td class="total-col" id="totalPrice">$<%= value.totalPrice %></td>
-                                                <td class="remove-col"><button class="btn-remove" onclick="deleteCartItem('<%= value.productId._id %>')"><i class="icon-close"  ></i></button></td>
+                                                <td class="remove-col"><button  class="btn-remove" onclick="deleteCartItem('<%= value.productId._id %>')"><i class="icon-close"  ></i></button></td>
                                             </tr>
-                                            <%
-                                            }) %>
+                                            <% }) %>
 									</tbody>
 								</table><!-- End .table table-wishlist  -->
                               <% }else{%>
@@ -308,7 +306,7 @@
 	                					<tbody>
 	                						<tr class="summary-subtotal">
 	                							<td>Subtotal:</td>
-	                							<td>$<%= subTotal %></td>
+	                							<td id="subTotal">$<%= subTotal %></td>
 	                						</tr><!-- End .summary-subtotal -->
 	                						<tr class="summary-shipping">
 	                							<td>Shipping:</td>
@@ -352,7 +350,7 @@
 
 	                						<tr class="summary-total">
 	                							<td>Total:</td>
-	                							<td>$160.00</td>
+	                							<td id="Total">$<%= subTotal %></td>
 	                						</tr><!-- End .summary-total -->
 	                					</tbody>
 	                				</table><!-- End .table table-summary -->
@@ -750,9 +748,12 @@
         axios.post('/cartUpdate', { productQuantity,productId })
             .then(function(response){
                 console.log(response.data);
-                const {totalPrice} = res.data
-                            console.log(totalPrice);
-                            document.getElementById('totalPrice').innerHTML = totalPrice
+                const {totalPrice,subTotal} = response.data
+                            console.log(subTotal);
+                            document.getElementById('totalPrice').innerHTML = `$${totalPrice}`
+                            document.getElementById('subTotal').innerHTML = `$${subTotal}`
+                            document.getElementById('Total').innerHTML = `$${subTotal}`
+                           
             }).catch(function(error){
                 console.error('Error:', error);
         });
@@ -763,6 +764,9 @@
         axios.post('/deleteCartItem', { productId })
             .then(function(response){
                 console.log(response.data);
+                const element = document.getElementById(`cartDelete${productId}`);
+                 element.remove();
+                 window.location.reload();
             }).catch(function(error){
                 console.error('Error:', error);
         });

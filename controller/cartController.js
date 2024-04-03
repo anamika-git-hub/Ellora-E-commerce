@@ -87,8 +87,9 @@ const updatequantity = async(req,res)=>{
         const products = cartData.products.find((product)=>product.productId.equals(productId))
         products.quantity=productQuantity
        const totalPrice = products.totalPrice=productQuantity* products.productPrice
+       const subTotal = cartData.products.reduce((total,products)=>total + products.totalPrice,0)
         await cartData.save();
-        res.status(200).json({ status: 'success', message: 'Quantity updated successfully',totalPrice});
+        res.status(200).json({ status: 'success', message: 'Quantity updated successfully',totalPrice,subTotal});
 
     } catch (error) {
         console.log(error.message);

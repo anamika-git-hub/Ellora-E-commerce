@@ -19,16 +19,16 @@ const productController = require('../controller/productController');
 const cartController = require('../controller/cartController');
 const orderController = require('../controller/orderController');
 
-user_route.get('/',isLogin,userController.loadHome);
-user_route.get('/login',isLogout,userController.loadLogin);
-user_route.get('/signUp',isLogout,userController.loadSignup);
+user_route.get('/',userController.loadHome);
+user_route.get('/login',userController.loadLogin);
+user_route.get('/signUp',userController.loadSignup);
 user_route.post('/signUp',userController.insertUser);
 
 user_route.get('/otp',userController.loadOtp);
 user_route.post('/otp',userController.verifyOtp);
 user_route.post('/resend',userController.resendOtp);
 
-user_route.post('/login',isLogout,userController.verifyLogin);
+user_route.post('/login',userController.verifyLogin);
 user_route.get('/logout',userController.loadLogout);
 
 user_route.get('/contact',isLogin,userController.loadContact);
@@ -43,6 +43,8 @@ user_route.post('/deleteAddress',userController.deleteAddress);
 
 user_route.get('/products',productController.productPage);
 user_route.get('/productDetail',productController.productDetails);
+
+user_route.post('/sort',productController.sortProduct);
 
 
 user_route.get('/cart',cartController.loadCart);

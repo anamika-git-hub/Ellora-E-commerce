@@ -917,8 +917,9 @@
          const shippingAddress = document.querySelector('input[name="shippingAddress"]:checked').value;
          const selectedPaymentMethod = document.querySelector('.accordion-summary .card-header a[aria-expanded="true"]');
             const shippingMethod = selectedPaymentMethod.innerText.trim();
-           
+           console.log('sp',shippingAddress);
           axios.post('/placeOrder',{shippingAddress ,subTotal,shippingMethod})
+
               .then(function(response){
                   console.log(response.data);
               }).catch(function(error){

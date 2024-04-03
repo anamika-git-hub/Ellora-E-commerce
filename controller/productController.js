@@ -122,6 +122,15 @@ const productDetails = async(req,res)=>{
         
 }
 
+const sortProduct = async(req,res)=>{
+    try {
+        const {sortValue} = req.body;
+        console.log('sr',sortValue);
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 module.exports={
     loadProductList,
     loadAddProducts,
@@ -130,5 +139,6 @@ module.exports={
     editProductLoad,
     updateProducts,
     productPage,
-    productDetails
+    productDetails,
+    sortProduct
 }

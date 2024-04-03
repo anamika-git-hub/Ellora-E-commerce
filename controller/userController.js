@@ -51,18 +51,19 @@ const insertUser =async(req,res)=>{
     if(error){ 
         console.log('Invalid registration',error.message);
         req.flash('exist', error.message);
-                res.redirect('/signUp').query({
-                name:name,
-                email:email,
-                mobile:mobile
-               })
+                res.redirect('/signUp')
+                // .query({
+            //     name:name,
+            //     email:email,
+            //     mobile:mobile
+            //    })
         // return res.json(error.message)
     }
     // console.log(error.message,1111111111111111111111111111);
     // const errorsArray =  error.message.split('.')
     // console.log(errorsArray)
         const value = await joiRegistrationSchema.validateAsync(req.body)
-        console.log('v',value)
+       
         const {name,email,mobile,password,confirmPassword} = value;
             const emailCheck = await User.findOne({email});
             if(!emailCheck){
@@ -260,16 +261,24 @@ const loadProfile = async(req,res)=>{
         const userId = req.session.user_id;
         const userData = await User.findById(userId)
         const user = await User.findById(userId);
-        
-        const orderData = await Order.findOne({userId:userId}).populate('products.productId').populate('userId');
-       console.log('ods',orderData);
-            const addressId = orderData.delivery_address;
-            const address= user.addresses.find(address=>{
-                return address._id.equals(addressId)
-            })
-        
-       
-        res.render('profile',{userData,orderData,address})
+        const orderData = await Order.find({userId:userId}).populate('products.productId').populate('userId')
+       if(orderData){
+        function addressing(orderData){
+            for( const order of orderData){
+                const addressId = order.delivery_address;
+                const address= user.addresses.find(address=>{
+                    return address._id.equals(addressId)
+                })
+                return address
+            }
+          
+        }
+       const addressData = addressing(orderData)
+        res.render('profile',{userData,orderData,addressData});
+       }else{
+        res.render('profile',{userData});
+       }
+           
 
     } catch (error) {
         console.log(error.message);
