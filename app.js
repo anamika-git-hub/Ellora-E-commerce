@@ -9,12 +9,14 @@ const logger = require('morgan');
 const flash = require('express-flash');
 const session = require('express-session');
 const config = require('./config/config');
+const nocache = require('nocache');
 
 const adminRouter = require('./routes/adminRouter');
 const usersRouter = require('./routes/usersRouter');
 
 
 const app = express();
+app.use(nocache());
 
 app.use(session({secret:"abc",resave:false,saveUninitialized:true}));
 app.use(flash());

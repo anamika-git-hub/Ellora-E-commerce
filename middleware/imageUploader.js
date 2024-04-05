@@ -24,13 +24,14 @@ const uploadMiddleware = (req, res, next) => {
     }
 
     try {
-      const uploadPromises = req.files.map(async (file) => {
+      const uploadedImages = []; // Array to store uploaded image URLs
+
+      for (const file of req.files) {
         const result = await cloudinary.uploader.upload(file.path, {
           folder: "product-images",
         });
-        return result.secure_url;
-      });
-      const uploadedImages = await Promise.all(uploadPromises);
+        uploadedImages.push(result.secure_url); // Add uploaded image URL to the array
+      }
 
       req.body.image = uploadedImages;
       next();

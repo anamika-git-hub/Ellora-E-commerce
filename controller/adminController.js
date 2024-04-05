@@ -34,6 +34,7 @@ const verifyLogin=async(req,res)=>{
                         name:admin.name,
                         _id:admin._id
                     }
+                    req.session.admin_id = admin._id;
                     res.redirect('/admin/home')
                 }else{
                     req.flash('login','Password is incorrect')
@@ -192,9 +193,8 @@ const updateUser = async (req,res)=>{
 
 const loadSignout = async(req,res)=>{
     try {
-
         req.session.destroy();
-        res.redirect('/')
+        res.redirect('/admin')
     } catch (error) {
         console.log(error.message)
     }
