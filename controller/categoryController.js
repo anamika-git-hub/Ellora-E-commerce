@@ -34,7 +34,6 @@ const insertCategory = async(req,res)=>{
        const existingCategory = await category.findOne({name:req.body.name});
        if(existingCategory){
         res.render('addCategories',{message:'Category with this name already exists'});
-        console.log('Category with this name already exists');
        }else{
         const Category = new category({
             name:req.body.name,

@@ -192,7 +192,6 @@ const verifyLogin = async(req,res)=>{
             }else{
                 
                 req.flash('login', 'Password is incorrect');
-                console.log(req.flash());
                res.redirect('/login')
                return ;
 
@@ -292,7 +291,6 @@ const editProfile = async(req,res)=>{
 
 const resetPasswithOld = async(req,res)=>{
     try {
-        console.log('try');
         const {confirmPass,userEmail,oldPass}= req.body;
         const user = await User.findOne({email:userEmail});
 
@@ -320,7 +318,6 @@ const resetPasswithOld = async(req,res)=>{
 }
 
 const addAddress = async(req,res)=>{
-    console.log('try');
     try{
         const{
             name,

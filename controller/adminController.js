@@ -36,17 +36,14 @@ const verifyLogin=async(req,res)=>{
                     }
                     res.redirect('/admin/home')
                 }else{
-                    console.log('password is incorrect')
                     req.flash('login','Password is incorrect')
                     res.redirect('/admin/')
                 }
             }else{
-                console.log('You are not the admin');
                 req.flash('login','You are not the admin')
                 res.redirect('/admin/')
             }
         }else{
-            console.log('You not even registered');
             req.flash('login','You not even registered')
             res.redirect('/admin/')
         }
@@ -75,7 +72,6 @@ const loadUserList=async(req,res)=>{
      .limit(limit * 1)
       .skip((page-1)* limit)
       .exec();
-      console.log(userData);
       
     const count = await User.find({
     }).countDocuments();
@@ -166,7 +162,6 @@ const editUserLoad = async(req,res)=>{
     try{
 
         const id=req.query.id;
-       console.log(id)
         const userData=await User.findById({_id:id});
         if(userData){
             res.render('editUsers',{users:userData})
@@ -184,7 +179,7 @@ const updateUser = async (req,res)=>{
         const existingUser = await User.findOne({email:req.body.email});
         if(existingUser._id==req.body.id){
             const userData = await User.findByIdAndUpdate({_id:req.body.id},{$set:{name:req.body.name,email:req.body.email,mobile:req.body.mobile}});
-            console.log(userData);
+           
             res.redirect('/admin/userList')
         }else{
             res.render('editUsers',{users:user,message:'Email already exists'})
@@ -195,6 +190,15 @@ const updateUser = async (req,res)=>{
     }
 }
 
+const loadSignout = async(req,res)=>{
+    try {
+
+        req.session.destroy();
+        res.redirect('/')
+    } catch (error) {
+        console.log(error.message)
+    }
+}
 
 
 
@@ -207,5 +211,6 @@ module.exports ={
     loadAddUsers,
     addUser,
     editUserLoad,
-    updateUser
+    updateUser,
+    loadSignout
 }

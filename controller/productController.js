@@ -88,10 +88,9 @@ const editProductLoad = async(req,res)=>{
 const updateProducts = async (req,res)=>{
     try {
         const productData = await products.findOne({_id:req.body.id});
-        console.log('pd',productData);
         if(productData){
         const pro = await products.findByIdAndUpdate({_id:req.body.id},{$set:{name:req.body.name,description:req.body.description,categories:req.body.category,price:req.body.price,stock:req.body.stock,image:req.body.image}});
-           console.log("pro",pro);
+           
         res.redirect('/admin/productList')
         }else{
             res.render('editProducts',{products:productData,message:'Category already exists'})
@@ -127,15 +126,11 @@ const sortProduct = async(req,res)=>{
         let sort;
         switch(sortValue){
             case 'Latest':
-            console.log('dks');
             sort = await products.find().sort({'_id':-1});
-            console.log('srr',sort);
             res.send({ status: 'success', message: 'sorted successfully',sort});
             break;
             case 'Price high to low':
-            console.log('dslk');
             sort = await products.find().sort({'price':-1});
-            console.log(sort);
             res.send({ status: 'success', message: 'sorted successfully',sort});
             break;
             case'Price low to high':

@@ -223,8 +223,8 @@
             <nav aria-label="breadcrumb" class="breadcrumb-nav">
                 <div class="container">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/products">Products</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Shopping Cart</li>
                     </ol>
                 </div><!-- End .container -->
@@ -266,13 +266,13 @@
                                                         </h3><!-- End .product-title -->
                                                     </div><!-- End .product -->
                                                 </td>
-                                                <td  class="price-col">$<%= value.productPrice %></td>
+                                                <td  class="price-col">Rs.<%= value.productPrice %></td>
                                                 <td class="quantity-col">
                                                     <div class="cart-product-quantity">
                                                         <input type="number"  class="form-control" onchange="addToCart(this,'<%= value.productId._id %>')" value="<%= value.quantity %>"  min="1" max="10" step="1" data-decimals="0" required>
                                                     </div><!-- End .cart-product-quantity -->
                                                 </td>
-                                                <td class="total-col" id="totalPrice<%= value.productId._id %>">$<%= value.totalPrice %></td>
+                                                <td class="total-col" id="totalPrice<%= value.productId._id %>">Rs.<%= value.totalPrice %></td>
                                                 <td class="remove-col"><button  class="btn-remove" onclick="deleteCartItem('<%= value.productId._id %>')"><i class="icon-close"  ></i></button></td>
                                             </tr>
                                             <% }) %>
@@ -306,7 +306,7 @@
 	                					<tbody>
 	                						<tr class="summary-subtotal">
 	                							<td>Subtotal:</td>
-	                							<td id="subTotal">$<%= subTotal %></td>
+	                							<td id="subTotal">Rs.<%= subTotal %></td>
 	                						</tr><!-- End .summary-subtotal -->
 	                						<tr class="summary-shipping">
 	                							<td>Shipping:</td>
@@ -350,7 +350,7 @@
 
 	                						<tr class="summary-total">
 	                							<td>Total:</td>
-	                							<td id="Total">$<%= subTotal %></td>
+	                							<td id="Total">Rs.<%= subTotal %></td>
 	                						</tr><!-- End .summary-total -->
 	                					</tbody>
 	                				</table><!-- End .table table-summary -->
@@ -750,9 +750,9 @@
                 console.log(response.data);
                 const {totalPrice,subTotal} = response.data
                             console.log(subTotal);
-                            document.getElementById(`totalPrice${productId}`).innerHTML = `$${totalPrice}`
-                            document.getElementById('subTotal').innerHTML = `$${subTotal}`
-                            document.getElementById('Total').innerHTML = `$${subTotal}`
+                            document.getElementById(`totalPrice${productId}`).innerHTML = `Rs.${totalPrice}`
+                            document.getElementById('subTotal').innerHTML = `Rs.${subTotal}`
+                            document.getElementById('Total').innerHTML = `Rs.${subTotal}`
                            
             }).catch(function(error){
                 console.error('Error:', error);

@@ -29,6 +29,8 @@ admin_route.get('/',adminController.loadLogin);
 admin_route.post('/',adminController.verifyLogin);
 admin_route.get('/home',adminController.loadHome);
 
+admin_route.get('/signout',adminController.loadSignout);
+
 admin_route.get('/Categories',categoryController.loadCategories);
 admin_route.get('/addCategories',categoryController.loadAddCategories);
 admin_route.post('/addCategories',categoryController.insertCategory);

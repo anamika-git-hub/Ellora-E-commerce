@@ -59,7 +59,7 @@
                             <span class="text">Orders</span>
                         </a>
                         <div class="submenu">
-                            <a href="orderList" class="active">Order list</a>
+                            <a href="/orderList" class="active">Order list</a>
                         </div>
                     </li>
                     <li class="menu-item has-submenu">
@@ -201,7 +201,7 @@
                 <div class="content-header">
                     <div>
                         <h2 class="content-title card-title">Order List</h2>
-                        <p>Lorem ipsum dolor sit amet.</p>
+                        
                     </div>
                     <div>
                         <input type="text" placeholder="Search order ID" class="form-control bg-white" />
@@ -213,62 +213,96 @@
                             <div class="col-lg-4 col-md-6 me-auto">
                                 <input type="text" placeholder="Search..." class="form-control" />
                             </div>
-                            <div class="col-lg-2 col-6 col-md-3">
-                                <select class="form-select">
-                                    <option>Status</option>
-                                    <option>Active</option>
-                                    <option>Disabled</option>
-                                    <option>Show all</option>
-                                </select>
-                            </div>
-                            <div class="col-lg-2 col-6 col-md-3">
-                                <select class="form-select">
-                                    <option>Show 20</option>
-                                    <option>Show 30</option>
-                                    <option>Show 40</option>
-                                </select>
-                            </div>
+                            
                         </div>
                     </header>
                     <!-- card-header end// -->
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-hover">
+                            <table id="orderLists" class="table table-cart table-mobile">
                                 <thead>
                                     <tr>
-                                        <th scope="col">Image</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Payment</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col">Date</th>
-                                        <th scope="col" class="text-end">Action</th>
+                                        <th>Image</th>
+                                        <th>Name</th>
+                                        <th>Payment</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th class="text-end">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
 
-                               <% if(orderData){%>
+                               <% if(orderData && orderData.length>0){%>
                                 <% orderData.forEach((order)=>{%>
                                     
-                                <% order.products.forEach((value)=>{%>
-                                <tr>
-                                  <td><b><img src="<%= value.productId.image[0]%>" class="img-sm img-thumbnail" alt="Product image"></b></td>
-                                  <td><%= value.productId.name %></td>
+                                <% order.products.forEach((value,index)=>{%>
+                                    <tr >
+
+                                    <input type="hidden" name="productId" value="<%= value.productId %>">
+                                    <td>
+                                       <b><img src="<%= value.productId.image[0]%>" class="img-sm img-thumbnail" alt="Product image"></b>
+                                    </td>
+                                    <td><%= value.productId.name %></td>
                                     <td>$<%= value.productId.price %></td>
                                     <td><span class="badge rounded-pill alert-warning"><%= order.status %></span></td>
                                     <td><%= new Date(order.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %></td>
                                     <td class="text-end">
-                                        <a href="#" class="btn btn-md rounded font-sm">Detail</a>
-                                        <div class="dropdown">
-                                            <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#">View detail</a>
-                                                <a class="dropdown-item" href="#">Edit info</a>
-                                                <a class="dropdown-item text-danger" href="#">Delete</a>
-                                            </div>
-                                        </div>
-                                        <!-- dropdown //end -->
+                                        <button  href="#" onclick="toOrder('<%= value.productId._id %>')"  id="toOrderDetails"  class="btn btn-md rounded font-sm">Detail</button>
                                     </td>
+                                    <td>
+                                        <% if(value.status === 'cancelled'){%>
+                                            <button type="submit" class="btn btn-md rounded disabled" onclick="cancelOrder(this,'<%= value.productId._id %>')">
+                                                <span>Cancelled</span>
+                                                </button>
+                                            <%}else{%>
+                                                <button type="submit"  class="btn btn-md rounded " onclick="cancelOrder(this,'<%= value.productId._id %>')">
+                                                    <span>Cancel</span>
+                                                    </button>
+                                            <%}%>
+                                        
+                                   </td>
                                 </tr>
+                                <div class="row" id="orderDetails<%= value.productId._id %>"  style="display: none;">
+                                                          
+                                    <div class="col-lg-4">
+                                            <div class="card card-dashboard">
+                                                <div class="card-body">
+                                                    <h3 class="card-title">Customer</h3><!-- End .card-title -->
+                                                    <p><%= order.userId.name%><br>
+                                                        <%= order.userId.email%><br>
+                                                        <%= order.userId.mobile%><br>
+                                                   
+                                                 
+                                                </div><!-- End .card-body -->
+                                            </div><!-- End .card-dashboard -->
+                                    </div><!-- End .col-lg-4 -->
+                                    <div class="col-lg-4">
+                                        <div class="card card-dashboard">
+                                            <div class="card-body">
+                                                    <h3 class="card-title">Order info</h3><!-- End .card-title -->
+
+                                                    <p>Shipping:Fargo Express<br>
+                                                        Pay method:<%= order.payment%><br>
+                                                        Status:<%= value.status%><br>
+                                                 
+                                            </div><!-- End .card-body -->
+                                        </div><!-- End .card-dashboard -->
+                                    </div><!-- End .col-lg-4 -->
+                                   
+                                        <div class="col-lg-4">
+                                            <div class="card card-dashboard">
+                                                <div class="card-body">
+                                                    <h3 class="card-title">Deliver to</h3><!-- End .card-title -->
+                                                   
+                                                    <p><%=order.delivery_address.name%><br>
+                                                        <%=order.delivery_address.streetAddress%><br>
+                                                        <%=order.delivery_address.city%>,<%=order.delivery_address.pincode%><br>
+                                                        <%= order.delivery_address.state%><br>
+                                                       
+                                                </div><!-- End .card-body -->
+                                            </div><!-- End .card-dashboard -->
+                                        </div><!-- End .col-lg-4 -->
+                                </div>
                                 <%}) %>
 
                                 <%}) %>
@@ -320,5 +354,30 @@
         <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
         <!-- Main Script -->
         <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
+        <script>
+            function cancelOrder(tag,orderId){
+              
+                    tag.innerText = 'Cancelled'
+                    tag.disabled=true
+                
+                fetch(`/cancelOrder?orderId=${orderId}`)
+            }
+        </script>
+        <script>
+            function toOrder(id){
+                console.log('id',id);
+                $('#orderLists').hide();
+                $(`#orderDetails${id}`).show();
+            }
+        </script>
+        <script>
+            $(document).ready(function() {
+                $('#toOrderDetails').click(function(e) {
+                    e.preventDefault(); 
+                    $('#orderLists').hide(); 
+                    $(`#orderDetails`).show(); 
+                });
+            });
+        </script>
     </body>
 </html>

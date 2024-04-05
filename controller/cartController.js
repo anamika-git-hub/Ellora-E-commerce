@@ -14,6 +14,7 @@ const loadCart = async(req,res)=>{
 
             const userId = req.session.user_id;
             const cartData = await Cart.findOne({userId:userId}).populate('userId').populate({path:'products.productId'});
+           
             let initialAmount = 0;
             if(cartData){
                 cartData.products.forEach((item)=>{
@@ -81,7 +82,6 @@ const addtoCart = async(req,res)=>{
 const updatequantity = async(req,res)=>{
     try {
         const {productId,productQuantity} = req.body;
-        console.log(productQuantity);
         const cartData = await Cart.findOne({userId:req.session.user_id});
         
         const products = cartData.products.find((product)=>product.productId.equals(productId))

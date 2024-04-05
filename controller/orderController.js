@@ -1,19 +1,18 @@
 const User = require('../models/userModel');
 const Cart = require('../models/cartModel');
 const Order = require('../models/orderModel');
+const Product = require('../models/productsModel')
 
 
 const placeOrder = async(req,res)=>{
     try {
         const userId = req.session.user_id;
         const {shippingAddress,subTotal,shippingMethod} = req.body;
-       console.log('sh',shippingAddress);
        
         const userData = await User.findById({_id:userId});
         const address = userData.addresses.find((address=>{
             return address._id.equals(shippingAddress)
         }))
-        console.log('add',address);
         const name = userData.name;
         const cartData = await Cart.findOne({userId:userId})
         const productData = cartData.products;
@@ -43,7 +42,38 @@ const placeOrder = async(req,res)=>{
             products:productData
         })
 
-        console.log('mo',myOrders);
+        const orderData = await Order.findOne({userId:userId});
+        const proData = orderData.products;
+        for(let i=0;i<proData.length;i++){
+        if(proData[i].status === 'placed'){
+            await Cart.deleteOne({userId:userId})
+           for(let i=0;i<cartData.products.length;i++){
+                const productId = productData[i].productId;
+                const quantity = productData[i].quantity
+                await Product.updateOne({
+                    _id:productId
+                },{
+                    $inc:{
+                        stock : -quantity
+                    }
+                })
+            }
+        }else if(proData[i].status === 'cancelled'){
+            await Cart.deleteOne({userId:userId})
+            for(let i=0;i<cartData.products.length;i++){
+                 const productId = productData[i].productId;
+                 const quantity = productData[i].quantity
+                 await Product.updateOne({
+                     _id:productId
+                 },{
+                     $inc:{
+                         stock : quantity
+                     }
+                 })
+             }
+        }
+        }
+       
 
 
     } catch (error) {
@@ -65,8 +95,6 @@ const loadOrderList = async(req,res)=>{
       
     const count = await Order.find({
     }).countDocuments();
-
-        console.log('od',orderData);
         res.render('orderList',{orderData,totalPages:Math.ceil(count/limit),currentPage:page})
     } catch (error) {
         console.log(error.message);
@@ -76,13 +104,11 @@ const loadOrderList = async(req,res)=>{
 const cancelOrder = async(req,res)=>{
     try {
         const {orderId} = req.query;
-        console.log(orderId);
         
         const orderData = await Order.findOne({userId:req.session.user_id});
         const a = orderData.products.find((p)=>{
            return p.productId.equals(orderId);
         });
-        console.log(a)
         a.status="cancelled";
         await orderData.save()
        

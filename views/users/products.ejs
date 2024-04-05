@@ -204,10 +204,8 @@
             <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
                 <div class="container">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Shop</a></li>
-                        <li class="breadcrumb-item"><a href="#">No Sidebar</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Boxed</li>
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Products</li>
                     </ol>
                 </div><!-- End .container -->
             </nav><!-- End .breadcrumb-nav -->
@@ -266,11 +264,11 @@
 
                                     <div class="product-body">
                                         <div class="product-cat">
-                                            <a href="#">Women</a>
+                                            <a href="#"><%=element.name%></a>
                                         </div><!-- End .product-cat -->
                                         <h3 class="product-title"><a href="product.html"><%= %></a></h3><!-- End .product-title -->
                                         <div class="product-price">
-                                            $<%=element.price%>
+                                            Rs.<%=element.price%>
                                         </div><!-- End .product-price -->
                                         <div class="ratings-container">
                                             <div class="ratings">
@@ -319,7 +317,7 @@
                                             <div class="filter-item">
                                                 <div class="custom-control custom-checkbox">
                                                     <input type="checkbox" class="custom-control-input" id="cat-1">
-                                                    <label class="custom-control-label" for="cat-1">Dresses</label>
+                                                    <label class="custom-control-label" for="cat-1">Men</label>
                                                 </div><!-- End .custom-checkbox -->
                                                 <span class="item-count">3</span>
                                             </div><!-- End .filter-item -->
@@ -327,7 +325,7 @@
                                             <div class="filter-item">
                                                 <div class="custom-control custom-checkbox">
                                                     <input type="checkbox" class="custom-control-input" id="cat-2">
-                                                    <label class="custom-control-label" for="cat-2">T-shirts</label>
+                                                    <label class="custom-control-label" for="cat-2">Women</label>
                                                 </div><!-- End .custom-checkbox -->
                                                 <span class="item-count">0</span>
                                             </div><!-- End .filter-item -->
@@ -335,7 +333,7 @@
                                             <div class="filter-item">
                                                 <div class="custom-control custom-checkbox">
                                                     <input type="checkbox" class="custom-control-input" id="cat-3">
-                                                    <label class="custom-control-label" for="cat-3">Bags</label>
+                                                    <label class="custom-control-label" for="cat-3">Dresses</label>
                                                 </div><!-- End .custom-checkbox -->
                                                 <span class="item-count">4</span>
                                             </div><!-- End .filter-item -->
@@ -351,7 +349,7 @@
                                             <div class="filter-item">
                                                 <div class="custom-control custom-checkbox">
                                                     <input type="checkbox" class="custom-control-input" id="cat-5">
-                                                    <label class="custom-control-label" for="cat-5">Shoes</label>
+                                                    <label class="custom-control-label" for="cat-5">T-shirts</label>
                                                 </div><!-- End .custom-checkbox -->
                                                 <span class="item-count">2</span>
                                             </div><!-- End .filter-item -->
