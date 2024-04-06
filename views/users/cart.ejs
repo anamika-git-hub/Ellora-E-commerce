@@ -251,7 +251,7 @@
 									<tbody>
                                         
                                             <% cartData.products.forEach((value,index)=>{ %>
-                                            <tr id="cartDelete<%= value.productId._id %>">
+                                            <tr id="cartDelete<%= index %>">
                                                 <input type="hidden" name="productId" value="<%= value.productId %>">
                                                 <td class="product-col">
                                                     <div class="product">
@@ -273,7 +273,7 @@
                                                     </div><!-- End .cart-product-quantity -->
                                                 </td>
                                                 <td class="total-col" id="totalPrice<%= value.productId._id %>">Rs.<%= value.totalPrice %></td>
-                                                <td class="remove-col"><button  class="btn-remove" onclick="deleteCartItem('<%= value.productId._id %>')"><i class="icon-close"  ></i></button></td>
+                                                <td class="remove-col"><button  class="btn-remove" onclick="deleteCartItem('<%= index %>','<%= value.productId._id %>')"><i class="icon-close"  ></i></button></td>
                                             </tr>
                                             <% }) %>
 									</tbody>
@@ -760,13 +760,14 @@
     }
 </script>
 <script>
-  async function deleteCartItem (productId){
+  async function deleteCartItem (index,productId){
+                const element = document.getElementById(`cartDelete${index}`);
+                 element.remove();
+                 window.location.reload();
         axios.post('/deleteCartItem', { productId })
             .then(function(response){
                 console.log(response.data);
-                const element = document.getElementById(`cartDelete${productId}`);
-                 element.remove();
-                 window.location.reload();
+                
             }).catch(function(error){
                 console.error('Error:', error);
         });

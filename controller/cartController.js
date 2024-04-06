@@ -9,6 +9,7 @@ const loadCart = async(req,res)=>{
 
             console.log('please login to get our service')
             req.flash('cart','Please login to get our service')
+            res.json({login:true});
            return res.redirect('/login')
         }else{
 
@@ -35,11 +36,16 @@ const addtoCart = async(req,res)=>{
         const {productId,productQuantity} = req.body;
         const productData = await Product.findById({_id:productId});
         const cartData = await Cart.findOne({userId:req.session.user_id});
+        if(!req.session.user_id){
+               res.json({login:true})
+        }else{
+        
         if(cartData){
             const existProduct = cartData.products.find((pro)=>pro.productId.toString()== productId);
             if(existProduct){
                 
-                console.log('This product already exists in cart');
+                req.flash('cart','This product already exists in cart');
+                res.json({success:false})
             } else{
             await Cart.findOneAndUpdate({
                 userId :req.session.user_id
@@ -74,6 +80,9 @@ const addtoCart = async(req,res)=>{
         await newCart.save();
     }
 
+    res.json({success:true});
+    
+}
     } catch (error) {
         console.log(error.message);
     }   

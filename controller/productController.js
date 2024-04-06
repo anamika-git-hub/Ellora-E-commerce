@@ -3,9 +3,9 @@ const category=require('../models/categoryModel')
 const products= require('../models/productsModel')
 const path = require('path');
 const {joiProductSchema} = require('../models/ValidationSchema')
-const uuid = require('uuid');
+// const uuid = require('uuid');
 const { description } = require('@hapi/joi/lib/base');
-const cloudinary = require("../utils/cloudinary");
+// const cloudinary = require("../utils/cloudinary");
 
 
 const loadProductList=async(req,res)=>{
@@ -49,21 +49,21 @@ const addProducts = async(req,res)=>{
              description:description,
              price:price,
              categories:categories,
-             image:image.map(url => ({ url, _id: generateUniqueId() })),
+             image:image,
              stock:stock,
              is_listed:true,
              size:['s','xs']
              })
 
-             product.image.forEach((image)=>{
-                console.log('id',image._id);
-             })
+            //  product.image.forEach((image)=>{
+            //     console.log('id',image._id);
+            //  })
 
-             function generateUniqueId(){
-                return uuid.v4();
-             }
+            //  function generateUniqueId(){
+            //     return uuid.v4();
+            //  }
 
-             console.log('pr',product);
+            //  console.log('pr',product);
                  res.redirect('/admin/productList')
        
     } catch (error) {
@@ -100,32 +100,32 @@ const editProductLoad = async(req,res)=>{
 const updateProducts = async (req,res)=>{
     try {
         const productData = await products.findOne({_id:req.body.id});
-        const data = {
-            name : req.body.name,
-            description : req.body.description,
-            price : req.body.price,
-            category : req.body.category,
-            price: req.body.price,
-            stock: req.body.stock
-        }
+        // const data = {
+        //     name : req.body.name,
+        //     description : req.body.description,
+        //     price : req.body.price,
+        //     category : req.body.category,
+        //     price: req.body.price,
+        //     stock: req.body.stock
+        // }
 
-        if(req.body.image !==''){
-            const imgId = productData.image._id;
-            if(imgId){
-                await cloudinary.uploader.destroy(imgId)
-            }
+        // if(req.body.image !==''){
+        //     const imgId = productData.image._id;
+        //     if(imgId){
+        //         await cloudinary.uploader.destroy(imgId)
+        //     }
 
-            const newImage = await cloudinary.uploader.upload(req.body.image,{
-                folder:"product-images"
-            })
-            data.image = {
-                _id:newImage._id,
-                url:newImage.secure_url
-            }
-        }
+        //     const newImage = await cloudinary.uploader.upload(req.body.image,{
+        //         folder:"product-images"
+        //     })
+        //     data.image = {
+        //         _id:newImage._id,
+        //         url:newImage.secure_url
+        //     }
+        // }
 
         if(productData){
-        const pro = await products.findOneAndUpdate({_id:req.body.id},data);
+            const pro = await products.findByIdAndUpdate({_id:req.body.id},{$set:{name:req.body.name,description:req.body.description,categories:req.body.category,price:req.body.price,stock:req.body.stock,image:req.body.image}});
           
         res.redirect('/admin/productList')
         }else{

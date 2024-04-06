@@ -931,6 +931,7 @@
     
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
   async function addtoCart (productId){
@@ -938,6 +939,38 @@
         axios.post('/cart', { productQuantity,productId })
             .then(function(response){
                 console.log(response.data);
+                if (response.data.login) {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Please Login",
+                        confirmButtonColor: "#3085d6",
+                        confirmButtonText: "Login",
+                        showCancelButton: true,
+                        cancelButtonColor: "#d33",
+                        text: response.data.message,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = "/login";
+                        }
+                    });
+                } else if (response.data.success == true) {
+                    Swal.fire({
+                        position: "center",
+                        title: "Success!",
+                       text: "Item added to cart",
+                       icon: "success", 
+                       buttons: false
+                    });
+                } else if(response.data.success == false){
+                    Swal.fire({
+                        position:'center',
+                        title:'Failed!',
+                        text: "This item is already in your cart",
+                        icon: "info",
+                        buttons: false
+
+                    })
+                }
             }).catch(function(error){
                 console.error('Error:', error);
         });

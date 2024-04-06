@@ -229,13 +229,12 @@
                                 <tbody>
                                   
           <% products.forEach(element => { %>
-            <% element.image.forEach((image)=>{%>
                
             <tr>
                 <td>
                     <a href="/detailes?id=<%=element._id%>">
-                        <img src="<%= image.url%> "class="img-sm img-thumbnail" alt="Item"  />
-                        <% console.log('ii',image.url); %>
+                        <img src="<%= element.image[0]%> "class="img-sm img-thumbnail" alt="Item"  />
+                       
                     </a>
                 </td>
                     
@@ -267,7 +266,6 @@
                </td>
                 
             </tr>
-            <%}) %>
             <%     })  %>
                                 </tbody>
                             </table>
