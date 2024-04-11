@@ -4,7 +4,9 @@ const userOtpVerification = require('../models/userOTPModel')
 const nodemailer=require('nodemailer');
 const {joiRegistrationSchema} = require('../models/ValidationSchema');
 const Boom = require('boom');
-const Order = require('../models/orderModel')
+const Order = require('../models/orderModel');
+const Cart = require('../models/cartModel');
+const Wishlist = require('../models/wishlistModel');
 
 
 const securePassword =async(password)=>{
@@ -18,7 +20,12 @@ const securePassword =async(password)=>{
 
 const loadHome = async(req,res)=>{
     try {
-        res.render('home');
+        
+        const cartData = await Cart.findOne({userId:req.session.user_id}).populate('userId').populate({path:'products.productId'});
+        
+            res.render('home',{cartData})
+        
+
     } catch (error) {
         console.log(error.message)
     }
@@ -248,13 +255,26 @@ const loadAbout = async(req,res)=>{
 
 const loadProfile = async(req,res)=>{
     try {
+        var page = 1;
+        if(req.query.page){
+            page = req.query.page;
+        }
+        const limit = 5;
+      
         const userId = req.session.user_id;
         const userData = await User.findById(userId)
-        const orderData = await Order.find({userId:userId}).populate('products.productId').populate('userId')
+        const cartData = await Cart.findOne({userId:req.session.user_id}).populate('userId').populate({path:'products.productId'});
+        const wishlistData = await Wishlist.findOne({userId:userId}).populate('userId').populate('products.productId');
+        const orderData = await Order.find({userId:userId}).sort({'_id':-1}).populate('products.productId').populate('userId')
+        .limit(limit * 1)
+        .skip((page-1)* limit)
+        .exec();
+         const count = await Order.find({
+      }).countDocuments();
        if(orderData){
-        res.render('profile',{userData,orderData});
+        res.render('profile',{userData,cartData,wishlistData,orderData,totalPages:Math.ceil(count/limit),currentPage:page});
        }else{
-        res.render('profile',{userData});
+        res.render('profile',{userData,cartData,wishlistData});
        }
            
 
@@ -369,6 +389,8 @@ const editAddress = async(req,res)=>{
         address.landMark=landMark;
         address.email = email;
         user.save();
+        res.redirect('/profile')
+        res.json({success:true})
     } catch (error) {
         console.log(error.message);
     }
@@ -382,7 +404,7 @@ const deleteAddress = async(req,res)=>{
             {$pull:{addresses:{_id:addressId}}
         }
         )
-
+        res.json({success:true});
     } catch (error) {
         console.log(error.message);
     }

@@ -22,14 +22,14 @@ const productSchema= new mongoose.Schema({
   },
   image:{
     type:Array,
-    validate:[arrayLimit,'you can pass only 4 images']
+    validate:[arrayLimit,'You can pass only 4 images']
   },
   size:{
     type:Array
   },
   stock:{
      type: Number,
-     required:true
+     required:true,
   },
   is_listed:{
     type:Boolean,
@@ -41,5 +41,6 @@ const productSchema= new mongoose.Schema({
 function arrayLimit(val){
   return val.length<=4
 }
+
 
 module.exports = mongoose.model('products',productSchema)

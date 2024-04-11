@@ -27,6 +27,9 @@ const uploadMiddleware = (req, res, next) => {
       const uploadPromises = req.files.map(async (file) => {
         const result = await cloudinary.uploader.upload(file.path, {
           folder: "product-images",
+          transformation: [
+            { width: 768, height: 1152, crop: "fill" }, 
+          ],
         });
         return result.secure_url;
       });

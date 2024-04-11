@@ -1,6 +1,8 @@
 
-const category=require('../models/categoryModel')
-const products= require('../models/productsModel')
+const category=require('../models/categoryModel');
+const products= require('../models/productsModel');
+const Cart = require('../models/cartModel');
+const Wishlist = require('../models/wishlistModel');
 const path = require('path');
 const {joiProductSchema} = require('../models/ValidationSchema')
 // const uuid = require('uuid');
@@ -138,8 +140,21 @@ const updateProducts = async (req,res)=>{
 
 const productPage = async(req,res)=>{
    try {
+    var page = 1;
+    if(req.query.page){
+        page = req.query.page;
+    }
+    const limit = 12;
     const productData = await products.find({is_listed:true})
-    res.render('products.ejs',{products:productData});
+    .limit(limit * 1)
+    .skip((page-1)* limit)
+    .exec();
+    
+  const count = await products.find({
+  }).countDocuments();
+    const cartData = await Cart.findOne({userId:req.session.user_id}).populate('userId').populate({path:'products.productId'});
+    const wishlistData = await Wishlist.findOne({userId:req.session.user_id}).populate('userId').populate('products.productId');
+    res.render('products.ejs',{products:productData,cartData,wishlistData,totalPages:Math.ceil(count/limit),currentPage:page});
    } catch (error) {
     console.log(error.message)
    }
@@ -149,7 +164,9 @@ const productDetails = async(req,res)=>{
     try {
         const {id} = req.query
         const productData = await products.findById({_id:id});
-        res.render('productDetail',{products:productData})
+        const wishlistData = await Wishlist.findOne({userId:req.session.user_id}).populate('userId').populate('products.productId');
+        const cartData = await Cart.findOne({userId:req.session.user_id}).populate('userId').populate({path:'products.productId'});
+        res.render('productDetail',{products:productData,cartData,wishlistData})
     } catch (error) {
        console.log(error.message) 
     }

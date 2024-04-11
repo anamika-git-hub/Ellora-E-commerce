@@ -57,18 +57,24 @@
                     </div><!-- End .header-left -->
 
                     <div class="header-right">
-                        <a href="wishlist.html" class="wishlist-link">
+                        <a href="/wishlist" class="wishlist-link">
                             <i class="icon-heart-o"></i>
                             <span class="wishlist-count">3</span>
                             <span class="wishlist-txt">My Wishlist</span>
                         </a>
 
                         <div class="dropdown cart-dropdown">
+                            <% if(cartData && cartData.products.length >0){%>
                             <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
                                 <i class="icon-shopping-cart"></i>
-                                <span class="cart-count">2</span>
-                                <span class="cart-txt">$ 164,00</span>
+                                    <span class="cart-count"><%= cartData.products.length %></span>
+                                    <span class="cart-txt"></span>
                             </a>
+                            <%}else{%>
+                                <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
+                                    <i class="icon-shopping-cart"></i>
+                                </a>
+                                <%} %>
 
                             <div class="dropdown-menu dropdown-menu-right">
                                 <div class="dropdown-cart-products">
@@ -124,6 +130,7 @@
                                     <a href="/CheckOut" class="btn btn-outline-primary-2"><span>Checkout</span><i class="icon-long-arrow-right"></i></a>
                                 </div><!-- End .dropdown-cart-total -->
                             </div><!-- End .dropdown-menu -->
+                           
                         </div><!-- End .cart-dropdown -->
                     </div>
                 </div><!-- End .container -->
@@ -135,22 +142,22 @@
                         <nav class="main-nav">
                             <ul class="menu sf-arrows">
                                 <li class="megamenu-container active">
-                                    <a href="index.html" class="sf-with-ul">Home</a>
+                                    <a href="index.html">Home</a>
                                 </li>
                                 <li>
-                                    <a href="/products" class="sf-with-ul">Products</a>
+                                    <a href="/products">Products</a>
                                 </li>
                                 <li>
-                                    <a href="/about" class="sf-with-ul">About</a>
+                                    <a href="/about">About</a>
                                 </li>
                                 <li>
-                                    <a href="/contact" class="sf-with-ul">Contact</a>
+                                    <a href="/contact">Contact</a>
                                 </li>
                                 <li>
-                                    <a href="/profile" class="sf-with-ul">Profile</a>
+                                    <a href="/profile">Profile</a>
                                 </li>
                                 <li>
-                                    <a href="/login" class="sf-with-ul">Login</a>
+                                    <a href="/login">Login</a>
 
                                 </li>
                             </ul><!-- End .menu -->

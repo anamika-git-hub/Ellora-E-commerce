@@ -91,23 +91,23 @@
 
                         <nav class="main-nav">
                             <ul class="menu sf-arrows">
-                                <li class="megamenu-container active">
-                                    <a href="/" class="sf-with-ul">Home</a>
+                                <li class="megamenu-container ">
+                                    <a href="/">Home</a>
+                                </li>
+                                <li class="active">
+                                    <a href="/products">Products</a>
                                 </li>
                                 <li>
-                                    <a href="/products" class="sf-with-ul">Products</a>
+                                    <a href="/about">About</a>
                                 </li>
                                 <li>
-                                    <a href="/about" class="sf-with-ul">About</a>
+                                    <a href="/contact">Contact</a>
                                 </li>
                                 <li>
-                                    <a href="/contact" class="sf-with-ul">Contact</a>
+                                    <a href="/profile">Profile</a>
                                 </li>
                                 <li>
-                                    <a href="/profile" class="sf-with-ul">Profile</a>
-                                </li>
-                                <li>
-                                    <a href="/login" class="sf-with-ul">Login</a>
+                                    <a href="/login">Login</a>
                                 </li>
                             </ul><!-- End .menu -->
                         </nav><!-- End .main-nav -->
@@ -123,72 +123,23 @@
                                 </div><!-- End .header-search-wrapper -->
                             </form>
                         </div><!-- End .header-search -->
-                        <div class="dropdown compare-dropdown">
-                            <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static" title="Compare Products" aria-label="Compare Products">
-                                <i class="icon-random"></i>
+                        <div class="dropdown cart-dropdown">
+                            <a href="/wishlist" class="dropdown-toggle" role="button">
+                                <i class="icon-heart-o"></i>
+                                <% if(wishlistData && wishlistData.products.length>0){ %>
+                                    <span class="cart-count"><%= wishlistData.products.length %></span>
+                                <% } %>
                             </a>
-
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <ul class="compare-products">
-                                    <li class="compare-product">
-                                        <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                                        <h4 class="compare-product-title"><a href="product.html">Blue Night Dress</a></h4>
-                                    </li>
-                                    <li class="compare-product">
-                                        <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                                        <h4 class="compare-product-title"><a href="product.html">White Long Skirt</a></h4>
-                                    </li>
-                                </ul>
-
-                                <div class="compare-actions">
-                                    <a href="#" class="action-link">Clear All</a>
-                                    <a href="#" class="btn btn-outline-primary-2"><span>Compare</span><i class="icon-long-arrow-right"></i></a>
-                                </div>
-                            </div><!-- End .dropdown-menu -->
-                        </div><!-- End .compare-dropdown -->
+                        </div><!-- End .cart-dropdown -->
 
                         <div class="dropdown cart-dropdown">
-                            <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
+                            <a href="/cart" class="dropdown-toggle" role="button" >
                                 <i class="icon-shopping-cart"></i>
-                                <span class="cart-count">2</span>
+                                <% if(cartData && cartData.products.length>0){%>
+                                    <span class="cart-count"><%= cartData.products.length %></span>
+                                
+                                <%} %>
                             </a>
-
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <div class="dropdown-cart-products">
-                                    <div class="product">
-                                        <div class="product-cart-details">
-                                            <h4 class="product-title">
-                                                <a href="product.html">Beige knitted elastic runner shoes</a>
-                                            </h4>
-
-                                            <span class="cart-product-info">
-                                                <span class="cart-product-qty">1</span>
-                                                x $84.00
-                                            </span>
-                                        </div><!-- End .product-cart-details -->
-
-                                        <figure class="product-image-container">
-                                            <a href="product.html" class="product-image">
-                                                <img src="assets/images/products/cart/product-1.jpg" alt="product">
-                                            </a>
-                                        </figure>
-                                        <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
-                                    </div><!-- End .product -->
-
-                                   
-                                </div><!-- End .cart-product -->
-
-                                <div class="dropdown-cart-total">
-                                    <span>Total</span>
-
-                                    <span class="cart-total-price">$160.00</span>
-                                </div><!-- End .dropdown-cart-total -->
-
-                                <div class="dropdown-cart-action">
-                                    <a href="/cart" class="btn btn-primary">View Cart</a>
-                                    <a href="/CheckOut" class="btn btn-outline-primary-2"><span>Checkout</span><i class="icon-long-arrow-right"></i></a>
-                                </div><!-- End .dropdown-cart-total -->
-                            </div><!-- End .dropdown-menu -->
                         </div><!-- End .cart-dropdown -->
                     </div><!-- End .header-right -->
                 </div><!-- End .container -->
@@ -243,58 +194,67 @@
                         <div id="productRow" class="row">
                             <% if(products.length > 0){%>
                                 <% products.forEach((element)=>{ %>
-                            <div class="col-6 col-md-4 col-lg-4 col-xl-3">
-                                <div class="product">
-                                    <figure class="product-media">
-                                        <span class="product-label label-new">New</span>
-                                        <a href="/productDetail?id=<%=element._id%>">
-                                            <img src="<%=element.image[0]%>" alt="Product image" class="product-image">
-                                        </a>
+                                <div class="col-6 col-md-4 col-lg-4 col-xl-3">
+                                    <div class="product">
+                                        <figure class="product-media">
+                                            <span class="product-label label-new">New</span>
+                                            <a href="/productDetail?id=<%=element._id%>">
+                                                <img src="<%=element.image[0]%>" alt="Product image" class="product-image">
+                                            </a>
 
-                                        <div class="product-action-vertical">
-                                            <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                        </div><!-- End .product-action -->
+                                            <div class="product-action-vertical">
+                                                <a href="#" onclick="addtoWishlist('<%=element._id%>')" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                             </div><!-- End .product-action -->
 
-                                        <div class="product-action action-icon-top">
-                                            <button  onclick="addtoCart('<%=element._id%>')" class="btn-product btn-cart"><span>add to cart</span></button>
-                                            <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"><span>quick view</span></a>
-                                            <a href="#" class="btn-product btn-compare" title="Compare"><span>compare</span></a>
-                                        </div><!-- End .product-action -->
-                                    </figure><!-- End .product-media -->
+                                            <div class="product-action action-icon-top">
+                                                 <button  onclick="addtoCart('<%=element._id%>')" class="btn-product btn-cart"><span>add to cart</span></button>
+                                                <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"><span>quick view</span></a>
+                                                <a href="#" class="btn-product btn-compare" title="Compare"><span>compare</span></a>
+                                            </div><!-- End .product-action -->
+                                        </figure><!-- End .product-media -->
 
-                                    <div class="product-body">
-                                        <div class="product-cat">
-                                            <a href="#"><%=element.name%></a>
-                                        </div><!-- End .product-cat -->
-                                        <h3 class="product-title"><a href="product.html"><%= %></a></h3><!-- End .product-title -->
-                                        <div class="product-price">
-                                            Rs.<%=element.price%>
-                                        </div><!-- End .product-price -->
-                                        <div class="ratings-container">
-                                            <div class="ratings">
-                                                <div class="ratings-val" style="width: 0%;"></div><!-- End .ratings-val -->
-                                            </div><!-- End .ratings -->
-                                            <span class="ratings-text">( 0 Reviews )</span>
-                                        </div><!-- End .rating-container -->
+                                        <div class="product-body">
+                                            <div class="product-cat">
+                                                <a href="#"><%=element.name%></a>
+                                            </div><!-- End .product-cat -->
+                                            <h3 class="product-title"><a href="product.html"><%= %></a></h3><!-- End .product-title -->
+                                            <div class="product-price">
+                                                Rs.<%=element.price%>
+                                            </div><!-- End .product-price -->
+                                            <div class="ratings-container">
+                                                <div class="ratings">
+                                                    <div class="ratings-val" style="width: 0%;"></div><!-- End .ratings-val -->
+                                                </div><!-- End .ratings -->
+                                                <span class="ratings-text">( 0 Reviews )</span>
+                                            </div><!-- End .rating-container -->
 
-                                        <div class="product-nav product-nav-dots">
-                                            <a href="#" style="background: #cc9966;"><span class="sr-only">Color name</span></a>
-                                            <a href="#" class="active" style="background: #ebebeb;"><span class="sr-only">Color name</span></a>
-                                        </div><!-- End .product-nav -->
-                                    </div><!-- End .product-body -->
-                                </div><!-- End .product -->
-                            </div><!-- End .col-sm-6 col-lg-4 col-xl-3 -->
-                            <% })%>
-                   <% }else{ %>
-            <tr>
-                <td colspan="3">Products Not Found</td>
-            </tr>
-            <%} %>
+                                            <div class="product-nav product-nav-dots">
+                                                <a href="#" style="background: #cc9966;"><span class="sr-only">Color name</span></a>
+                                                <a href="#" class="active" style="background: #ebebeb;"><span class="sr-only">Color name</span></a>
+                                            </div><!-- End .product-nav -->
+                                        </div><!-- End .product-body -->
+                                    </div><!-- End .product -->
+                                </div><!-- End .col-sm-6 col-lg-4 col-xl-3 -->
+                                <% })%>
+                            <% }else{ %>
+                                <tr>
+                                     <td colspan="3">Products Not Found</td>
+                                </tr>
+                            <%} %>
                         </div><!-- End .row -->
 
-                        <div class="load-more-container text-center">
-                            <a href="#" class="btn btn-outline-darker btn-load-more">More Products <i class="icon-refresh"></i></a>
-                        </div><!-- End .load-more-container -->
+                        <div class="pagination-area mt-30 mb-50">
+                            <nav aria-label="Page navigation example ">
+                                <ul class="pagination justify-content-start">
+                                    <% for(let j=1; j<=totalPages; j++){ %>
+                                    <li class="page-item <%= j === currentPage ? "active":" "%>"><a class="page-link" href="?page=<%= j%>"><%= j%></a></li>
+                                    <% } %>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
                     </div><!-- End .products -->
 
                     <div class="sidebar-filter-overlay"></div><!-- End .sidebar-filter-overlay -->
@@ -977,6 +937,39 @@
     }
 </script>
 <script>
+    async function addtoWishlist (productId){
+          axios.post('/wishlist', {productId})
+              .then(function(response){
+                  console.log(response.data);
+                  if (response.data.login) {
+                      Swal.fire({
+                          icon: "warning",
+                          title: "Please Login",
+                          confirmButtonColor: "#3085d6",
+                          confirmButtonText: "Login",
+                          showCancelButton: true,
+                          cancelButtonColor: "#d33",
+                          text: response.data.message,
+                      }).then((result) => {
+                          if (result.isConfirmed) {
+                              window.location.href = "/login";
+                          }
+                      });
+                  } else if (response.data.success == true) {
+                      Swal.fire({
+                          position: "center",
+                          title: "Success!",
+                         text: "Item added to wishlist",
+                         icon: "success", 
+                         buttons: false
+                      });
+                  }
+              }).catch(function(error){
+                  console.error('Error:', error);
+          });
+      }
+  </script>
+<script>
 const sortInput = document.getElementById('sortby');
 sortInput.addEventListener('change',handleChange);
 function handleChange(event){
@@ -986,7 +979,6 @@ function handleChange(event){
         .then(function(response){
             console.log(response.data);
             const{sort} = response.data
-            console.log('ssr',sort);
             const productSort = document.getElementById('productRow');
             let productHTML = '';
             sort.forEach((element)=>{

@@ -1,6 +1,7 @@
 const User = require('../models/userModel')
 const Cart = require('../models/cartModel');
 const Product = require('../models/productsModel');
+const Wishlist = require('../models/wishlistModel');
 const { query } = require('express');
 
 const loadCart = async(req,res)=>{
@@ -15,7 +16,7 @@ const loadCart = async(req,res)=>{
 
             const userId = req.session.user_id;
             const cartData = await Cart.findOne({userId:userId}).populate('userId').populate({path:'products.productId'});
-           
+            const wishlistData = await Wishlist.findOne({userId:req.session.user_id}).populate('userId').populate('products.productId');
             let initialAmount = 0;
             if(cartData){
                 cartData.products.forEach((item)=>{
@@ -23,7 +24,7 @@ const loadCart = async(req,res)=>{
                     initialAmount += itemPrice*item.quantity
                 })
             }
-            res.render('cart',{cartData, subTotal : initialAmount});
+            res.render('cart',{cartData, subTotal : initialAmount,wishlistData});
         }
 
     }catch (error){
@@ -43,8 +44,6 @@ const addtoCart = async(req,res)=>{
         if(cartData){
             const existProduct = cartData.products.find((pro)=>pro.productId.toString()== productId);
             if(existProduct){
-                
-                req.flash('cart','This product already exists in cart');
                 res.json({success:false})
             } else{
             await Cart.findOneAndUpdate({
@@ -123,6 +122,7 @@ const loadCheckOut = async(req,res)=>{
       const addresses = user.addresses;
 
       const cartData = await Cart.findOne({userId:userId}).populate({path:'products.productId'});
+      const wishlistData = await Wishlist.findOne({userId:req.session.user_id}).populate('userId').populate('products.productId');
       if(cartData.products.length<=0){
         res.redirect('/cart'); 
       }else{
@@ -133,7 +133,7 @@ const loadCheckOut = async(req,res)=>{
                 initialAmount += itemPrice*item.quantity
             })
         }
-        res.render('checkout',{cartData,subTotal:initialAmount,addresses:addresses});
+        res.render('checkout',{cartData,subTotal:initialAmount,addresses:addresses,wishlistData});
       }
      
    } catch (error) {

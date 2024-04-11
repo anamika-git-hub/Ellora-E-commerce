@@ -49,20 +49,24 @@ const placeOrder = async(req,res)=>{
             await Cart.deleteOne({userId:userId})
            for(let i=0;i<cartData.products.length;i++){
                 const productId = productData[i].productId;
-                const quantity = productData[i].quantity
-                await Product.updateOne({
+                const quantity = productData[i].quantity;
+                console.log('quantity',quantity);
+                const result = await Product.updateOne({
                     _id:productId
                 },{
                     $inc:{
                         stock : -quantity
                     }
                 })
+
+                console.log('res',result);
             }
         }else if(proData[i].status === 'cancelled'){
             await Cart.deleteOne({userId:userId})
             for(let i=0;i<cartData.products.length;i++){
                  const productId = productData[i].productId;
                  const quantity = productData[i].quantity
+
                  await Product.updateOne({
                      _id:productId
                  },{
