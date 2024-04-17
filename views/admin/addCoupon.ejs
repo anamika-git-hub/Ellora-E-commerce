@@ -29,13 +29,13 @@
             </div>
             <nav>
                 <ul class="menu-aside">
-                    <li class="menu-item">
+                    <li class="menu-item active">
                         <a class="menu-link" href="home">
                             <i class="icon material-icons md-home"></i>
                             <span class="text">Dashboard</span>
                         </a>
                     </li>
-                    <li class="menu-item has-submenu ">
+                    <li class="menu-item has-submenu">
                         <a class="menu-link" href="page-products-list.html">
                             <i class="icon material-icons md-shopping_bag"></i>
                             <span class="text">Products</span>
@@ -59,7 +59,7 @@
                             <span class="text">Orders</span>
                         </a>
                         <div class="submenu">
-                            <a href="orderList">Order list 1</a>
+                            <a href="orderList">Order list </a>
                         </div>
                     </li>
                     <li class="menu-item has-submenu">
@@ -71,13 +71,13 @@
                             <a href="couponList">Coupon list</a>
                         </div>
                     </li>
-                    <li class="menu-item has-submenu active">
+                    <li class="menu-item has-submenu">
                         <a class="menu-link" href="page-form-product-1.html">
                             <i class="icon material-icons md-add_box"></i>
                             <span class="text">Categories</span>
                         </a>
                         <div class="submenu">
-                            <a href="Categories" class="active">Categories list</a>
+                            <a href="Categories">Categories list</a>
                         </div>
                     </li>
                     <li class="menu-item has-submenu">
@@ -196,88 +196,60 @@
                 </div>
             </header>
             <section class="content-main">
-                <div class="content-header">
-                    <div>
-                        <h2 class="content-title card-title">Categories</h2>
-                        <p>Add, edit or delete a category</p>
+                <form action="/admin/addCoupon" method="post" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-9">
+                        <div class="content-header">
+                            <h2 class="content-title">Add New Coupon</h2>
+                        </div>
                     </div>
-                    <div>
-                        <a href="addCategories" class="btn btn-primary btn-sm rounded">Create new</a>
-                    </div>
-
-                </div>
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="col-lg-4 col-md-6 me-auto">
-                                    <input type="text" placeholder="Search..." class="form-control" id="inputThings" onkeyup="searchName()"/>
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div class="mb-4">
+                                    <label for="product_title"  class="form-label">Coupon name</label>
+                                    <input type="text" name="name" placeholder="Type here" class="form-control" id="product_title" />
                                 </div>
-                                <br>
-                                <div class="table-responsive">
-                                    <table id="tableId" class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Name</th>
-                                                <th>Description</th>
-                                                <th class="text-end">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <%if(category.length>0){
-                                                for(let i=0;i<category.length;i++){
-                                             %>
-                                            <tr>
-                                                
-                                                <td><%= category[i].name %></td>
-                                                <td><%= category[i].description %></td>
-                                                <td><%if(category[i].is_listed=== false){
-                                                     %>
-                                                    <button class="btn btn-sm font-sm rounded btn-danger" onclick="listCategory(this,'<%=category[i]._id %>')">Unlisted</button>
-                                                    <% 
-                                                     }else{
-                                                     %> 
-                                                     <button class="btn btn-sm font-sm rounded btn-success" onclick="listCategory (this,'<%=category[i]._id%>')">Listed</button>
-                                                     <%
-                                                    } %>
-                                                </td>
-                                                <td >
-                                                    <a class="btn btn-sm font-sm rounded btn-primary" href='/admin/editCategories?id=<%= category[i]._id %>' >Edit</a>
-                                                </td>
-                                            </tr>
-                                                 <%
-                                                }
-                                            } else { %>
-                                             <tr>
-                                                 <td colspan="5" style="text-align: center; padding: 10px;">Category not found</td>
-                                            </tr>
-                                             <% } %>
-                                            
-                                        </tbody>
-                                    </table>
+                                <div class="row gx-3">
+                                    <div class="col-md-4 mb-3">
+                                        <label for="product_sku" class="form-label">Validity Date</label>
+                                            <input type="date" name="ValidityDate" value="02.05.2021" class="form-control" />
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="product_color" class="form-label">Offer Price</label>
+                                        <input type="text" name="offerPrice" placeholder="Type here" class="form-control" id="product_color" />
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label for="product_size" class="form-label">Maximum limit</label>
+                                        <input type="text" name="maximumLimit" placeholder="Type here" class="form-control" id="product_size" />
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="product_brand" class="form-label">Coupon code</label>
+                                    <input  placeholder="Type here" class="form-control" id="product_brand" />
                                 </div>
                             </div>
-                            <!-- .col// -->
                         </div>
-                        <!-- .row // -->
+                        <!-- card end// -->
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <div>
+                                    <label class="form-label">Images</label>
+                                    <input class="form-control" name="image" type="file" />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- card end// -->
                     </div>
-                    <!-- card body .// -->
                 </div>
-                <!-- card .// -->
-                <div class="pagination-area mt-15 mb-50">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-start">
-                            <% for(let j=1; j<=totalPages; j++){ %>
-                            <li class="page-item active"><a class="page-link" href="?page=<%= j%>"><%= j%></a></li>
-                            <% } %>
-                            <li class="page-item">
-                                <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                            </li>
-                        </ul>
-                    </nav>
+                 <!-- row end// -->
+                 <div class="row">
+                    <div >
+                        <button class="btn btn-primary" type="submit">Add Coupon</button>
+                    </div>
                 </div>
+            </form>
             </section>
-            <!-- content-main end// -->
             <footer class="main-footer font-xs">
                 <div class="row pb-30 pt-15">
                     <div class="col-sm-6">
@@ -300,43 +272,23 @@
         <!-- Main Script -->
         <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
         <script>
-            function searchName(){
-        
-               var table,input,tr,i,filter
-               input = document.getElementById('inputThings')
-               table = document.getElementById('tableId')
-               filter = input.value.toUpperCase()
+            function generateCouponId() {
+    let couponId = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const length = 10;
 
-               tr = table.getElementsByTagName('tr')
-               for(i=0;i<tr.length;i++){
-                    td=tr[i].getElementsByTagName('td')[0]
-                    if(td){
-                        txtValue=td.textContent
-                        console.log(txtValue)
-                        if(txtValue.toUpperCase().indexOf(filter)>-1){
-                             tr[i].style.display=""
-                        }else{
-                            tr[i].style.display="none"
-                        }
-                    }
-                }
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        couponId += characters.charAt(randomIndex);
+    }
 
+    return couponId;
+}
 
-             }
-        </script>
-        <script>
-            function listCategory(tag,categoryId){
-                if(tag.innerText=='Listed'){
-                    tag.innerText='Unlisted'
-                    tag.style.background='red'
-                    tag.style.color='white'
-                }else if(tag.innerText == 'Unlisted'){
-                    tag.innerText='Listed'
-                    tag.style.background='green'
-                    tag.style.color='black'
-                }
-                fetch(`/admin/listCategory?categoryId=${categoryId}`)
-            }
+// Example usage
+const newCouponId = generateCouponId();
+console.log(newCouponId); // Outputs something like "aB3C7EzK9h"
+
         </script>
     </body>
 </html>

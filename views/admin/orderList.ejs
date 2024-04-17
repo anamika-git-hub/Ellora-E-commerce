@@ -65,12 +65,10 @@
                     <li class="menu-item has-submenu">
                         <a class="menu-link" href="page-sellers-cards.html">
                             <i class="icon material-icons md-store"></i>
-                            <span class="text">Sellers</span>
+                            <span class="text">Coupon</span>
                         </a>
                         <div class="submenu">
-                            <a href="page-sellers-cards.html">Sellers cards</a>
-                            <a href="page-sellers-list.html">Sellers list</a>
-                            <a href="page-seller-detail.html">Seller profile</a>
+                            <a href="couponList">Coupon list</a>
                         </div>
                     </li>
                     <li class="menu-item has-submenu ">
@@ -231,40 +229,40 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-
+                                    <%console.log("orderLength:"+paginatedProductIds.length)%>
                                <% if(orderData && orderData.length>0){%>
-                                <% orderData.forEach((order)=>{%>
-                                    
-                                <% order.products.forEach((value,index)=>{%>
+                                    <% orderData.forEach(order=>{%>
+                                        
+                                <% paginatedProductIds.forEach((value,index)=>{%>
                                     <tr >
 
-                                    <input type="hidden" name="productId" value="<%= value.productId %>">
-                                    <td>
-                                       <b><img src="<%= value.productId.image[0]%>" class="img-sm img-thumbnail" alt="Product image"></b>
-                                    </td>
-                                    <td><%= value.productId.name %></td>
-                                    <td>$<%= value.productId.price %></td>
-                                    <td><span class="badge rounded-pill alert-warning"><%= order.status %></span></td>
-                                    <td><%= new Date(order.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %></td>
-                                    <td class="text-end">
-                                        <button  href="#" onclick="toOrder('<%= value.productId._id %>')"  id="toOrderDetails"  class="btn btn-md rounded font-sm">Detail</button>
-                                    </td>
-                                    <td>
-                                        <% if(value.status === 'cancelled'){%>
-                                            <button type="submit" class="btn btn-md rounded disabled" onclick="cancelOrder(this,'<%= value.productId._id %>')">
-                                                <span>Cancelled</span>
+                                        <input type="hidden" name="productId" value="<%= value.productId %>">
+                                        <td>
+                                            <b><img src="<%= value.image[0]%>" class="img-sm img-thumbnail" alt="Product image"></b>
+                                        </td>
+                                        <td><%= value.name %></td>
+                                        <td>$<%= value.price %></td>
+                                        <td><span class="badge rounded-pill alert-warning"><%= order.status %></span></td>
+                                        <td><%= new Date(order.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %></td>
+                                        <td class="text-end">
+                                            <button  href="#" onclick="toOrder('<%= value._id %>')"  id="toOrderDetails"  class="btn btn-md rounded font-sm">Detail</button>
+                                        </td>
+                                        <td>
+                                            <% if(value.status === 'cancelled'){%>
+                                                <button type="submit" class="btn btn-md rounded disabled" onclick="cancelOrder(this,'<%= value._id %>')">
+                                                    <span>Cancelled</span>
                                                 </button>
                                             <%}else{%>
-                                                <button type="submit"  class="btn btn-md rounded " onclick="cancelOrder(this,'<%= value.productId._id %>')">
+                                                <button type="submit"  class="btn btn-md rounded " onclick="cancelOrder(this,'<%= value._id %>')">
                                                     <span>Cancel</span>
-                                                    </button>
+                                                </button>
                                             <%}%>
                                         
-                                   </td>
-                                </tr>
-                                <div class="row" id="orderDetails<%= value.productId._id %>"  style="display: none;">
+                                        </td>
+                                    </tr>
+                                    <div class="row" id="orderDetails<%= value._id %>"  style="display: none;">
                                                           
-                                    <div class="col-lg-4">
+                                        <div class="col-lg-4">
                                             <div class="card card-dashboard">
                                                 <div class="card-body">
                                                     <h3 class="card-title">Customer</h3><!-- End .card-title -->
@@ -275,18 +273,18 @@
                                                  
                                                 </div><!-- End .card-body -->
                                             </div><!-- End .card-dashboard -->
-                                    </div><!-- End .col-lg-4 -->
-                                    <div class="col-lg-4">
-                                        <div class="card card-dashboard">
-                                            <div class="card-body">
+                                        </div><!-- End .col-lg-4 -->
+                                        <div class="col-lg-4">
+                                            <div class="card card-dashboard">
+                                                <div class="card-body">
                                                     <h3 class="card-title">Order info</h3><!-- End .card-title -->
 
                                                     <p>Shipping:Fargo Express<br>
                                                         Pay method:<%= order.payment%><br>
                                                         Status:<%= value.status%><br>
                                                  
-                                            </div><!-- End .card-body -->
-                                        </div><!-- End .card-dashboard -->
+                                                </div><!-- End .card-body -->
+                                            </div><!-- End .card-dashboard -->
                                     </div><!-- End .col-lg-4 -->
                                    
                                         <div class="col-lg-4">
@@ -304,33 +302,35 @@
                                         </div><!-- End .col-lg-4 -->
                                 </div>
                                 <%}) %>
-
                                 <%}) %>
+                               
                               <% }else{%>
                                 <tr>
                                     <td colspan="5" style="text-align: center; padding: 10px;">Orders not found</td>
                                 </tr>
                                 <%} %>
+                                
                                 </tbody>
                             </table>
+                            <div id="orderLists" class="pagination-area mt-30 mb-50">
+                                <nav aria-label="Page navigation example ">
+                                    <ul class="pagination justify-content-center">
+                                        <% for(let j=1; j<=totalPages; j++){ %>
+                                        <li class="page-item <%= j === currentPage ? "active":" "%>"><a class="page-link" href="?page=<%= j%>"><%= j%></a></li>
+                                        <% } %>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
                         </div>
                         <!-- table-responsive //end -->
                     </div>
                     <!-- card-body end// -->
                 </div>
                 <!-- card end// -->
-                <div class="pagination-area mt-15 mb-50">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-start">
-                            <% for(let j=1; j<=totalPages; j++){ %>
-                            <li class="page-item <%= j === currentPage ? 'active':''%>"><a class="page-link" href="?page=<%= j%>"><%= j%></a></li>
-                            <% } %>
-                            <li class="page-item">
-                                <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
+                
             </section>
             <!-- content-main end// -->
             <footer class="main-footer font-xs">

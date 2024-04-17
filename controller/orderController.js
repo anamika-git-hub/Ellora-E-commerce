@@ -1,20 +1,57 @@
 const User = require('../models/userModel');
 const Cart = require('../models/cartModel');
 const Order = require('../models/orderModel');
-const Product = require('../models/productsModel')
+const Product = require('../models/productsModel');
+const Razorpay = require('razorpay');
+const {RAZORPAY_ID_KEY,RAZORPAY_SECRET_KEY} = process.env;
+
+const razorpayInstance = new Razorpay({
+    key_id : RAZORPAY_ID_KEY,
+    key_secret : RAZORPAY_SECRET_KEY
+});
 
 
 const placeOrder = async(req,res)=>{
     try {
+        
         const userId = req.session.user_id;
         const {shippingAddress,subTotal,shippingMethod} = req.body;
-       
+        const amount =subTotal*100
+        if(shippingMethod == 'Razorpay'){
+            const options = {
+                amount:amount,
+                currency:'INR',
+                receipt :'anamikap9895@gmail.com'
+            }
+    
+            razorpayInstance.orders.create(options,
+            (err,order)=>{
+                console.log('or',order);
+                if(!err){
+                    res.status(200).send({
+                        success:true,
+                        msg:'Order Created',
+                        order_id:order.id,
+                        amount:amount,
+                        key_id:RAZORPAY_ID_KEY,
+                        // product_name:req.body.name,
+                        // description:req.body.description,
+                        contact:'9896754325',
+                        name:'Anamika',
+                        email:'anamikap9895@gmail.com'
+                    })
+                }else{
+                    res.status(400).send({success:false,msg:'Something went wrong!'})
+                }
+            })
+           
+        }
         const userData = await User.findById({_id:userId});
         const address = userData.addresses.find((address=>{
             return address._id.equals(shippingAddress)
         }))
         const name = userData.name;
-        const cartData = await Cart.findOne({userId:userId})
+        const cartData = await Cart.findOne({userId:userId}).populate("products.productId")
         const productData = cartData.products;
         
         const status = shippingMethod === "Cash on delivery" ? "placed" : "pending";
@@ -40,26 +77,30 @@ const placeOrder = async(req,res)=>{
             statusLevel:statusLevel,
             payment:shippingMethod,
             products:productData
-        })
+        },res.status(200).send({order:true,msg:'Order successful'}))
+        
+        
 
         const orderData = await Order.findOne({userId:userId});
         const proData = orderData.products;
         for(let i=0;i<proData.length;i++){
         if(proData[i].status === 'placed'){
-            await Cart.deleteOne({userId:userId})
+            // await Cart.deleteOne({userId:userId})
            for(let i=0;i<cartData.products.length;i++){
                 const productId = productData[i].productId;
                 const quantity = productData[i].quantity;
                 console.log('quantity',quantity);
-                const result = await Product.updateOne({
-                    _id:productId
-                },{
-                    $inc:{
-                        stock : -quantity
-                    }
-                })
 
-                console.log('res',result);
+                // const result = await Product.updateOne({
+                //     _id:productId
+                // },{
+                //     $inc:{
+                //         stock : -quantity
+                //     }
+                // })
+                const data = await Product.findOne({_id:productId});
+                data.stock=data.stock-quantity;
+                 await  data.save()
             }
         }else if(proData[i].status === 'cancelled'){
             await Cart.deleteOne({userId:userId})
@@ -77,9 +118,6 @@ const placeOrder = async(req,res)=>{
              }
         }
         }
-       
-
-
     } catch (error) {
         console.log(error.message);
     }
@@ -91,15 +129,18 @@ const loadOrderList = async(req,res)=>{
     if(req.query.page){
         page = req.query.page;
     }
-    const limit = 2;
+    const limit = 5;
         const orderData = await Order.find().populate('products.productId').populate('userId')
-        .limit(limit * 1)
-        .skip((page-1)* limit)
-        .exec();
+        
+        const products = orderData.flatMap(order => order.products.map(product => product.productId))
+        const paginatedProductIds = products.slice((page - 1) * limit, page * limit);
+        console.log('pro',paginatedProductIds);
+        
       
     const count = await Order.find({
     }).countDocuments();
-        res.render('orderList',{orderData,totalPages:Math.ceil(count/limit),currentPage:page})
+    console.log("length of oderData:"+orderData.length)
+        res.render('orderList',{orderData,paginatedProductIds,totalPages:Math.ceil(count/limit),currentPage:page})
     } catch (error) {
         console.log(error.message);
     }

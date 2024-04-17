@@ -42,7 +42,7 @@ const addtoCart = async(req,res)=>{
         }else{
         
         if(cartData){
-            const existProduct = cartData.products.find((pro)=>pro.productId.toString()== productId);
+            const existProduct = cartData.products.find((pro)=>pro.productId.toString() == productId);
             if(existProduct){
                 res.json({success:false})
             } else{
@@ -71,7 +71,7 @@ const addtoCart = async(req,res)=>{
                     
                 }
             ]
-            // ,
+           
             // subTotal:products.totalPrice.forEach((item,index)=>{item*index})
            
         })

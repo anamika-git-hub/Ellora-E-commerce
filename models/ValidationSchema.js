@@ -30,8 +30,16 @@ const joiUserSchema = joi.object({
     mobile : joi.number().max(10).min(10). required()
 })
 
+const joiCouponSchema = joi.object({
+    name: joi.string().required(),
+    validityDate: joi.date(),
+    offerPrice: joi.number(),
+    maximumLimit: joi.number()
+})
+
 module.exports = {
     joiRegistrationSchema,
     joiProductSchema,
-    joiUserSchema
+    joiUserSchema,
+    joiCouponSchema
 }

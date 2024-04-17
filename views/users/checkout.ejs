@@ -438,7 +438,7 @@
                                                         <div class="card-header" id="heading-4">
                                                             <h2 class="card-title">
                                                                 <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
-                                                                    PayPal <small class="float-right paypal-link">What is PayPal?</small>
+                                                                    Razorpay 
                                                                 </a>
                                                             </h2>
                                                         </div><!-- End .card-header -->
@@ -861,16 +861,45 @@
     </script>
     
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
     async function placeOrder(subTotal){
          const shippingAddress = document.querySelector('input[name="shippingAddress"]:checked').value;
          const selectedPaymentMethod = document.querySelector('.accordion-summary .card-header a[aria-expanded="true"]');
             const shippingMethod = selectedPaymentMethod.innerText.trim();
-           console.log('sp',shippingAddress);
           axios.post('/placeOrder',{shippingAddress ,subTotal,shippingMethod})
-
-              .then(function(response){
-                  console.log(response.data);
+              .then(function(res){
+                  console.log(res.data);
+                  if(res.data.success){
+                    var options = {
+						"key": ""+res.data.key_id+"",
+						"amount": ""+res.data.amount+"",
+						"currency": "INR",
+						// "image": "https://dummyimage.com/600x400/000/fff",
+						"order_id": ""+res.data.order_id+"",
+						"handler": function (response){
+							alert("Payment Succeeded");
+							// window.open("/","_self")
+						},
+						"prefill": {
+						
+							"name": ""+res.data.name+"",
+							"email": ""+res.data.email+""
+						},
+						
+					};
+					var razorpayObject = new Razorpay(options);
+					razorpayObject.on('payment.failed', function (response){
+							alert("Payment Failed");
+					});
+					razorpayObject.open();
+				}
+                if(res.data.order){
+                    alert(res.msg);
+                }
+				else{
+					alert(res.msg);
+				}
               }).catch(function(error){
                   console.error('Error:', error);
           });

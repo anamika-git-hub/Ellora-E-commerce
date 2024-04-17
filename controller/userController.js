@@ -303,6 +303,8 @@ const editProfile = async(req,res)=>{
                 new:true
             })
          }
+         res.redirect('/profile')
+         
          
     } catch (error) {
         console.log(error.message);
@@ -367,6 +369,7 @@ const addAddress = async(req,res)=>{
                 }
             }
         })
+        res.render('profile')
     }catch(error){
         console.log(error.message);
     }
@@ -405,6 +408,7 @@ const deleteAddress = async(req,res)=>{
         }
         )
         res.json({success:true});
+        res.render('profile')
     } catch (error) {
         console.log(error.message);
     }

@@ -136,8 +136,8 @@
                         </a>
                     </li>
                 </ul>
-                <br />
-                <br />
+                <br/>
+                <br/>
             </nav>
         </aside>
         <main class="main-wrap">
@@ -198,11 +198,11 @@
             <section class="content-main">
                 <div class="content-header">
                     <div>
-                        <h2 class="content-title card-title">Categories</h2>
-                        <p>Add, edit or delete a category</p>
+                        <h2 class="content-title card-title">Coupons</h2>
+                        <p>Add, edit or delete a coupons</p>
                     </div>
                     <div>
-                        <a href="addCategories" class="btn btn-primary btn-sm rounded">Create new</a>
+                        <a href="addCoupon" class="btn btn-primary btn-sm rounded">Create new</a>
                     </div>
 
                 </div>
@@ -224,34 +224,21 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <%if(category.length>0){
-                                                for(let i=0;i<category.length;i++){
-                                             %>
+                                           
                                             <tr>
                                                 
-                                                <td><%= category[i].name %></td>
-                                                <td><%= category[i].description %></td>
-                                                <td><%if(category[i].is_listed=== false){
-                                                     %>
-                                                    <button class="btn btn-sm font-sm rounded btn-danger" onclick="listCategory(this,'<%=category[i]._id %>')">Unlisted</button>
-                                                    <% 
-                                                     }else{
-                                                     %> 
-                                                     <button class="btn btn-sm font-sm rounded btn-success" onclick="listCategory (this,'<%=category[i]._id%>')">Listed</button>
-                                                     <%
-                                                    } %>
+                                                <td></td>
+                                                <td></td>
+                                                <td>
                                                 </td>
                                                 <td >
-                                                    <a class="btn btn-sm font-sm rounded btn-primary" href='/admin/editCategories?id=<%= category[i]._id %>' >Edit</a>
+                                                   
                                                 </td>
                                             </tr>
-                                                 <%
-                                                }
-                                            } else { %>
                                              <tr>
-                                                 <td colspan="5" style="text-align: center; padding: 10px;">Category not found</td>
+                                                 <td colspan="5" style="text-align: center; padding: 10px;">Coupons not found</td>
                                             </tr>
-                                             <% } %>
+                                           
                                             
                                         </tbody>
                                     </table>
@@ -267,9 +254,7 @@
                 <div class="pagination-area mt-15 mb-50">
                     <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-start">
-                            <% for(let j=1; j<=totalPages; j++){ %>
-                            <li class="page-item active"><a class="page-link" href="?page=<%= j%>"><%= j%></a></li>
-                            <% } %>
+                            
                             <li class="page-item">
                                 <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
                             </li>
@@ -299,44 +284,6 @@
         <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
         <!-- Main Script -->
         <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
-        <script>
-            function searchName(){
         
-               var table,input,tr,i,filter
-               input = document.getElementById('inputThings')
-               table = document.getElementById('tableId')
-               filter = input.value.toUpperCase()
-
-               tr = table.getElementsByTagName('tr')
-               for(i=0;i<tr.length;i++){
-                    td=tr[i].getElementsByTagName('td')[0]
-                    if(td){
-                        txtValue=td.textContent
-                        console.log(txtValue)
-                        if(txtValue.toUpperCase().indexOf(filter)>-1){
-                             tr[i].style.display=""
-                        }else{
-                            tr[i].style.display="none"
-                        }
-                    }
-                }
-
-
-             }
-        </script>
-        <script>
-            function listCategory(tag,categoryId){
-                if(tag.innerText=='Listed'){
-                    tag.innerText='Unlisted'
-                    tag.style.background='red'
-                    tag.style.color='white'
-                }else if(tag.innerText == 'Unlisted'){
-                    tag.innerText='Listed'
-                    tag.style.background='green'
-                    tag.style.color='black'
-                }
-                fetch(`/admin/listCategory?categoryId=${categoryId}`)
-            }
-        </script>
     </body>
 </html>
