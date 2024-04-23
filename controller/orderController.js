@@ -28,7 +28,7 @@ const placeOrder = async(req,res)=>{
             (err,order)=>{
                 console.log('or',order);
                 if(!err){
-                    res.status(200).send({
+                    res.status(200).json({
                         success:true,
                         msg:'Order Created',
                         order_id:order.id,
@@ -41,7 +41,7 @@ const placeOrder = async(req,res)=>{
                         email:'anamikap9895@gmail.com'
                     })
                 }else{
-                    res.status(400).send({success:false,msg:'Something went wrong!'})
+                    res.status(400).json({success:false,msg:'Something went wrong!'})
                 }
             })
            
@@ -77,10 +77,8 @@ const placeOrder = async(req,res)=>{
             statusLevel:statusLevel,
             payment:shippingMethod,
             products:productData
-        },res.status(200).send({order:true,msg:'Order successful'}))
-        
-        
-
+        })
+        res.redirect('/successPage');
         const orderData = await Order.findOne({userId:userId});
         const proData = orderData.products;
         for(let i=0;i<proData.length;i++){
@@ -118,6 +116,15 @@ const placeOrder = async(req,res)=>{
              }
         }
         }
+      
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const loadSuccessPage = async(req,res)=>{
+    try {
+        res.render('successPage')
     } catch (error) {
         console.log(error.message);
     }
@@ -164,6 +171,7 @@ const cancelOrder = async(req,res)=>{
 
 module.exports={
     placeOrder,
+    loadSuccessPage,
     loadOrderList,
     cancelOrder
 }

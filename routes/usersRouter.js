@@ -20,7 +20,7 @@ const cartController = require('../controller/cartController');
 const orderController = require('../controller/orderController');
 const wishlistController = require('../controller/wishlistController');
 
-userRouter.get('/',isLogin,userController.loadHome);
+userRouter.get('/',userController.loadHome);
 userRouter.get('/login',isLogout,userController.loadLogin);
 userRouter.get('/signUp',isLogout,userController.loadSignup);
 userRouter.post('/signUp',userController.insertUser);
@@ -36,7 +36,7 @@ userRouter.get('/contact',isLogin,userController.loadContact);
 userRouter.get('/about',isLogin,userController.loadAbout);
 
 userRouter.get('/profile',isLogin,userController.loadProfile);
-userRouter.post('/profile',userController.editProfile);
+userRouter.put('/profile',userController.editProfile);
 userRouter.post('/profile',userController.resetPasswithOld);
 userRouter.post('/addAddress',userController.addAddress);
 userRouter.post('/editAddress',userController.editAddress);
@@ -59,6 +59,7 @@ userRouter.post('/deleteCartItem',cartController.deleteCartItem);
 
 userRouter.get('/CheckOut',isLogin,cartController.loadCheckOut);
 userRouter.post('/placeOrder',orderController.placeOrder);
+userRouter.get('/successPage',orderController.loadSuccessPage);
 userRouter.get('/cancelOrder',isLogin,orderController.cancelOrder);
 
 

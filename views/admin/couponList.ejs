@@ -62,22 +62,22 @@
                             <a href="orderList">Order list 1</a>
                         </div>
                     </li>
-                    <li class="menu-item has-submenu">
+                    <li class="menu-item has-submenu active">
                         <a class="menu-link" href="page-sellers-cards.html">
                             <i class="icon material-icons md-store"></i>
                             <span class="text">Coupon</span>
                         </a>
                         <div class="submenu">
-                            <a href="couponList">Coupon list</a>
+                            <a href="couponList" class="active">Coupon list</a>
                         </div>
                     </li>
-                    <li class="menu-item has-submenu active">
+                    <li class="menu-item has-submenu ">
                         <a class="menu-link" href="page-form-product-1.html">
                             <i class="icon material-icons md-add_box"></i>
                             <span class="text">Categories</span>
                         </a>
                         <div class="submenu">
-                            <a href="Categories" class="active">Categories list</a>
+                            <a href="Categories" >Categories list</a>
                         </div>
                     </li>
                     <li class="menu-item has-submenu">
@@ -218,26 +218,44 @@
                                     <table id="tableId" class="table table-hover">
                                         <thead>
                                             <tr>
+                                                <th>ID</th>
                                                 <th>Name</th>
-                                                <th>Description</th>
+                                                <th>Code</th>
+                                                <th>Validity</th>
+                                                <th>Minimum Amount</th>
+                                                <th>Discount</th>
+                                                <th>Status</th>
                                                 <th class="text-end">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                           
-                                            <tr>
+                                            <% if(couponData && couponData.length >0){%>
                                                 
-                                                <td></td>
-                                                <td></td>
+                                           <% couponData.forEach((coupon,index)=>{%>
+                                            <tr>
+                                                <td><%= index+1 %></td>
+                                                <td><%= coupon.name %></td>
+                                                <td><%= coupon.couponCode %></td>
+                                                <td ><%= coupon.expiryDate.toLocaleDateString()%></td>
+                                                <td ><%= coupon.miniLimit %></td>
+                                                <td ><%= coupon.offerPrice %></td>
+                                                <td ><%= coupon.status %></td>
                                                 <td>
-                                                </td>
-                                                <td >
-                                                   
-                                                </td>
+                                                    <a href="/admin/editCoupon?id=<%= coupon._id %>" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> Edit </a>
+                                                    <%if(coupon.is_listed === true){%>
+                                                    <button class="btn btn-sm font-sm rounded text-white btn-success " onclick="deleteCoupon(this,'<%=coupon._id%>') "> List </button>
+                                                    <%}else{ %>
+                                                    <button  class="btn btn-sm font-sm rounded text-white btn-danger " onclick="deleteCoupon(this,'<%=coupon._id%>') ">  Unlist </button>
+                                                    <%} %> 
+                                                </td>  
                                             </tr>
-                                             <tr>
-                                                 <td colspan="5" style="text-align: center; padding: 10px;">Coupons not found</td>
-                                            </tr>
+                                            <%}) %>
+                                            <%}else{%>
+                                                <tr>
+                                                    <td colspan="5" style="text-align: center; padding: 10px;">Coupons not found</td>
+                                               </tr>
+                                            <%} %>
+                                            
                                            
                                             
                                         </tbody>
@@ -284,6 +302,19 @@
         <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
         <!-- Main Script -->
         <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
-        
+        <script>
+            function deleteCoupon(tag,couponId){
+                if(tag.innerText=='List'){
+                    tag.innerText='Unlist'
+                    tag.style.background='red'
+                    tag.style.color='white'
+                }else if(tag.innerText == 'Unlist'){
+                    tag.innerText='List'
+                    tag.style.background='green'
+                    tag.style.color='black'
+                }
+                fetch(`/admin/deleteCoupon?couponId=${couponId}`)
+            }
+        </script>
     </body>
 </html>

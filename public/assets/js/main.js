@@ -186,8 +186,16 @@ $(document).ready(function () {
 		});
 
 		// Update Price Range
+        let minPrice = 0;
+        let maxPrice = 0;
+
+
 		priceSlider.noUiSlider.on('update', function( values, handle ){
-			$('#filter-price-range').text(values.join(' - '));
+            minPrice = parseFloat(values[0].replace('$', ''));
+            maxPrice = parseFloat(values[1].replace('$', ''));
+            $('#filter-price-range').text('$'+minPrice+' - '+'$'+maxPrice);
+
+            fetch(`/products?minPrice=${minPrice}&maxPrice=${maxPrice}`)
 		});
 	}
 

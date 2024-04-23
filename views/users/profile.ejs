@@ -30,6 +30,64 @@
 </head>
 
 <body>
+    <style>
+        .wrapper {
+            display: flex;
+            align-items: center;
+        }
+    
+        .coupon_card {
+            width: 100%; /* Full width for responsiveness */
+            max-width: 300px; 
+            padding: 20px;
+            border-radius: 20px;
+            background: rgb(253, 196, 89);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden; /* Hide overflowing content */
+        }
+    
+        .content {
+            z-index: 10;
+        }
+    
+        .cross-bg {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            background-color: #b07727;
+            left: 0px;
+            top: 0px;
+            opacity: 0.4;
+            clip-path: polygon(50% 0%, 90% 20%, 100% 60%, 75% 100%, 25% 100%, 0% 60%, 10% 20%);
+            z-index: 1;
+        }
+    
+        .logo {
+            margin-bottom: 20px;
+        }
+    
+        .off {
+            line-height: 1;
+            font-size: 40px;
+        }
+    
+        .plus {
+            font-size: 18px;
+        }
+    
+        .code {
+            text-transform: uppercase;
+            padding: 10px;
+            background-color: #fff;
+            color: rgb(255, 111, 0);
+            font-size: 16px;
+        }
+    </style>
+    
     <div class="page-wrapper">
         <header class="header">
             <div class="header-top">
@@ -181,6 +239,9 @@
 								    <li class="nav-item">
 								        <a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
 								    </li>
+                                    <li class="nav-item">
+								        <a class="nav-link" id="tab-coupon-link" data-toggle="tab" href="#tab-coupon" role="tab" aria-controls="tab-coupon" aria-selected="false">Available coupons</a>
+								    </li>
 								    <li class="nav-item">
 								        <a class="nav-link" href="/logout">Sign Out</a>
 								    </li>
@@ -212,7 +273,6 @@
                                                 <% if(orderData && orderData.length>0){%> 
                                                 <% orderData.forEach((order)=>{%>
                                                     <% order.products.forEach((value,index)=>{ %>
-                                               
                                                    <tr >
                                                         <input type="hidden" name="productId" value="<%= value.productId %>">
                                                         <td class="product-col">
@@ -244,9 +304,10 @@
                                                             
                                                        </td>
                                                     </tr>
+                                                    
+                                              
                                                    
                                                         <div class="row" id="orderDetails<%= value.productId._id %>"  style="display: none;">
-                                                          
                                                             <div class="col-lg-4">
                                                                     <div class="card card-dashboard">
                                                                         <div class="card-body">
@@ -263,7 +324,6 @@
                                                                 <div class="card card-dashboard">
                                                                     <div class="card-body">
                                                                             <h3 class="card-title">Order info</h3><!-- End .card-title -->
-                    
                                                                             <p>Shipping:Fargo Express<br>
                                                                                 Pay method:<%= order.payment%><br>
                                                                                 Status:<%= value.status%><br>
@@ -285,6 +345,9 @@
                                                                     </div><!-- End .card-body -->
                                                                 </div><!-- End .card-dashboard -->
                                                             </div><!-- End .col-lg-4 -->
+                                                            <div class="col-lg-12 text-right">
+                                                            <a onclick="toOrderlist('<%= value.productId._id %>')" href="#tab-orders" id="toOrderlists">back</a>
+                                                            </div>
                                                         </div>
                                                         <%}) %>
                                                     <% }) %>
@@ -293,11 +356,13 @@
                                                     <p>No order has been made yet.</p>
                                                     <a href="/products" class="btn btn-outline-primary-2"><span>GO SHOP </span><i class="icon-long-arrow-right"></i></a>
                                                 <%} %>
-                                                       
+                                                     
                                             </tbody>
                                             
                                         </table> 
-                                        <div class="pagination-area mt-30 mb-50">
+                                       
+                                        <!-- End .table table-wishlist  -->
+                                        <div id="paginationId" class="pagination-area mt-30 mb-50">
                                             <nav aria-label="Page navigation example ">
                                                 <ul class="pagination justify-content-center">
                                                     <% for(let j=1; j<=totalPages; j++){ %>
@@ -308,11 +373,7 @@
                                                     </li>
                                                 </ul>
                                             </nav>
-                                        </div>
-                                        <!-- End .table table-wishlist  -->
-                                        
-
-                                        
+                                        </div> 
 
                                     </div><!-- .End .tab-pane -->
 								    <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
@@ -348,9 +409,10 @@
                                                         </div><!-- End .card-body -->
                                                     </div><!-- End .card-dashboard -->
                                                 </div><!-- End .col-lg-6 -->
+                                          
                                                 <div class="row" id="editAddress<%=value._id%>"  style="display: none;" >
                                                     <form action="/editAddress" method="post">
-                                                    <div class="col-lg-9">
+                                                    <div class="col-lg-12">
                                                         <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
                                       
                                                             <input type="hidden" name="_id" value="<%=value._id%>">
@@ -502,6 +564,37 @@
 			                				</button>
 			                			</form>
 								    </div><!-- .End .tab-pane -->
+                                  
+                                        <div class="tab-pane fade " id="tab-coupon" role="tabpanel" aria-labelledby="tab-coupon-link">
+                                            <% if(couponData && couponData.length>0){ %>
+                                                <% couponData.forEach(coupon=>{%>
+                                                    
+                                            <div class="wrapper d-flex flex-direction row ">
+                                               
+                                                <div class=" coupon_card card  col-lg-6">
+                                                    <div class="cross-bg"></div>
+                                                    <div class="content">
+                                                        <div class="text-center text-uppercase text-white off">
+                                                            <h1 class="mt-0"><%= coupon.offerPrice %></h1>
+                                                        </div>
+                                                        <div class="text-center text-white">
+                                                            <span class="plus"><%= coupon.name %></span>
+                                                        </div>
+                                                        <div class="text-center text-uppercase text-white">
+                                                            <h3 class="m-0"><%= coupon.expiryDate.toLocaleDateString() %></h3>
+                                                        </div>
+                                                        <div class="code text-center mt-4">
+                                                            <span>Use code: <%= coupon.couponCode %></span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <%}) %>     
+                                            <%}else{%>
+                                                <p>No coupon exist</p>
+                                                <a href="/products" class="btn btn-outline-primary-2"><span>GO SHOP </span><i class="icon-long-arrow-right"></i></a>
+                                            <%} %>
+                                        </div>
 								</div>
 	                		</div><!-- End .col-lg-9 -->
 	                	</div><!-- End .row -->
@@ -898,30 +991,21 @@
         $(`#editAddress${id}`).show();
     }
 </script>
-<script>
-    $(document).ready(function() {
-        $('#showeditAddress').click(function(e) {
-            e.preventDefault(); 
-            $('.col-lg-6').hide(); 
-            $('#editAddress').show(); 
-        });
-    });
-</script>
+
 <script>
     function toOrder(id){
-        $('#orderList').hide();
+        $('#orderList,#paginationId').hide();
         $(`#orderDetails${id}`).show();
     }
 </script>
+
 <script>
-    $(document).ready(function() {
-        $('#toOrderDetails').click(function(e) {
-            e.preventDefault(); 
-            $('#orderList').hide(); 
-            $(`#orderDetails`).show(); 
-        });
-    });
+    function toOrderlist(id){
+        $(`#orderDetails${id}`).hide();
+        $('#orderList,#paginationId').show();
+    }
 </script>
+
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>

@@ -226,53 +226,47 @@
                                 </thead>
                                 <tbody>
                                   
-          <% products.forEach(element => { %>
+                                    <% products.forEach(element => { %> 
                
-            <tr>
-                <td>
-                    <a href="/detailes?id=<%=element._id%>">
-                        <img src="<%= element.image[0]%> "class="img-sm img-thumbnail" alt="Item"  />
-                       
-                    </a>
-                </td>
-                    
-                
-                <td class="nameSearch"><%= element.name %></td>
-                
-                <td class="nameSearch"><%= element.categories.name %></td>
-            
-                <td><%= element.price %></td>
-                <td><%= element.stock %></td>
-                <td><%= element.description %></td>
-             
-                <td>
-                    
-                    <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
-                        <a href="/admin/editProducts?id=<%= element._id %>" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> Edit </a>
-                        <%
-                        if(element.is_listed === true){
-                            %>
-                            <button class="btn btn-sm font-sm rounded text-white btn-success " onclick="listProduct(this,'<%=element._id%>') "> List </button>
-                            <%
-                        }else{
-                            %>
-                            <button  class="btn btn-sm font-sm rounded text-white btn-danger " onclick="listProduct(this,'<%=element._id%>') ">  Unlist </button>
-                            <%
-                        }
-                        %>   
-                        </div>
-               </td>
-                
-            </tr>
-            <%     })  %>
+                                    <tr>
+                                        <td> 
+                                            <a href="/detailes?id=<%=element._id%>">
+                                            <img src="<%= element.image[0].url%> "class="img-sm img-thumbnail" alt="Item"  />
+                                            
+                                            </a>
+                                        </td>
+                                            
+                                        
+                                        <td class="nameSearch"><%= element.name %></td>
+                                        
+                                        <td class="nameSearch"><%= element.categories.name %></td>
+                                    
+                                        <td><%= element.price %></td>
+                                        <td><%= element.stock %></td>
+                                        <td><%= element.description %></td>
+                                    
+                                        <td>
+                                    
+                                        <div class="col-lg-2 col-sm-2 col-4 col-action text-end">
+                                        <a href="/admin/editProducts?id=<%= element._id %>" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> Edit </a>
+                                            <%if(element.is_listed === true){%>
+                                            <button class="btn btn-sm font-sm rounded text-white btn-success " onclick="listProduct(this,'<%=element._id%>') "> List </button>
+                                            <%}else{ %>
+                                            <button  class="btn btn-sm font-sm rounded text-white btn-danger " onclick="listProduct(this,'<%=element._id%>') ">  Unlist </button>
+                                            <%} %>   
+                                        </div>
+                                        </td>
+                                    
+                                    </tr>
+                                    <%}) %>
                                 </tbody>
                             </table>
                         </div>
-                        <!-- table-responsive //end -->
+                        <!-- table-responsive end -->
                     </div>
-                    <!-- card-body end// -->
+                    <!-- card-body end -->
                 </div>
-                <!-- card end// -->
+                <!-- card end -->
                 <div class="pagination-area mt-30 mb-50">
                     <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-start">
@@ -286,7 +280,7 @@
                     </nav>
                 </div>
             </section>
-            <!-- content-main end// -->
+            <!-- content-main end -->
             <footer class="main-footer font-xs">
                 <div class="row pb-30 pt-15">
                     <div class="col-sm-6">

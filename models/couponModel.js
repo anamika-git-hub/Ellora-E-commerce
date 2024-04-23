@@ -3,35 +3,37 @@ const mongoose = require('mongoose');
 const couponModel = new mongoose.Schema({
     name:{
         type:String,
-        require:true
+        required:true
     },
     status:{
-        type:Date,
-        enum:['active','expired']
+        type:String,
+        default:'active'
     },
     expiryDate:{
-        type:String,
-        require:true
+        type:Date,
+        required:true
     },
-    offer:{
+    offerPrice:{
         type:Number,
-        require:true
+        required:true
     },
-    image:{
-        type:String,
-        require:true
-    },
+   
     miniLimit:{
         type:Number,
-        require:true
+        required:true
     },
-    couponId:{
+    couponCode:{
         type:String,
-        require:true
+        required:true
     },
     usedUsers:{
         type:Array,
         default:[]
+    },
+    is_listed:{
+        type:Boolean,
+        required:true,
+        default:true
     }
 })
 

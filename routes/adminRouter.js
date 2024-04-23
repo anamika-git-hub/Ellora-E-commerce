@@ -55,7 +55,9 @@ adminRouter.post('/editproducts',productController.updateProducts);
 adminRouter.get('/couponList',isLogin,couponController.loadCouponList);
 adminRouter.get('/addCoupon',isLogin,couponController.loadAddCoupon);
 adminRouter.post('/addCoupon',isLogin,couponController.addCoupon);
-
+adminRouter.get('/deleteCoupon',isLogin,couponController.deleteCoupon);
+adminRouter.get('/editCoupon',couponController.loadEditCoupon);
+adminRouter.post('/editCoupon',couponController.editCoupon);
 adminRouter.get('/orderList',isLogin,orderController.loadOrderList);
 
 

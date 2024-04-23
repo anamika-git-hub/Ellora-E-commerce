@@ -31,7 +31,7 @@ const uploadMiddleware = (req, res, next) => {
             { width: 768, height: 1152, crop: "fill" }, 
           ],
         });
-        return result.secure_url;
+        return result.url;
       });
       const uploadedImages = await Promise.all(uploadPromises);
 

@@ -1,5 +1,6 @@
 const mongoose=require('mongoose');
-mongoose.connect('mongodb://127.0.0.1:27017/user_list').then(()=>console.log("connect")).catch((err)=>console.log(err))
+const dotenv = require('dotenv').config();
+mongoose.connect(process.env.MONGODB_URL).then(()=>console.log("connect")).catch((err)=>console.log(err))
 
 const createError = require('http-errors');
 const express = require('express');

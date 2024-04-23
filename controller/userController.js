@@ -7,8 +7,9 @@ const Boom = require('boom');
 const Order = require('../models/orderModel');
 const Cart = require('../models/cartModel');
 const Wishlist = require('../models/wishlistModel');
+const Coupon = require('../models/couponModel');
 
-
+// password hasing
 const securePassword =async(password)=>{
     try{
        const passwordHash = await bcrypt.hash(password,10);
@@ -18,14 +19,11 @@ const securePassword =async(password)=>{
     }
 }
 
+//get home page
 const loadHome = async(req,res)=>{
     try {
-        
         const cartData = await Cart.findOne({userId:req.session.user_id}).populate('userId').populate({path:'products.productId'});
-        
             res.render('home',{cartData})
-        
-
     } catch (error) {
         console.log(error.message)
     }
@@ -43,7 +41,10 @@ const loadLogin=async(req,res)=>{
 
 const loadSignup=async(req,res)=>{
     try {
-        res.render('signUp');
+
+        const messages = req.flash('messages')[0] || {}; 
+        const formData = req.flash('formData')[0] || {};
+        res.render('signUp',{messages,formData});
     } catch (error) {
         console.log(error.message)
     }
@@ -56,9 +57,13 @@ const insertUser =async(req,res)=>{
             abortEarly: false
           });
     if(error){ 
-        console.log('Invalid registration',error.message);
-        req.flash('exist', error.message);
-                res.redirect('/signUp')
+        const errorMessages = error.details.reduce((acc, cur) => {
+            acc[cur.context.key] = cur.message;
+            return acc;
+        }, {});
+        req.flash('messages', errorMessages);
+        req.flash('formData', req.body);
+        res.redirect('/signUp')
     }
         const value = await joiRegistrationSchema.validateAsync(req.body)
        
@@ -75,6 +80,7 @@ const insertUser =async(req,res)=>{
               req.flash('exist', 'User already exists with this email');
                return res.redirect('/signUp')
               }
+             
     }catch (error) {
         console.log(error.message);
     }
@@ -266,15 +272,16 @@ const loadProfile = async(req,res)=>{
         const cartData = await Cart.findOne({userId:req.session.user_id}).populate('userId').populate({path:'products.productId'});
         const wishlistData = await Wishlist.findOne({userId:userId}).populate('userId').populate('products.productId');
         const orderData = await Order.find({userId:userId}).sort({'_id':-1}).populate('products.productId').populate('userId')
+        const couponData = await Coupon.find()
         .limit(limit * 1)
         .skip((page-1)* limit)
         .exec();
          const count = await Order.find({
       }).countDocuments();
        if(orderData){
-        res.render('profile',{userData,cartData,wishlistData,orderData,totalPages:Math.ceil(count/limit),currentPage:page});
+        res.render('profile',{userData,cartData,wishlistData,couponData,orderData,totalPages:Math.ceil(count/limit),currentPage:page});
        }else{
-        res.render('profile',{userData,cartData,wishlistData});
+        res.render('profile',{userData,cartData,wishlistData,couponData});
        }
            
 

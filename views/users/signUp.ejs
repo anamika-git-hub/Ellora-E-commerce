@@ -351,46 +351,31 @@
 							    </div><!-- .End .tab-pane -->
 							    <div class="tab-pane fade show active" id="register-2" role="tabpanel" aria-labelledby="register-tab-2">
 							    	<form action="/signUp" method="post">
-                                        <% if (messages.exist) { %>
-                                            <div class="alert alert-danger d-flex align-items-center" role="alert" id="existAlert">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2 " viewBox="0 0 16 16" role="img" aria-label="Warning:">
-                                                  <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-                                                </svg>
-                                                <div >
-                                                    
-                                                    <strong>!!!</strong> 
-                                                    <%= messages.exist %>
-                                                    <!-- <script>
-                                                        alert('<%= messages.exist %>')
-                                                    </script> -->
-                                                 
-                                                  
-                                                 </div>
-                                              </div>
-                                               
-                                            
-                                        <% } %>
-                                       
-                                        
-                                          
 							    		<div class="form-group">
 							    			<label for="register-email-2">Your name</label>
-							    			<input type="text" class="form-control" id="name-field" name="name" required>
+							    			<input type="text" class="form-control" id="name-field" value="<%= formData.name %>"  name="name" required>
+                                            <span class="error-message" style="color: red;"><%= messages.name %></span>
 							    		</div><!-- End .form-group -->
                                         <div class="form-group">
 							    			<label for="register-email-2">Your email address </label>
-							    			<input type="email" class="form-control" id="email-field" name="email" required>
-							    		</div><!-- End .form-group --><div class="form-group">
+							    			<input type="email" class="form-control" id="email-field" value="<%= formData.email %>"  name="email" required>
+                                            <span class="error-message" style="color: red;"><%= messages.email %></span>
+							    		</div><!-- End .form-group -->
+                                        <div class="form-group">
 							    			<label for="register-email-2">Your mobile</label>
-							    			<input type="text" class="form-control" id="mobile-field" name="mobile"  required>
+							    			<input type="text" class="form-control" id="mobile-field" value="<%= formData.mobile %>"  name="mobile"  required>
+                                            <span class="error-message" style="color: red;"><%= messages.mobile %></span>
 							    		</div><!-- End .form-group -->
 							    		<div class="form-group">
 							    			<label for="register-password-2">Password </label>
-							    			<input type="password" class="form-control" id="register-password-2" name="password" required>
+							    			<input type="password" class="form-control" id="register-password-2"   name="password" required>
+                                            <span class="error-message"style="color: red;" ><%= messages.password %></span>
 							    		</div><!-- End .form-group -->
                                         <div class="form-group">
 							    			<label for="register-password-2">Confirm Password </label>
-							    			<input type="password" class="form-control" id="register-password-2" name="confirmPassword" required>
+							    			<input type="password" class="form-control" id="register-password-2"   name="confirmPassword" required>
+                                            <span class="error-message" style="color: red;"><%= messages.confirmPassword %></span>
+
 							    		</div><!-- End .form-group -->
                                         
 							    		<div class="form-footer">
