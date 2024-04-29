@@ -2,7 +2,6 @@ const User = require('../models/userModel')
 const Cart = require('../models/cartModel');
 const Product = require('../models/productsModel');
 const Wishlist = require('../models/wishlistModel');
-const { query } = require('express');
 
 const loadCart = async(req,res)=>{
     try {
@@ -24,7 +23,10 @@ const loadCart = async(req,res)=>{
                     initialAmount += itemPrice*item.quantity
                 })
             }
-            res.render('cart',{cartData, subTotal : initialAmount,wishlistData});
+            const totalAfterDiscound =  req.flash('totalAfterDiscound')[0] || initialAmount;
+                res.render('cart',{cartData, subTotal : initialAmount,wishlistData,totalAfterDiscound});
+           
+           
         }
 
     }catch (error){
@@ -117,6 +119,9 @@ const deleteCartItem = async(req,res)=>{
 
 const loadCheckOut = async(req,res)=>{
    try {
+
+      const {total} = req.body;
+      console.log('total',total);
       const userId = req.session.user_id;
       const user = await User.findById(userId);
       const addresses = user.addresses;
@@ -133,7 +138,8 @@ const loadCheckOut = async(req,res)=>{
                 initialAmount += itemPrice*item.quantity
             })
         }
-        res.render('checkout',{cartData,subTotal:initialAmount,addresses:addresses,wishlistData});
+        const totalAfterDiscound =  req.flash('totalAfterDiscound')[0] || initialAmount;
+        res.render('checkout',{cartData,subTotal:totalAfterDiscound,addresses:addresses,wishlistData});
       }
      
    } catch (error) {

@@ -22,7 +22,8 @@ const adminController=require('../controller/adminController')
 const productController=require('../controller/productController')
 const categoryController=require('../controller/categoryController');
 const orderController = require('../controller/orderController');
-const couponController = require('../controller/couponController')
+const couponController = require('../controller/couponController');
+const offerController = require('../controller/offerController');
 
 adminRouter.get('/',isLogout,adminController.loadLogin);
 
@@ -58,6 +59,11 @@ adminRouter.post('/addCoupon',isLogin,couponController.addCoupon);
 adminRouter.get('/deleteCoupon',isLogin,couponController.deleteCoupon);
 adminRouter.get('/editCoupon',couponController.loadEditCoupon);
 adminRouter.post('/editCoupon',couponController.editCoupon);
+
+adminRouter.get('/offerList',offerController.loadOfferList);
+adminRouter.get('/addOffer',offerController.loadAddOffer);
+adminRouter.post('/addOffer',offerController.addOffer);
+
 adminRouter.get('/orderList',isLogin,orderController.loadOrderList);
 
 

@@ -29,19 +29,19 @@
             </div>
             <nav>
                 <ul class="menu-aside">
-                    <li class="menu-item">
+                    <li class="menu-item active">
                         <a class="menu-link" href="home">
                             <i class="icon material-icons md-home"></i>
                             <span class="text">Dashboard</span>
                         </a>
                     </li>
-                    <li class="menu-item has-submenu ">
+                    <li class="menu-item has-submenu">
                         <a class="menu-link" href="page-products-list.html">
                             <i class="icon material-icons md-shopping_bag"></i>
                             <span class="text">Products</span>
                         </a>
                         <div class="submenu">
-                            <a href="productList" >Product List</a>
+                            <a href="productList">Product List</a>
                         </div>
                     </li>
                     <li class="menu-item has-submenu">
@@ -53,13 +53,13 @@
                             <a href="userList">User list </a>
                         </div>
                     </li>
-                    <li class="menu-item has-submenu active">
+                    <li class="menu-item has-submenu">
                         <a class="menu-link" href="page-orders-1.html">
                             <i class="icon material-icons md-shopping_cart"></i>
                             <span class="text">Orders</span>
                         </a>
                         <div class="submenu">
-                            <a href="/orderList" class="active">Order list</a>
+                            <a href="orderList">Order list </a>
                         </div>
                     </li>
                     <li class="menu-item has-submenu">
@@ -71,7 +71,16 @@
                             <a href="couponList">Coupon list</a>
                         </div>
                     </li>
-                    <li class="menu-item has-submenu ">
+                    <li class="menu-item has-submenu">
+                        <a class="menu-link" href="page-sellers-cards.html">
+                            <i class="icon material-icons md-store"></i>
+                            <span class="text">Offer</span>
+                        </a>
+                        <div class="submenu">
+                            <a href="offerList">Offer list</a>
+                        </div>
+                    </li>
+                    <li class="menu-item has-submenu">
                         <a class="menu-link" href="page-form-product-1.html">
                             <i class="icon material-icons md-add_box"></i>
                             <span class="text">Categories</span>
@@ -196,142 +205,78 @@
                 </div>
             </header>
             <section class="content-main">
-                <div class="content-header">
-                    <div>
-                        <h2 class="content-title card-title">Order List</h2>
-                        
-                    </div>
-                    <div>
-                        <input type="text" placeholder="Search order ID" class="form-control bg-white" />
-                    </div>
-                </div>
-                <div class="card mb-4">
-                    <header class="card-header">
-                        <div class="row gx-3">
-                            <div class="col-lg-4 col-md-6 me-auto">
-                                <input type="text" placeholder="Search..." class="form-control" />
-                            </div>
-                            
+                <form action="/admin/addOffer" method="post" >
+                <div class="row">
+                    <div class="col-9">
+                        <div class="content-header">
+                            <h2 class="content-title">Add New Offer</h2>
                         </div>
-                    </header>
-                    <!-- card-header end// -->
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="orderLists" class="table table-cart table-mobile">
-                                <thead>
-                                    <tr>
-                                        <th>Image</th>
-                                        <th>Name</th>
-                                        <th>Payment</th>
-                                        <th>Status</th>
-                                        <th>Date</th>
-                                        <th class="text-end">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                               <% if(orderData && orderData.length>0){%>
-                                    <% orderData.forEach(order=>{%>
-                                        
-                                <% paginatedProductIds.forEach((value,index)=>{%>
-                                    <tr >
-
-                                        <input type="hidden" name="productId" value="<%= value.productId %>">
-                                        <td>
-                                            <b><img src="<%= value.image[0]%>" class="img-sm img-thumbnail" alt="Product image"></b>
-                                        </td>
-                                        <td><%= value.name %></td>
-                                        <td>$<%= value.price %></td>
-                                        <td><span class="badge rounded-pill alert-warning"><%= order.status %></span></td>
-                                        <td><%= new Date(order.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %></td>
-                                        <td class="text-end">
-                                            <button  href="#" onclick="toOrder('<%= value._id %>')"  id="toOrderDetails"  class="btn btn-md rounded font-sm">Detail</button>
-                                        </td>
-                                        <td>
-                                            <% if(value.status === 'cancelled'){%>
-                                                <button type="submit" class="btn btn-md rounded disabled" onclick="cancelOrder(this,'<%= value._id %>')">
-                                                    <span>Cancelled</span>
-                                                </button>
-                                            <%}else{%>
-                                                <button type="submit"  class="btn btn-md rounded " onclick="cancelOrder(this,'<%= value._id %>')">
-                                                    <span>Cancel</span>
-                                                </button>
-                                            <%}%>
-                                        
-                                        </td>
-                                    </tr>
-                                    <div class="row" id="orderDetails<%= value._id %>"  style="display: none;">
-                                                          
-                                        <div class="col-lg-4">
-                                            <div class="card card-dashboard">
-                                                <div class="card-body">
-                                                    <h3 class="card-title">Customer</h3><!-- End .card-title -->
-                                                    <p><%= order.userId.name%><br>
-                                                        <%= order.userId.email%><br>
-                                                        <%= order.userId.mobile%><br>
-                                                   
-                                                 
-                                                </div><!-- End .card-body -->
-                                            </div><!-- End .card-dashboard -->
-                                        </div><!-- End .col-lg-4 -->
-                                        <div class="col-lg-4">
-                                            <div class="card card-dashboard">
-                                                <div class="card-body">
-                                                    <h3 class="card-title">Order info</h3><!-- End .card-title -->
-
-                                                    <p>Shipping:Fargo Express<br>
-                                                        Pay method:<%= order.payment%><br>
-                                                        Status:<%= value.status%><br>
-                                                 
-                                                </div><!-- End .card-body -->
-                                            </div><!-- End .card-dashboard -->
-                                    </div><!-- End .col-lg-4 -->
-                                   
-                                        <div class="col-lg-4">
-                                            <div class="card card-dashboard">
-                                                <div class="card-body">
-                                                    <h3 class="card-title">Deliver to</h3><!-- End .card-title -->
-                                                   
-                                                    <p><%=order.delivery_address.name%><br>
-                                                        <%=order.delivery_address.streetAddress%><br>
-                                                        <%=order.delivery_address.city%>,<%=order.delivery_address.pincode%><br>
-                                                        <%= order.delivery_address.state%><br>
-                                                       
-                                                </div><!-- End .card-body -->
-                                            </div><!-- End .card-dashboard -->
-                                        </div><!-- End .col-lg-4 -->
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                    <div class="mb-4">
+                                        <label for="product_title"  class="form-label">Offer name</label>
+                                        <input type="text" name="name" placeholder="Type here" class="form-control" id="product_title" />
+                                    </div>
+                                    <div class="row gx-3">
+                                        <div class="col-md-4 mb-3">
+                                            <label for="product_sku" class="form-label">Validity Date</label>
+                                                <input type="date" name="ValidityDate" value="02.05.2021" class="form-control" />
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="product_color" class="form-label">Offer Price</label>
+                                            <input type="text" name="offerPrice" placeholder="Type here" class="form-control" id="product_color" />
+                                        </div>
+                                    
+                                    </div>
+                            </div><!-- card end// -->
+                                <div class="card-body">
+                                <div class="row gx-3">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="product_sku" class="form-label">Offer Type</label>
+                                        <div class="ms-auto text-md-end">
+                                            <select class="form-select d-inline-block" name="offerTypeName" id="offerType">
+                                                <option>select</option>
+                                                <option>Product</option>
+                                                <option>Category</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3" id="category" hidden>
+                                        <label for="product_sku" class="form-label">Categories</label>
+                                        <div class="ms-auto text-md-end">
+                                            <select class="form-select" name="offerType" id="categorySelect">
+                                                <% categoryData.forEach(element => {  %>
+                                                    <option value="<%= element._id%>"><%= element.name %></option>
+                                                <% }); %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3" id="productsDiv" hidden>
+                                        <label for="product_sku" class="form-label">Products</label>
+                                        <div class="ms-auto text-md-end">
+                                            <select class="form-select" name="offerType" id="productSelect">
+                                                <% productData.forEach(element => {  %>
+                                                    <option value="<%= element._id %>"><%= element.name %></option>
+                                                <% }); %>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    
                                 </div>
-                                <%}) %>
-                                <%}) %>
-                               
-                              <% }else{%>
-                                <tr>
-                                    <td colspan="5" style="text-align: center; padding: 10px;">Orders not found</td>
-                                </tr>
-                                <%} %>
-                                
-                                </tbody>
-                            </table>
-                            <div id="orderLists" class="pagination-area mt-30 mb-50">
-                                <nav aria-label="Page navigation example ">
-                                    <ul class="pagination justify-content-center">
-                                        <% for(let j=1; j<=totalPages; j++){ %>
-                                        <li class="page-item <%= j === currentPage ? "active":" "%>"><a class="page-link" href="?page=<%= j%>"><%= j%></a></li>
-                                        <% } %>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
+                            </div><!-- card end// -->
                         </div>
-                        <!-- table-responsive //end -->
-                    </div>
-                    <!-- card-body end// -->
                 </div>
-                <!-- card end// -->
-                
+                 <!-- row end// -->
+                 <div class="row">
+                    <div >
+                        <button class="btn btn-primary" type="submit">Add Offer</button>
+                    </div>
+                </div>
+            </form>
             </section>
-            <!-- content-main end// -->
             <footer class="main-footer font-xs">
                 <div class="row pb-30 pt-15">
                     <div class="col-sm-6">
@@ -346,6 +291,35 @@
                 </div>
             </footer>
         </main>
+        <script>
+            const selectElements = document.getElementById('offerType');
+            selectElements.addEventListener('change', handleChange);
+        
+            function handleChange(event) {
+                const selectedValue = event.target.value;
+                const productsDiv = document.getElementById("productsDiv");
+                const categoryDiv = document.getElementById("category");
+        
+                if (selectedValue === 'Product') {
+                    console.log('Showing Products');
+                    productsDiv.hidden = false;
+                    categoryDiv.hidden = true;
+                    // Set name attribute for the visible select element
+                    document.getElementById("categorySelect").removeAttribute("name");
+                    document.getElementById("productSelect").setAttribute("name", "offerType");
+                } else if (selectedValue === 'Category') {
+                    console.log('Showing Categories');
+                    productsDiv.hidden = true;
+                    categoryDiv.hidden = false;
+                    // Set name attribute for the visible select element
+                    document.getElementById("productSelect").removeAttribute("name");
+                    document.getElementById("categorySelect").setAttribute("name", "offerType");
+                }
+            }
+        
+            document.getElementById("submitButton").addEventListener("click", function(event) {
+            });
+        </script>
         <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
         <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
         <script src="assets/js/vendors/select2.min.js"></script>
@@ -353,30 +327,6 @@
         <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
         <!-- Main Script -->
         <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
-        <script>
-            function cancelOrder(tag,orderId){
-              
-                    tag.innerText = 'Cancelled'
-                    tag.disabled=true
-                
-                fetch(`/cancelOrder?orderId=${orderId}`)
-            }
-        </script>
-        <script>
-            function toOrder(id){
-                console.log('id',id);
-                $('#orderLists').hide();
-                $(`#orderDetails${id}`).show();
-            }
-        </script>
-        <script>
-            $(document).ready(function() {
-                $('#toOrderDetails').click(function(e) {
-                    e.preventDefault(); 
-                    $('#orderLists').hide(); 
-                    $(`#orderDetails`).show(); 
-                });
-            });
-        </script>
+        
     </body>
 </html>

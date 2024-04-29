@@ -19,6 +19,7 @@ const productController = require('../controller/productController');
 const cartController = require('../controller/cartController');
 const orderController = require('../controller/orderController');
 const wishlistController = require('../controller/wishlistController');
+const couponController = require('../controller/couponController')
 
 userRouter.get('/',userController.loadHome);
 userRouter.get('/login',isLogout,userController.loadLogin);
@@ -56,6 +57,7 @@ userRouter.get('/cart',isLogin,cartController.loadCart);
 userRouter.post('/cart',cartController.addtoCart);
 userRouter.post('/cartUpdate',cartController.updatequantity);
 userRouter.post('/deleteCartItem',cartController.deleteCartItem);
+userRouter.post('/applyCoupon',couponController.applyCoupon);
 
 userRouter.get('/CheckOut',isLogin,cartController.loadCheckOut);
 userRouter.post('/placeOrder',orderController.placeOrder);

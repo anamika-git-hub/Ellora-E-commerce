@@ -1,6 +1,6 @@
 const { joiCouponSchema } = require('../models/ValidationSchema');
-const { off } = require('../models/categoryModel');
 const Coupon = require('../models/couponModel');
+const Cart = require('../models/cartModel');
 
 
 const loadCouponList = async(req,res)=>{
@@ -70,6 +70,23 @@ const editCoupon = async(req,res)=>{
     }
 }
 
+const applyCoupon = async(req,res)=>{
+    try {
+        const {couponCode }= req.body 
+        const couponData = await Coupon.findOne({couponCode:couponCode});
+        
+        const cartData = await Cart.findOne({userId:req.session.user_id});
+        
+       const subTotal = cartData.products.reduce((total,products)=>total + products.totalPrice,0)
+       const totalAfterDiscound = subTotal - couponData.offerPrice
+       req.flash('totalAfterDiscound',totalAfterDiscound)
+       req.flash('discoundAmount',couponData.offerPrice);
+       req.flash('subTotal',subTotal)
+       res.redirect('/cart');
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 
 module.exports = {
@@ -78,5 +95,6 @@ module.exports = {
     addCoupon,
     deleteCoupon,
     loadEditCoupon,
-    editCoupon
+    editCoupon,
+    applyCoupon
 }

@@ -213,21 +213,22 @@
                                 <h3 class="summary-title">Your cart is empty</h3>
 
                                 <% } %>
-	                			<div class="cart-bottom">
-			            			<div class="cart-discount">
-			            				<form action="#">
-			            					<div class="input-group">
-				        						<input type="text" class="form-control" required placeholder="coupon code">
-				        						<div class="input-group-append">
-													<button class="btn btn-outline-primary-2" type="submit"><i class="icon-long-arrow-right"></i></button>
-												</div><!-- .End .input-group-append -->
-			        						</div><!-- End .input-group -->
-			            				</form>
-			            			</div><!-- End .cart-discount -->
-
-			            			<button  class="btn btn-outline-dark-2" type="submit" ><span>UPDATE CART</span><i class="icon-refresh"></i></button>
-		            			</div><!-- End .cart-bottom -->
+	                		
                             </form>
+                            <div class="cart-bottom">
+                                <div class="cart-discount">
+                                    <form action="/applyCoupon" method="post">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="couponCode" required placeholder="coupon code">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-primary-2" type="submit"><i class="icon-long-arrow-right"></i></button>
+                                            </div><!-- .End .input-group-append -->
+                                        </div><!-- End .input-group -->
+                                    </form>
+                                </div><!-- End .cart-discount -->
+
+                                <button  class="btn btn-outline-dark-2" type="submit" ><span>UPDATE CART</span><i class="icon-refresh"></i></button>
+                            </div><!-- End .cart-bottom -->
 	                		</div><!-- End .col-lg-9 -->
 	                		<aside class="col-lg-3">
 	                			<div class="summary summary-cart">
@@ -235,10 +236,13 @@
 
 	                				<table class="table table-summary">
 	                					<tbody>
-	                						<tr class="summary-subtotal">
-	                							<td>Subtotal:</td>
-	                							<td id="subTotal">Rs.<%= subTotal %></td>
-	                						</tr><!-- End .summary-subtotal -->
+                                            
+                                              <tr class="summary-subtotal">
+                                                <td>Subtotal:</td>
+                                                <td id="subTotal">Rs.<%= subTotal %></td>
+                                              </tr>
+                                            
+                                            <!-- End .summary-subtotal -->
 	                						<tr class="summary-shipping">
 	                							<td>Shipping:</td>
 	                							<td>&nbsp;</td>
@@ -275,21 +279,22 @@
 	                						</tr><!-- End .summary-shipping-row -->
 
 	                						<tr class="summary-shipping-estimate">
-	                							<td>Estimate for Your Country<br> <a href="dashboard.html">Change address</a></td>
 	                							<td>&nbsp;</td>
 	                						</tr><!-- End .summary-shipping-estimate -->
-
-	                						<tr class="summary-total">
+                                         
+                                            <tr class="summary-total">
 	                							<td>Total:</td>
-	                							<td id="Total">Rs.<%= subTotal %></td>
+	                							<td id="Total" >Rs.<%= totalAfterDiscound  %></td>
 	                						</tr><!-- End .summary-total -->
+                                            
+	                						
 	                					</tbody>
 	                				</table><!-- End .table table-summary -->
 
 	                				<a href="/CheckOut" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</a>
 	                			</div><!-- End .summary -->
 
-		            			<a href="category.html" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i></a>
+		            			<a href="/products" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i></a>
 	                		</aside><!-- End .col-lg-3 -->
 	                	</div><!-- End .row -->
 	                </div><!-- End .container -->
@@ -689,6 +694,25 @@
                 console.error('Error:', error);
         });
     }
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const totalText = document.getElementById('Total').textContent;
+        const total = parseFloat(totalText.split('Rs.')[1]);
+        console.log('to:', total); 
+
+        fetch('/CheckOut', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ total: total }) 
+        })
+        .then(response => {
+        })
+        .catch(error => {
+        });
+    });
 </script>
 <script>
   async function deleteCartItem (index,productId){

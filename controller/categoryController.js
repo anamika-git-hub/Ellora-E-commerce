@@ -30,8 +30,8 @@ const loadAddCategories = async(req,res)=>{
 
 const insertCategory = async(req,res)=>{
     try {
-
-       const existingCategory = await category.findOne({name:req.body.name});
+        const regex = new RegExp("^" + req.body.name + "$", "i");
+       const existingCategory =await category.find({ name: regex });
        if(existingCategory){
         res.render('addCategories',{message:'Category with this name already exists'});
        }else{

@@ -1,16 +1,11 @@
 const joi = require('@hapi/joi');
 
+
 const joiRegistrationSchema = joi.object({
     name : joi.string().required("name is required"),
     email : joi.string().email().lowercase().required("email is required"),
     mobile: joi.string().length(10).pattern(/^[0-9]+$/).required(),
-    password : joi.string().length(6).pattern(/^[0-9]+$/).required().messages({
-        'string.empty': `"password" cannot be an empty field`,
-        'string.min': `"password" should have a minimum length of {#limit}`,
-        'string.max': `"password" should have a maximum length of {#limit}`,
-        'any.required': `"password" is a required field`,
-        'string.pattern':`"password" must include`
-      }),
+    password : joi.string().length(6).pattern(/^[0-9]+$/).required(),
     confirmPassword:joi.string().valid(joi.ref('password')).required()
 })
 
@@ -30,6 +25,10 @@ const joiUserSchema = joi.object({
     mobile : joi.number().max(10).min(10). required()
 })
 
+const joiCategorySchema = joi.object({
+
+})
+
 const joiCouponSchema = joi.object({
     name: joi.string(),
     ValidityDate: joi.date(),
@@ -39,9 +38,19 @@ const joiCouponSchema = joi.object({
     
 })
 
+const joiOfferSchema = joi.object({
+    name:joi.string(),
+    offerPrice:joi.number(),
+    offerTypeName:joi.string(),
+    offerType: joi.string(),
+    ValidityDate:joi.date()
+})
+
 module.exports = {
     joiRegistrationSchema,
     joiProductSchema,
     joiUserSchema,
-    joiCouponSchema
+    joiCouponSchema,
+    joiOfferSchema,
+    joiCategorySchema
 }

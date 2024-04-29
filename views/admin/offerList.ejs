@@ -41,7 +41,7 @@
                             <span class="text">Products</span>
                         </a>
                         <div class="submenu">
-                            <a href="productList" >Product List</a>
+                            <a href="productList">Product List</a>
                         </div>
                     </li>
                     <li class="menu-item has-submenu">
@@ -53,22 +53,22 @@
                             <a href="userList">User list </a>
                         </div>
                     </li>
-                    <li class="menu-item has-submenu active">
+                    <li class="menu-item has-submenu">
                         <a class="menu-link" href="page-orders-1.html">
                             <i class="icon material-icons md-shopping_cart"></i>
                             <span class="text">Orders</span>
                         </a>
                         <div class="submenu">
-                            <a href="/orderList" class="active">Order list</a>
+                            <a href="orderList">Order list 1</a>
                         </div>
                     </li>
-                    <li class="menu-item has-submenu">
+                    <li class="menu-item has-submenu active">
                         <a class="menu-link" href="page-sellers-cards.html">
                             <i class="icon material-icons md-store"></i>
                             <span class="text">Coupon</span>
                         </a>
                         <div class="submenu">
-                            <a href="couponList">Coupon list</a>
+                            <a href="couponList" class="active">Coupon list</a>
                         </div>
                     </li>
                     <li class="menu-item has-submenu ">
@@ -77,7 +77,7 @@
                             <span class="text">Categories</span>
                         </a>
                         <div class="submenu">
-                            <a href="Categories">Categories list</a>
+                            <a href="Categories" >Categories list</a>
                         </div>
                     </li>
                     <li class="menu-item has-submenu">
@@ -136,8 +136,8 @@
                         </a>
                     </li>
                 </ul>
-                <br />
-                <br />
+                <br/>
+                <br/>
             </nav>
         </aside>
         <main class="main-wrap">
@@ -198,138 +198,86 @@
             <section class="content-main">
                 <div class="content-header">
                     <div>
-                        <h2 class="content-title card-title">Order List</h2>
-                        
+                        <h2 class="content-title card-title">Offers</h2>
+                        <p>Add, edit or delete Offers</p>
                     </div>
                     <div>
-                        <input type="text" placeholder="Search order ID" class="form-control bg-white" />
+                        <a href="addOffer" class="btn btn-primary btn-sm rounded">Create new</a>
                     </div>
+
                 </div>
-                <div class="card mb-4">
-                    <header class="card-header">
-                        <div class="row gx-3">
-                            <div class="col-lg-4 col-md-6 me-auto">
-                                <input type="text" placeholder="Search..." class="form-control" />
-                            </div>
-                            
-                        </div>
-                    </header>
-                    <!-- card-header end// -->
+                <div class="card">
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="orderLists" class="table table-cart table-mobile">
-                                <thead>
-                                    <tr>
-                                        <th>Image</th>
-                                        <th>Name</th>
-                                        <th>Payment</th>
-                                        <th>Status</th>
-                                        <th>Date</th>
-                                        <th class="text-end">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                               <% if(orderData && orderData.length>0){%>
-                                    <% orderData.forEach(order=>{%>
-                                        
-                                <% paginatedProductIds.forEach((value,index)=>{%>
-                                    <tr >
-
-                                        <input type="hidden" name="productId" value="<%= value.productId %>">
-                                        <td>
-                                            <b><img src="<%= value.image[0]%>" class="img-sm img-thumbnail" alt="Product image"></b>
-                                        </td>
-                                        <td><%= value.name %></td>
-                                        <td>$<%= value.price %></td>
-                                        <td><span class="badge rounded-pill alert-warning"><%= order.status %></span></td>
-                                        <td><%= new Date(order.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %></td>
-                                        <td class="text-end">
-                                            <button  href="#" onclick="toOrder('<%= value._id %>')"  id="toOrderDetails"  class="btn btn-md rounded font-sm">Detail</button>
-                                        </td>
-                                        <td>
-                                            <% if(value.status === 'cancelled'){%>
-                                                <button type="submit" class="btn btn-md rounded disabled" onclick="cancelOrder(this,'<%= value._id %>')">
-                                                    <span>Cancelled</span>
-                                                </button>
-                                            <%}else{%>
-                                                <button type="submit"  class="btn btn-md rounded " onclick="cancelOrder(this,'<%= value._id %>')">
-                                                    <span>Cancel</span>
-                                                </button>
-                                            <%}%>
-                                        
-                                        </td>
-                                    </tr>
-                                    <div class="row" id="orderDetails<%= value._id %>"  style="display: none;">
-                                                          
-                                        <div class="col-lg-4">
-                                            <div class="card card-dashboard">
-                                                <div class="card-body">
-                                                    <h3 class="card-title">Customer</h3><!-- End .card-title -->
-                                                    <p><%= order.userId.name%><br>
-                                                        <%= order.userId.email%><br>
-                                                        <%= order.userId.mobile%><br>
-                                                   
-                                                 
-                                                </div><!-- End .card-body -->
-                                            </div><!-- End .card-dashboard -->
-                                        </div><!-- End .col-lg-4 -->
-                                        <div class="col-lg-4">
-                                            <div class="card card-dashboard">
-                                                <div class="card-body">
-                                                    <h3 class="card-title">Order info</h3><!-- End .card-title -->
-
-                                                    <p>Shipping:Fargo Express<br>
-                                                        Pay method:<%= order.payment%><br>
-                                                        Status:<%= value.status%><br>
-                                                 
-                                                </div><!-- End .card-body -->
-                                            </div><!-- End .card-dashboard -->
-                                    </div><!-- End .col-lg-4 -->
-                                   
-                                        <div class="col-lg-4">
-                                            <div class="card card-dashboard">
-                                                <div class="card-body">
-                                                    <h3 class="card-title">Deliver to</h3><!-- End .card-title -->
-                                                   
-                                                    <p><%=order.delivery_address.name%><br>
-                                                        <%=order.delivery_address.streetAddress%><br>
-                                                        <%=order.delivery_address.city%>,<%=order.delivery_address.pincode%><br>
-                                                        <%= order.delivery_address.state%><br>
-                                                       
-                                                </div><!-- End .card-body -->
-                                            </div><!-- End .card-dashboard -->
-                                        </div><!-- End .col-lg-4 -->
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="col-lg-4 col-md-6 me-auto">
+                                    <input type="text" placeholder="Search..." class="form-control" id="inputThings" onkeyup="searchName()"/>
                                 </div>
-                                <%}) %>
-                                <%}) %>
-                               
-                              <% }else{%>
-                                <tr>
-                                    <td colspan="5" style="text-align: center; padding: 10px;">Orders not found</td>
-                                </tr>
-                                <%} %>
-                                
-                                </tbody>
-                            </table>
-                            <div id="orderLists" class="pagination-area mt-30 mb-50">
-                                <nav aria-label="Page navigation example ">
-                                    <ul class="pagination justify-content-center">
-                                        <% for(let j=1; j<=totalPages; j++){ %>
-                                        <li class="page-item <%= j === currentPage ? "active":" "%>"><a class="page-link" href="?page=<%= j%>"><%= j%></a></li>
-                                        <% } %>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                                        </li>
-                                    </ul>
-                                </nav>
+                                <br>
+                                <div class="table-responsive">
+                                    <table id="tableId" class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Name</th>
+                                                <th>Percentage</th>
+                                                <th>Offer Type</th>
+                                                <th>Expired At</th>
+                                                <th>Status</th>
+                                                <th class="text-end">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                           <% if(offerData && offerData.length>0){%>
+                                            <% offerData.forEach((offer,index)=>{%>
+                                            <tr>
+                                                <td><%= index +1 %></td>
+                                                <td><%= offer.name %></td>
+                                                <td><%= offer.offerPrice %></td>
+                                                <td ><%= offer.offerTypeName %></td>
+                                                <td ><%= offer.expiredAt.toLocaleDateString() %></td> 
+                                                <td><% const currentDate = new Date(); %>
+                                                    
+                                                <% const offerExpiredDate = new Date(offer.expiredAt); %>
+                                                <% if (offerExpiredDate > currentDate) { %>
+                                                    <div class="col-lg-1 col-sm-2 col-4 col-date">
+                                                        <span class="badge rounded-pill alert-success">Active</span>
+                                                    </div>
+                                                <% } else { %>
+                                                    <div class="col-lg-1 col-sm-2 col-4 col-date">
+                                                        <span class="badge rounded-pill alert-danger">Expired</span>
+                                                    </div>
+                                                <% } %>
+                                            </td>
+                                            </tr>
+                                            <%}) %>
+                                            <%}else{%> 
+                                                <tr>
+                                                    <td colspan="5" style="text-align: center; padding: 10px;">Offers not found</td>
+                                                </tr>
+                                                <%} %>
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
+                            <!-- .col// -->
                         </div>
-                        <!-- table-responsive //end -->
+                        <!-- .row // -->
                     </div>
-                    <!-- card-body end// -->
+                    <!-- card body .// -->
                 </div>
-                <!-- card end// -->
-                
+                <!-- card .// -->
+                <div class="pagination-area mt-15 mb-50">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-start">
+                            
+                            <li class="page-item">
+                                <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
             </section>
             <!-- content-main end// -->
             <footer class="main-footer font-xs">
@@ -354,29 +302,18 @@
         <!-- Main Script -->
         <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
         <script>
-            function cancelOrder(tag,orderId){
-              
-                    tag.innerText = 'Cancelled'
-                    tag.disabled=true
-                
-                fetch(`/cancelOrder?orderId=${orderId}`)
+            function deleteCoupon(tag,couponId){
+                if(tag.innerText=='List'){
+                    tag.innerText='Unlist'
+                    tag.style.background='red'
+                    tag.style.color='white'
+                }else if(tag.innerText == 'Unlist'){
+                    tag.innerText='List'
+                    tag.style.background='green'
+                    tag.style.color='black'
+                }
+                fetch(`/admin/deleteCoupon?couponId=${couponId}`)
             }
-        </script>
-        <script>
-            function toOrder(id){
-                console.log('id',id);
-                $('#orderLists').hide();
-                $(`#orderDetails${id}`).show();
-            }
-        </script>
-        <script>
-            $(document).ready(function() {
-                $('#toOrderDetails').click(function(e) {
-                    e.preventDefault(); 
-                    $('#orderLists').hide(); 
-                    $(`#orderDetails`).show(); 
-                });
-            });
         </script>
     </body>
 </html>

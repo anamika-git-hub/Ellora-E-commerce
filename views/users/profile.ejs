@@ -37,7 +37,7 @@
         }
     
         .coupon_card {
-            width: 100%; /* Full width for responsiveness */
+            width: 100%; 
             max-width: 300px; 
             padding: 20px;
             border-radius: 20px;
@@ -47,7 +47,7 @@
             flex-direction: column;
             align-items: center;
             position: relative;
-            overflow: hidden; /* Hide overflowing content */
+            overflow: hidden; 
         }
     
         .content {
@@ -80,7 +80,7 @@
         }
     
         .code {
-            text-transform: uppercase;
+            /* text-transform: uppercase; */
             padding: 10px;
             background-color: #fff;
             color: rgb(255, 111, 0);
@@ -566,12 +566,10 @@
 								    </div><!-- .End .tab-pane -->
                                   
                                         <div class="tab-pane fade " id="tab-coupon" role="tabpanel" aria-labelledby="tab-coupon-link">
+                                            <div class=" row wrapper d-flex justify-content-around ">
                                             <% if(couponData && couponData.length>0){ %>
                                                 <% couponData.forEach(coupon=>{%>
-                                                    
-                                            <div class="wrapper d-flex flex-direction row ">
-                                               
-                                                <div class=" coupon_card card  col-lg-6">
+                                                <div class="col-lg-6 coupon_card card mb-5">
                                                     <div class="cross-bg"></div>
                                                     <div class="content">
                                                         <div class="text-center text-uppercase text-white off">
@@ -585,12 +583,13 @@
                                                         </div>
                                                         <div class="code text-center mt-4">
                                                             <span>Use code: <%= coupon.couponCode %></span>
+                                                            <button class="copy-btn" data-coupon-code="<%= coupon.couponCode %>">Copy Code</button>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
                                             <%}) %>     
                                             <%}else{%>
+                                            </div>
                                                 <p>No coupon exist</p>
                                                 <a href="/products" class="btn btn-outline-primary-2"><span>GO SHOP </span><i class="icon-long-arrow-right"></i></a>
                                             <%} %>
@@ -976,6 +975,7 @@
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
 <script>
     $(document).ready(function() {
         $('#showAddAddress').click(function(e) {
@@ -1027,7 +1027,25 @@
         fetch(`/cancelOrder?orderId=${orderId}`)
     }
 </script>
-
+<script>
+    // Add this script section after your closing body tag
+    const copyButtons = document.querySelectorAll('.copy-btn');
+    console.log('ksdlkjfa',copyButtons);
+    copyButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        const couponCode = this.dataset.couponCode;
+        navigator.clipboard.writeText(couponCode)
+          .then(() => {
+            // Success message (optional)
+            console.log('Coupon code copied to clipboard!');
+          })
+          .catch(error => {
+            // Error message (optional)
+            console.error('Failed to copy coupon code:', error);
+          });
+      });
+    });
+    </script>
 </body>
 
 
