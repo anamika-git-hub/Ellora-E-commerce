@@ -26,13 +26,19 @@ const addOffer = async(req,res)=>{
     try {
         const value = await joiOfferSchema.validateAsync(req.body)
         const{name,ValidityDate,offerPrice,offerTypeName,offerType} = value
+        const currentDate = new Date();
+        console.log('cd',currentDate);
+       
+        const offerExpiredDate = new Date(ValidityDate)
+        console.log('nd',offerExpiredDate)
         const offerData = await Offer.create({
             name:name,
             offerPrice:offerPrice,
             offerTypeName:offerTypeName,
             product:offerTypeName === 'Product'? offerType: undefined,
             category:offerTypeName === 'Category'? offerType: undefined,
-            expiredAt:ValidityDate
+            expiredAt:ValidityDate,
+            status:offerExpiredDate>=currentDate?true:false
         })
         res.redirect('/admin/offerList');
     } catch (error) {

@@ -291,7 +291,7 @@
 	                					</tbody>
 	                				</table><!-- End .table table-summary -->
 
-	                				<a href="/CheckOut" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</a>
+	                				<button  onclick="checkout('<%= totalAfterDiscound  %>')" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</button>
 	                			</div><!-- End .summary -->
 
 		            			<a href="/products" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i></a>
@@ -696,24 +696,20 @@
     }
 </script>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const totalText = document.getElementById('Total').textContent;
-        const total = parseFloat(totalText.split('Rs.')[1]);
-        console.log('to:', total); 
-
-        fetch('/CheckOut', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ total: total }) 
-        })
-        .then(response => {
-        })
-        .catch(error => {
-        });
-    });
+    function checkout(total){
+        // fetch(`/CheckOut?total=${total}`, {
+        //     method: 'GET',
+        // })
+        // .then(response => {
+        //     console.log('Request successful');
+            window.location=`/CheckOut?total=${total}`
+        // })
+        // .catch(error => {
+        //     console.error('Error:', error); 
+        // });
+    }
 </script>
+
 <script>
   async function deleteCartItem (index,productId){
                 const element = document.getElementById(`cartDelete${index}`);

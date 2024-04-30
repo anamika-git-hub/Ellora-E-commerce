@@ -8,7 +8,8 @@ const offerModel = new mongoose.Schema({
     offerTypeName:{type:String,required:true},
     product:{type:String},
     category:{type:String},
-    expiredAt:{type:Date,required:true}
+    expiredAt:{type:Date,required:true},
+    status:{type:Boolean}
 })
 
 module.exports = mongoose.model('Offer',offerModel)

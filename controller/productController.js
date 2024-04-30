@@ -47,26 +47,16 @@ const addProducts = async(req,res)=>{
     try {
        const value= await joiProductSchema.validateAsync(req.body)
        const {name,description,price,categories,image,stock} = value
-       const product =  await products.create(
+         await products.create(
              {name:name,
              description:description,
              price:price,
              categories:categories,
-             image:image.map(url => ({ url, _id: generateUniqueId() })),
+             image:image,
              stock:stock,
              is_listed:true,
              size:['s','xs']
              })
-
-             product.image.forEach((image)=>{
-                console.log('id',image._id);
-             })
-
-             function generateUniqueId(){
-                return uuid.v4();
-             }
-
-             console.log('pr',product);
                  res.redirect('/admin/productList')
        
     } catch (error) {
@@ -143,6 +133,7 @@ const productPage = async(req,res)=>{
    try {
     console.log('filter',req.query);
     const queryObj = {...req.query};
+    // console.log('qo',queryObj.minPrice ,queryObj.maxPrice ,queryObj.categories);
     const page = req.query.page ? parseInt(req.query.page) : 1;
     const limit = 12;
     let productQuery = {is_listed:true}
@@ -153,13 +144,15 @@ const productPage = async(req,res)=>{
             price: {$gte: parseFloat(queryObj.minPrice), $lte: parseFloat(queryObj.maxPrice)},
             categories: {$in: categories}
         };
+        
+    // console.log('productQuery:',productQuery);
     } else if (queryObj.minPrice && queryObj.maxPrice) {
         productQuery = {
             ...productQuery,
             price: {$gte: parseFloat(queryObj.minPrice), $lte: parseFloat(queryObj.maxPrice)}
         }
     }
-        const productData = await products.find(productQuery)
+        const productData = await products.find(productQuery).populate({path:'categories',model:'categories'}).populate('offer')
             .limit(limit)
             .skip((page - 1) * limit)
             .exec();  
@@ -170,25 +163,71 @@ const productPage = async(req,res)=>{
     const wishlistData = await Wishlist.findOne({userId:req.session.user_id}).populate('userId').populate('products.productId');
     const categoryData = await category.find();
     const offerData = await Offer.find();
-    // console.log('o',offerData);
+     if(offerData ){
+     for(const offer of offerData){
+        if(offer.offerTypeName === 'Product'){
+            const type = offer.product
+             const matchingProducts = productData.filter(product=>product._id == type);
+             for (const matchingProduct of matchingProducts) {
+                const offerId = offer._id;
+                if(offer.status == true){
+                    await products.updateOne({_id:matchingProduct._id},{
+                        offer:offerId
+                    })
+                }
+                
+            }
 
-    const offerProducts = offerData.map(offer => {
-        const offerProductId = new mongoose.Types.ObjectId(offer.product);
-        return productData.find(product => product._id.equals(offerProductId));
-        }).filter(product => product !== undefined);
-
-    const offerCategories = offerData.map(offer => {
-            const offerCategoryId = new mongoose.Types.ObjectId(offer.category);
-            return categoryData.find(category => category._id.equals(offerCategoryId));
-        }).filter(category => category !== undefined);
+        }
+     }
+    }
+//  console.log('pr',productData);
 
 
-    // console.log('off',offerProducts);
 
-    res.render('products.ejs',{products:productData,cartData,wishlistData,categoryData,totalPages:Math.ceil(count/limit),currentPage:page,offerProducts,offerCategories});
+//     console.log('o',offerData);
+
+    // const offerProducts = offerData.map(offer => {
+    //     const offerProductId = new mongoose.Types.ObjectId(offer.product);
+    //     return productData.find(product => product._id.equals(offerProductId));
+    //     }).filter(product => product !== undefined);
+
+    //     console.log('ofpro',offerProducts);
+
+    // const offerCategories = offerData.map(offer => {
+    //         const offerCategoryId = new mongoose.Types.ObjectId(offer.category);
+    //         return categoryData.find(category => category._id.equals(offerCategoryId));
+    //     }).filter(category => category !== undefined);
+        
+    //     console.log("Product Data:", productData);
+    //     console.log("Offer Products:", offerProducts);
+        
+
+
+    //     productData.forEach(value => {
+    //         const offerProduct = offerProducts.find(offerProduct => offerProduct && offerProduct._id.toString() === value._id.toString());
+    //         console.log("Product ID:", value._id.toString());
+    //         console.log("Offer Product:", offerProduct);
+    //     });
+        
+    // console.log('off',offerProducts[0]._id);
+
+    res.render('products.ejs',{products:productData,cartData,wishlistData,categoryData,totalPages:Math.ceil(count/limit),currentPage:page});
    } catch (error) {
     console.log(error.message)
    }
+}
+
+const searchProducts = async(req,res)=>{
+    try {
+        const productData =await products.find()
+
+        const query = req.query.query.toLowerCase();
+        const filterProducts = productData.filter(product=>product.name.toLowerCase().includes(query));
+        res.json({success:true,products:filterProducts})
+    } catch (error) {
+        console.log(error.message);
+    }
 }
 
 const productDetails = async(req,res)=>{
@@ -213,23 +252,23 @@ const sortProduct = async(req,res)=>{
         console.log('pr',productData);
         switch(sortValue){
             case 'Latest':
-            sort = await products.find(productData).sort({'_id':-1});
+            sort = await products.find(productData).populate({path:'categories',model:'categories'}).sort({'_id':-1});
             res.send({ status: 'success', message: 'sorted successfully',sort});
             break;
             case 'Price high to low':
-            sort = await products.find(productData).sort({'price':-1});
+            sort = await products.find(productData).populate({path:'categories',model:'categories'}).sort({'price':-1});
             res.send({ status: 'success', message: 'sorted successfully',sort});
             break;
             case'Price low to high':
-            sort = await products.find(productData).sort({'price':1});
+            sort = await products.find(productData).populate({path:'categories',model:'categories'}).sort({'price':1});
             res.send({ status: 'success', message: 'sorted successfully',sort});
             break;
             case'a to z':
-            sort = await products.find(productData).collation({ locale: 'en', strength: 1 }).sort({ 'name': 1 });
+            sort = await products.find(productData).populate({path:'categories',model:'categories'}).collation({ locale: 'en', strength: 1 }).sort({ 'name': 1 });
             res.send({ status: 'success', message: 'sorted successfully',sort});
             break;
             case'z to a':
-            sort = await products.find(productData).collation({ locale: 'en', strength: 1 }).sort({ 'name': -1 });
+            sort = await products.find(productData).populate({path:'categories',model:'categories'}).collation({ locale: 'en', strength: 1 }).sort({ 'name': -1 });
             res.send({ status: 'success', message: 'sorted successfully',sort});
             break;
             default:
@@ -249,5 +288,6 @@ module.exports={
     updateProducts,
     productPage,
     productDetails,
-    sortProduct
+    sortProduct,
+    searchProducts
 }

@@ -1,4 +1,15 @@
 // Main Js File
+var minPrice = 0;
+var maxPrice = 0;
+
+function filterChecked(){
+    console.log('--------------------------------------------------======');
+    selectedCategories = Array.from(document.querySelectorAll('.custom-control-input:checked')).map(checkbox => checkbox.value);
+    console.log(selectedCategories,'ddddd')
+    
+    fetch(`/products?categories=${selectedCategories}&minPrice=${minPrice}&maxPrice=${maxPrice}`); 
+}
+
 $(document).ready(function () {
     'use strict';
 
@@ -224,7 +235,7 @@ $(document).ready(function () {
             margin: 200,
             range: {
                 'min': 0,
-                'max': 1000
+                'max': 3000
             },
             tooltips: true,
             format: wNumb({
@@ -233,28 +244,21 @@ $(document).ready(function () {
             })
         });
     
-        // Update Price Range
-        let minPrice = 0;
-        let maxPrice = 0;
-    
-        priceSlider.noUiSlider.on('update', function(values, handle) {
+        // var minPrice = 0;
+        // var maxPrice = 0;
+
+
+		priceSlider.noUiSlider.on('update', function( values, handle ){
             minPrice = parseFloat(values[0].replace('$', ''));
             maxPrice = parseFloat(values[1].replace('$', ''));
-            $('#filter-price-range').text('$' + minPrice + ' - ' + '$' + maxPrice);
-            function filterChecked(){
+            $('#filter-price-range').text('$'+minPrice+' - '+'$'+maxPrice);
 
-                selectedCategories = Array.from(document.querySelectorAll('.custom-control-input:checked')).map(checkbox => checkbox.value);
-                console.log(selectedCategories,'ddddd')
-                
-                fetch(`/products?categories=${selectedCategories}&minPrice=${minPrice}&maxPrice=${maxPrice}`); // Include selectedCategories here
-            }
-        });
-    }
+            fetch(`/products?minPrice=${minPrice}&maxPrice=${maxPrice}`)
+		});
+	}
 
    
-
-
-
+    
 
 
 

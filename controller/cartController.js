@@ -24,8 +24,10 @@ const loadCart = async(req,res)=>{
                 })
             }
             const totalAfterDiscound =  req.flash('totalAfterDiscound')[0] || initialAmount;
+             req.session.total = totalAfterDiscound
                 res.render('cart',{cartData, subTotal : initialAmount,wishlistData,totalAfterDiscound});
            
+                
            
         }
 
@@ -120,8 +122,9 @@ const deleteCartItem = async(req,res)=>{
 const loadCheckOut = async(req,res)=>{
    try {
 
-      const {total} = req.body;
-      console.log('total',total);
+      const {total} = req.query;
+      console.log('totals',total);
+      
       const userId = req.session.user_id;
       const user = await User.findById(userId);
       const addresses = user.addresses;
@@ -131,15 +134,8 @@ const loadCheckOut = async(req,res)=>{
       if(cartData.products.length<=0){
         res.redirect('/cart'); 
       }else{
-        let initialAmount = 0;
-        if(cartData){
-            cartData.products.forEach((item)=>{
-                let itemPrice = item.productPrice;
-                initialAmount += itemPrice*item.quantity
-            })
-        }
-        const totalAfterDiscound =  req.flash('totalAfterDiscound')[0] || initialAmount;
-        res.render('checkout',{cartData,subTotal:totalAfterDiscound,addresses:addresses,wishlistData});
+        
+        res.render('checkout',{cartData,subTotal:total,addresses:addresses,wishlistData});
       }
      
    } catch (error) {

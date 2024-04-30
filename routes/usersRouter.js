@@ -44,6 +44,7 @@ userRouter.post('/editAddress',userController.editAddress);
 userRouter.post('/deleteAddress',userController.deleteAddress);
 
 userRouter.get('/products',isLogin,productController.productPage);
+userRouter.get('/searchProduct',productController.searchProducts);
 userRouter.get('/productDetail',isLogin,productController.productDetails);
 
 userRouter.post('/sort',productController.sortProduct);

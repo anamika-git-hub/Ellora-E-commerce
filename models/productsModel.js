@@ -34,6 +34,11 @@ const productSchema= new mongoose.Schema({
   is_listed:{
     type:Boolean,
     required:true
+  },
+  offer:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref:'Offer',
+    default:null
   }
 
 })

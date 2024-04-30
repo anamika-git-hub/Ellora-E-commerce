@@ -45,6 +45,12 @@ const orderSchema = new mongoose.Schema({
     paymentId:{
         type:String
     },
+    couponDiscound:{
+      type:Number
+    },
+    offerDiscound:{
+      type:Number
+    },
     products:[{
         productId:{
             type:mongoose.Schema.Types.ObjectId,

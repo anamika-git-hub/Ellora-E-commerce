@@ -119,7 +119,8 @@
                             <form action="#" method="get">
                                 <div class="header-search-wrapper">
                                     <label for="q" class="sr-only">Search</label>
-                                    <input type="search" class="form-control" name="q" id="q" placeholder="Search in..." onkeypress="searchName()" required>
+                                    <input type="search" class="form-control" name="q" id="searchInput" placeholder="Search in..."  required>
+                                    <div id="suggestionsContainer"></div>
                                 </div><!-- End .header-search-wrapper -->
                             </form>
                         </div><!-- End .header-search -->
@@ -163,7 +164,7 @@
 
             <div class="page-content">
                 <div class="container">
-        			<div class="toolbox">
+        			<div class="toolbox">   
         				<div class="toolbox-left">
                             <a href="#" class="sidebar-toggler"><i class="icon-bars"></i>Filters</a>
         				</div><!-- End .toolbox-left -->
@@ -192,6 +193,7 @@
         <!-- product details -->
                     <div class="products">
                         <div id="productRow" class="row">
+                           
                             <% if(products.length > 0){%>
                                 <% products.forEach((element)=>{ %>
                                 <div class="col-6 col-md-4 col-lg-4 col-xl-3">
@@ -214,13 +216,20 @@
 
                                         <div class="product-body">
                                             <div class="product-cat">
-                                                <a class="nameSearch" href="#"><%=element.name%></a>
+                                                <a href="#"><%= element.categories.name %></a>
+                                               
                                             </div><!-- End .product-cat -->
-                                            <h3 class="product-title"><a href="product.html"><%= %></a></h3><!-- End .product-title -->
-                                             
-                                            <% const productOffer = offerProducts.find(offerProduct => offerProduct._id === element._id); %>
-
-                                            <% console.log('op',productOffer); %>
+                                            <h3 class="product-title"> <a class="nameSearch" href="#"><%=element.name%></a></h3><!-- End .product-title -->
+                                            <div class="product-price">
+                                          <% if( element.offer && element.offer.status == true){%>
+                                            
+                                            <h5 class="new-price">Rs.<%=element.price - (element.offer.offerPrice * element.price)/100 %></h5>
+                                            <p class="old-price">Rs.<%= element.price %></p>
+                                            <%}else{%>
+                                                <p>Rs.<%= element.price %></p>
+                                                <%} %>
+                                        </div>
+                                          
                                             <div class="ratings-container">
                                                 <div class="ratings">
                                                     <div class="ratings-val" style="width: 0%;"></div><!-- End .ratings-val -->
@@ -281,7 +290,7 @@
                                                 <div class="custom-control custom-checkbox">
                                                     <input type="checkbox" onclick="filterChecked()" value="<%= category.name %>"  class="custom-control-input" id="cat<%= category._id %>">
                                                     <label class="custom-control-label" for="cat<%= category._id %>"><%= category.name %></label>
-                                                </div><!-- End .custom-checkbox -->
+                                                </div><!-- End .custom-checkbox --> 
                                                 <span class="item-count">3</span>
                                             </div><!-- End .filter-item -->
                                             <%}) %>
@@ -403,7 +412,7 @@
 
             <form action="#" method="get" class="mobile-search">
                 <label for="mobile-search" class="sr-only">Search</label>
-                <input type="search" class="form-control" name="mobile-search" id="mobile-search" placeholder="Search in..." required>
+                <input type="search"  class="form-control" name="mobile-search" id="mobile-search" placeholder="Search in..." required>
                 <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
             </form>
             
@@ -836,6 +845,46 @@
 </script> -->
 
 <script>
+    const searchInput = document.getElementById('searchInput');
+const suggestionsContainer = document.getElementById('suggestionsContainer');
+
+searchInput.addEventListener('keyup', function(event) {
+    const searchText = event.target.value.trim();
+
+    // Clear previous suggestions
+    suggestionsContainer.innerHTML = '';
+
+    // Fetch product names based on searchText from backend
+    fetch(`/searchProduct?query=${searchText}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const products = data.products;
+
+                // Display product names as suggestions
+                products.forEach(product => {
+                    const suggestion = document.createElement('div');
+                    suggestion.textContent = product.name;
+                    suggestion.classList.add('suggestion');
+
+                    // Handle suggestion click to populate search input
+                    suggestion.addEventListener('click', function() {
+                        searchInput.value = product.name;
+                        suggestionsContainer.innerHTML = '';
+                    });
+
+                    suggestionsContainer.appendChild(suggestion);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching products:', error);
+        });
+});
+
+</script>
+
+<script>
 const sortInput = document.getElementById('sortby');
 sortInput.addEventListener('change',handleChange);
 function handleChange(event){
@@ -868,7 +917,7 @@ function handleChange(event){
 
                                     <div class="product-body">
                                         <div class="product-cat">
-                                            <a href="#">Women</a>
+                                            <a href="#">${element.categories.name}</a>
                                         </div><!-- End .product-cat -->
                                         <h3 class="product-title"><a href="product.html">${element.name}</a></h3><!-- End .product-title -->
                                         <div class="product-price">
@@ -894,6 +943,10 @@ function handleChange(event){
             console.error('Error:', error);
     });
 }
+
+
+
+
 
 
 </script>

@@ -83,6 +83,7 @@ const applyCoupon = async(req,res)=>{
        req.flash('discoundAmount',couponData.offerPrice);
        req.flash('subTotal',subTotal)
        res.redirect('/cart');
+       
     } catch (error) {
         console.log(error.message);
     }
