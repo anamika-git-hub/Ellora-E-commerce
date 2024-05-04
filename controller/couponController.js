@@ -73,6 +73,7 @@ const editCoupon = async(req,res)=>{
 const applyCoupon = async(req,res)=>{
     try {
         const {couponCode }= req.body 
+
         const couponData = await Coupon.findOne({couponCode:couponCode});
         
         const cartData = await Cart.findOne({userId:req.session.user_id});
@@ -82,8 +83,9 @@ const applyCoupon = async(req,res)=>{
        req.flash('totalAfterDiscound',totalAfterDiscound)
        req.flash('discoundAmount',couponData.offerPrice);
        req.flash('subTotal',subTotal)
+       req.session.couponCode = couponCode
        res.redirect('/cart');
-       
+        
     } catch (error) {
         console.log(error.message);
     }

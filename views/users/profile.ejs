@@ -293,11 +293,11 @@
                                                         <td class="price-col" id="totalPrice"><%= new Date(order.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %></td>
                                                         <td>
                                                             <%if(value.status === 'cancelled'){%>
-                                                                <button type="submit" class="btn btn-outline-primary-2 disabled" onclick="cancelOrder(this,'<%= value.productId._id %>')">
+                                                                <button type="submit" class="btn btn-outline-primary-2 disabled">
                                                                     <span>Cancelled</span>
                                                                     </button>
                                                             <%}else{%>
-                                                                <button type="submit"  class="btn btn-outline-primary-2 " onclick="cancelOrder(this,'<%= value.productId._id %>')">
+                                                                <button type="submit"  class="btn btn-outline-primary-2 " onclick="cancelOrder(this,'<%= value.productId._id %>','<%= order._id%>')">
                                                                     <span>Cancel</span>
                                                                     </button>
                                                             <%}%>
@@ -1008,23 +1008,84 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 <script>
-  async function deleteAddress (addressId){
-        axios.post('/deleteAddress', { addressId })
-            .then(function(response){
-                console.log(response.data);
-            }).catch(function(error){
-                console.error('Error:', error);
+    document.getElementById('addAddressButton').addEventListener('click', async function(event) {
+        event.preventDefault(); // Prevent form submission
+
+        try {
+            const response = await axios.post('/addAddress');
+            if (response.data.success) {
+                // Show SweetAlert upon successful form submission
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Address added successfully!',
+                    icon: 'success'
+                });
+            } else {
+                // Handle case where form submission was not successful
+                console.error('Error:', response.data.error);
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Failed to add address.',
+                    icon: 'error'
+                });
+            }
+        } catch (error) {
+            // Handle errors if necessary
+            console.error('Error:', error);
+            Swal.fire({
+                title: 'Error!',
+                text: 'Failed to add address.',
+                icon: 'error'
+            });
+        }
+    });
+</script>
+
+
+
+<script>
+  async function deleteAddress(addressId) {
+    try {
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
         });
+
+        if (result.isConfirmed) {
+            const response = await axios.post('/deleteAddress', { addressId });
+            if (response.data.success) {
+                // Remove the deleted address from the DOM
+                const deletedElement = document.getElementById(`editAddress${addressId}`).parentNode;
+                deletedElement.parentNode.removeChild(deletedElement);
+                // Show success message
+                Swal.fire('Deleted!', 'Your address has been deleted.', 'success');
+            } else {
+                Swal.fire('Error!', 'Failed to delete address.', 'error');
+            }
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        Swal.fire('Error!', 'Failed to delete address.', 'error');
     }
-</script> 
+}
+
+
+</script>
 <script>
-    function cancelOrder(tag,orderId){
+    function cancelOrder(tag, productId, orderId){
       
             tag.innerText = 'Cancelled'
             tag.disabled=true
         
-        fetch(`/cancelOrder?orderId=${orderId}`)
+        fetch(`/cancelOrder?productId=${productId}&orderId=${orderId}`)
     }
 </script>
 <script>

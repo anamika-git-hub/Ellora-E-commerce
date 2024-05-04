@@ -47,7 +47,7 @@ userRouter.get('/products',isLogin,productController.productPage);
 userRouter.get('/searchProduct',productController.searchProducts);
 userRouter.get('/productDetail',isLogin,productController.productDetails);
 
-userRouter.post('/sort',productController.sortProduct);
+// userRouter.post('/sort',productController.sortProduct);
 
 userRouter.get('/wishlist',wishlistController.loadWishlist);
 userRouter.post('/wishlist',wishlistController.addtoWishlist);

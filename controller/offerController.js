@@ -5,8 +5,15 @@ const Category = require('../models/categoryModel');
 
 const loadOfferList = async(req,res)=>{
     try {
-        const offerData = await Offer.find();
-        res.render('offerList',{offerData});
+
+        const page = req.query.page ? parseInt(req.query.page) : 1;
+    const limit = 5;
+        const offerData = await Offer.find()
+        .limit(limit)
+        .skip((page - 1) * limit)  ;
+        
+    const count = await Offer.countDocuments();
+        res.render('offerList',{offerData,totalPages:Math.ceil(count/limit),currentPage:page});
     } catch (error) {
         console.log(error.message);
     }

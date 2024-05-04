@@ -30,54 +30,55 @@
             <nav>
                 <ul class="menu-aside">
                     <li class="menu-item">
-                        <a class="menu-link" href="home">
+                        <a class="menu-link" href="index.html">
                             <i class="icon material-icons md-home"></i>
                             <span class="text">Dashboard</span>
                         </a>
                     </li>
-                    <li class="menu-item has-submenu ">
+                    <li class="menu-item has-submenu">
                         <a class="menu-link" href="page-products-list.html">
                             <i class="icon material-icons md-shopping_bag"></i>
                             <span class="text">Products</span>
                         </a>
                         <div class="submenu">
-                            <a href="productList">Product List</a>
+                            <a href="page-products-list.html">Product List</a>
+                            <a href="page-products-grid.html">Product grid</a>
+                            <a href="page-products-grid-2.html">Product grid 2</a>
+                            <a href="page-categories.html">Categories</a>
                         </div>
                     </li>
-                    <li class="menu-item has-submenu">
-                        <a class="menu-link" href="page-orders-1.html">
-                            <i class="icon material-icons md-people"></i>
-                            <span class="text">Users</span>
-                        </a>
-                        <div class="submenu">
-                            <a href="userList">User list </a>
-                        </div>
-                    </li>
-                    <li class="menu-item has-submenu">
+                    <li class="menu-item has-submenu active">
                         <a class="menu-link" href="page-orders-1.html">
                             <i class="icon material-icons md-shopping_cart"></i>
                             <span class="text">Orders</span>
                         </a>
                         <div class="submenu">
-                            <a href="orderList">Order list 1</a>
+                            <a href="page-orders-1.html">Order list 1</a>
+                            <a href="page-orders-2.html">Order list 2</a>
+                            <a href="page-orders-detail.html" class="active">Order detail</a>
                         </div>
                     </li>
-                    <li class="menu-item has-submenu active">
+                    <li class="menu-item has-submenu">
                         <a class="menu-link" href="page-sellers-cards.html">
                             <i class="icon material-icons md-store"></i>
-                            <span class="text">Coupon</span>
+                            <span class="text">Sellers</span>
                         </a>
                         <div class="submenu">
-                            <a href="couponList" class="active">Coupon list</a>
+                            <a href="page-sellers-cards.html">Sellers cards</a>
+                            <a href="page-sellers-list.html">Sellers list</a>
+                            <a href="page-seller-detail.html">Seller profile</a>
                         </div>
                     </li>
-                    <li class="menu-item has-submenu ">
+                    <li class="menu-item has-submenu">
                         <a class="menu-link" href="page-form-product-1.html">
                             <i class="icon material-icons md-add_box"></i>
-                            <span class="text">Categories</span>
+                            <span class="text">Add product</span>
                         </a>
                         <div class="submenu">
-                            <a href="Categories" >Categories list</a>
+                            <a href="page-form-product-1.html">Add product 1</a>
+                            <a href="page-form-product-2.html">Add product 2</a>
+                            <a href="page-form-product-3.html">Add product 3</a>
+                            <a href="page-form-product-4.html">Add product 4</a>
                         </div>
                     </li>
                     <li class="menu-item has-submenu">
@@ -136,8 +137,8 @@
                         </a>
                     </li>
                 </ul>
-                <br/>
-                <br/>
+                <br />
+                <br />
             </nav>
         </aside>
         <main class="main-wrap">
@@ -198,98 +199,173 @@
             <section class="content-main">
                 <div class="content-header">
                     <div>
-                        <h2 class="content-title card-title">Offers</h2>
-                        <p>Add, edit or delete Offers</p>
+                        <h2 class="content-title card-title">Order detail</h2>
+                        <p>Details for Order ID: 3453012</p>
                     </div>
-                    <div>
-                        <a href="addOffer" class="btn btn-primary btn-sm rounded">Create new</a>
-                    </div>
-
                 </div>
                 <div class="card">
+                    <header class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
+                                <span> <i class="material-icons md-calendar_today"></i> <b>Wed, Aug 13, 2020, 4:34PM</b> </span> <br />
+                                <small class="text-muted">Order ID: 3453012</small>
+                            </div>
+                            <div class="col-lg-6 col-md-6 ms-auto text-md-end">
+                                <select class="form-select d-inline-block mb-lg-0 mr-5 mw-200">
+                                    <option>Change status</option>
+                                    <option>Awaiting payment</option>
+                                    <option>Confirmed</option>
+                                    <option>Shipped</option>
+                                    <option>Delivered</option>
+                                </select>
+                                <a class="btn btn-primary" href="#">Save</a>
+                                <a class="btn btn-secondary print ms-2" href="#"><i class="icon material-icons md-print"></i></a>
+                            </div>
+                        </div>
+                    </header>
+                    <!-- card-header end// -->
+                    
                     <div class="card-body">
+                        <div class="row mb-50 mt-20 order-info-wrap">
+                            <div class="col-md-4">
+                                <article class="icontext align-items-start">
+                                    <span class="icon icon-sm rounded-circle bg-primary-light">
+                                        <i class="text-primary material-icons md-person"></i>
+                                    </span>
+                                    <div class="text">
+                                        <h6 class="mb-1">Customer</h6>
+                                        <p class="mb-1">
+                                            <%= order.userId.name%> <br />
+                                            <%= order.userId.email%><br />
+                                            <%= order.userId.mobile%>
+                                        </p>
+                                        <a href="#">View profile</a>
+                                    </div>
+                                </article>
+                            </div>
+                            <!-- col// -->
+                            <div class="col-md-4">
+                                <article class="icontext align-items-start">
+                                    <span class="icon icon-sm rounded-circle bg-primary-light">
+                                        <i class="text-primary material-icons md-local_shipping"></i>
+                                    </span>
+                                    <div class="text">
+                                        <h6 class="mb-1">Order info</h6>
+                                        <p class="mb-1">
+                                            Shipping: Fargo express <br />
+                                            Pay method:<%= order.payment%><br />
+                                            Status: <%=order.products[0].status%>
+                                        </p>
+                                        <a href="#">Download info</a>
+                                    </div>
+                                </article>
+                            </div>
+                            <!-- col// -->
+                            <div class="col-md-4">
+                                <article class="icontext align-items-start">
+                                    <span class="icon icon-sm rounded-circle bg-primary-light">
+                                        <i class="text-primary material-icons md-place"></i>
+                                    </span>
+                                    <div class="text">
+                                        <h6 class="mb-1">Deliver to</h6>
+                                        <p><%=order.delivery_address.name%><br>
+                                            <%=order.delivery_address.streetAddress%><br>
+                                            <%=order.delivery_address.city%>,<%=order.delivery_address.pincode%><br>
+                                            <%= order.delivery_address.state%><br>
+                                        </p>
+                                        <a href="#">View profile</a>
+                                    </div>
+                                </article>
+                            </div>
+                            <!-- col// -->
+                        </div>
+                        <!-- row // -->
                         <div class="row">
-                            <div class="col-md-12">
-                                <div class="col-lg-4 col-md-6 me-auto">
-                                    <input type="text" placeholder="Search..." class="form-control" id="inputThings" onkeyup="searchName()"/>
-                                </div>
-                                <br>
+                            <div class="col-lg-7">
                                 <div class="table-responsive">
-                                    <table id="tableId" class="table table-hover">
+                                    <table class="table">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
-                                                <th>Name</th>
-                                                <th>Percentage</th>
-                                                <th>Offer Type</th>
-                                                <th>Expired At</th>
-                                                <th>Status</th>
-                                                <th class="text-end">Action</th>
+                                                <th width="20%">Product</th>
+                                                <th width="20%">Unit Price</th>
+                                                <th scope="20%">Status</th>
+                                                <th width="20%">Quantity</th>
+                                                <th width="20%" class="text-end">Total</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                           <% if(offerData && offerData.length>0){%>
-                                            <% offerData.forEach((offer,index)=>{%>
+                                            <% order.products.forEach((value,index)=>{%>
+                                              
                                             <tr>
-                                                <td><%= index +1 %></td>
-                                                <td><%= offer.name %></td>
-                                                <td><%= offer.offerPrice %></td>
-                                                <td ><%= offer.offerTypeName %></td>
-                                                <td ><%= offer.expiredAt.toLocaleDateString() %></td> 
-                                                <td><% const currentDate = new Date(); %>
-                                                    
-                                                <% const offerExpiredDate = new Date(offer.expiredAt); %>
-                                                <% if (offerExpiredDate > currentDate) { %>
-                                                    <div class="col-lg-1 col-sm-2 col-4 col-date">
-                                                        <span class="badge rounded-pill alert-success">Active</span>
-                                                    </div>
-                                                <% } else { %>
-                                                    <div class="col-lg-1 col-sm-2 col-4 col-date">
-                                                        <span class="badge rounded-pill alert-danger">Expired</span>
-                                                    </div>
-                                                <% } %>
-                                            </td>
+                                                <td>
+                                                    <a class="itemside" href="#">
+                                                        <div class="left">
+                                                            <img src="<%= value.productId.image[0] %>" width="40" height="40" class="img-xs" alt="Item" />
+                                                        </div>
+                                                        <div class="info"><%= value.name %></div>
+                                                    </a>
+                                                </td>
+                                                <td>$<%= value.productPrice %></td>
+                                                <td><span class="badge rounded-pill alert-warning"><%=value.status %></span></td>
+                                                <td><%= value.quantity %></td>
+                                                <td class="text-end">$<%= value.totalPrice%></td>
+                                            </tr>
+                                            <tr class="ml-5">
+                                                <td colspan="4" >
+                                                    <article class="float-end">
+                                                        <dl class="dlist">
+                                                            <dt>Subtotal:</dt>
+                                                            <dd>$973.35</dd>
+                                                        </dl>
+                                                        <dl class="dlist">
+                                                            <dt>Shipping cost:</dt>
+                                                            <dd>$0.00</dd>
+                                                        </dl>
+                                                        <dl class="dlist">
+                                                            <dt>Grand total:</dt>
+                                                            <dd><b class="h5">$983.00</b></dd>
+                                                        </dl>
+                                                        <dl class="dlist">
+                                                            <dt class="text-muted">Status:</dt>
+                                                            <dd>
+                                                                <span class="badge rounded-pill alert-success text-success">Payment done</span>
+                                                            </dd>
+                                                        </dl>
+                                                    </article>
+                                                </td>
                                             </tr>
                                             <%}) %>
-                                            <%}else{%> 
-                                                <tr>
-                                                    <td colspan="5" style="text-align: center; padding: 10px;">Offers not found</td>
-                                                </tr>
-                                                <%} %>
-                                            
                                         </tbody>
                                     </table>
-                                    <div class="pagination-area mt-15 mb-50">
-                                        <nav aria-label="Page navigation example">
-                                            <ul class="pagination justify-content-start">
-                                                <% for(let j=1; j<=totalPages; j++){ %>
-                                                <li class="page-item <%= j === currentPage ? 'active':''%>"><a class="page-link" href="?page=<%= j%>"><%= j%></a></li>
-                                                <% } %>
-                                                <li class="page-item">
-                                                    <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                                                </li>
-                                            </ul>
-                                        </nav>
+                                    
+                                </div>
+                                <!-- table-responsive// -->
+                            </div>
+                            <!-- col// -->
+                            <div class="col-lg-1"></div>
+                            <div class="col-lg-4">
+                                <div class="box shadow-sm bg-light">
+                                    <h6 class="mb-15">Payment info</h6>
+                                    <p>
+                                        <img src="assets/imgs/card-brands/2.png" class="border" height="20" /> Master Card **** **** 4768 <br />
+                                        Business name: Grand Market LLC <br />
+                                        Phone: +1 (800) 555-154-52
+                                    </p>
+                                </div>
+                                <div class="h-25 pt-4">
+                                    <div class="mb-3">
+                                        <label>Notes</label>
+                                        <textarea class="form-control" name="notes" id="notes" placeholder="Type some note"></textarea>
                                     </div>
+                                    <button class="btn btn-primary">Save note</button>
                                 </div>
                             </div>
-                            <!-- .col// -->
+                            <!-- col// -->
                         </div>
-                        <!-- .row // -->
                     </div>
-                    <!-- card body .// -->
+                    <!-- card-body end// -->
                 </div>
-                <!-- card .// -->
-                <div class="pagination-area mt-15 mb-50">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-start">
-                            
-                            <li class="page-item">
-                                <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
+                <!-- card end// -->
             </section>
             <!-- content-main end// -->
             <footer class="main-footer font-xs">
@@ -313,19 +389,5 @@
         <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
         <!-- Main Script -->
         <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
-        <script>
-            function deleteCoupon(tag,couponId){
-                if(tag.innerText=='List'){
-                    tag.innerText='Unlist'
-                    tag.style.background='red'
-                    tag.style.color='white'
-                }else if(tag.innerText == 'Unlist'){
-                    tag.innerText='List'
-                    tag.style.background='green'
-                    tag.style.color='black'
-                }
-                fetch(`/admin/deleteCoupon?couponId=${couponId}`)
-            }
-        </script>
     </body>
 </html>

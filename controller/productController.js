@@ -137,96 +137,132 @@ const productPage = async(req,res)=>{
     const page = req.query.page ? parseInt(req.query.page) : 1;
     const limit = 12;
     let productQuery = {is_listed:true}
+        
+    console.log('productQuery:',productQuery);
+    console.log('productQuery:',queryObj);
     if (queryObj.minPrice && queryObj.maxPrice && queryObj.categories) {
         const categories = queryObj.categories.split(',');
         productQuery = {
             ...productQuery,
-            price: {$gte: parseFloat(queryObj.minPrice), $lte: parseFloat(queryObj.maxPrice)},
-            categories: {$in: categories}
+            price: {'$gte': parseFloat(queryObj.minPrice), '$lte': parseFloat(queryObj.maxPrice)},
+            "categories.name": {$in: categories}
         };
-        
-    // console.log('productQuery:',productQuery);
+    
     } else if (queryObj.minPrice && queryObj.maxPrice) {
         productQuery = {
             ...productQuery,
-            price: {$gte: parseFloat(queryObj.minPrice), $lte: parseFloat(queryObj.maxPrice)}
+            price: { '$gte': parseFloat(queryObj.minPrice), '$lte': parseFloat(queryObj.maxPrice)}
         }
     }
-        const productData = await products.find(productQuery).populate({path:'categories',model:'categories'}).populate('offer')
-            .limit(limit)
-            .skip((page - 1) * limit)
-            .exec();  
 
-             req.session.proQuery =productQuery;
+    const sortOptions = {
+        Latest: {_id:-1},
+        PriceHighTolow : {price:-1},
+        PriceLowtoHigh: { price:1},
+        aToz:{name:1},
+        zToa:{name:-1}
+    }
+    
+
+    const sort = sortOptions[req.query.sort] || {name:1}
+
+          console.log('prqo',productQuery);
+        const productData = await products.find(productQuery).populate({path:'categories',model:'categories'}).populate('offer')
+            .sort(sort)
+            .limit(limit)
+            .skip((page - 1) * limit)  ;
+
+
+
     const count = await products.countDocuments(productQuery);
     const cartData = await Cart.findOne({userId:req.session.user_id}).populate('userId').populate({path:'products.productId'});
     const wishlistData = await Wishlist.findOne({userId:req.session.user_id}).populate('userId').populate('products.productId');
     const categoryData = await category.find();
     const offerData = await Offer.find();
-     if(offerData ){
-     for(const offer of offerData){
-        if(offer.offerTypeName === 'Product'){
-            const type = offer.product
-             const matchingProducts = productData.filter(product=>product._id == type);
-             for (const matchingProduct of matchingProducts) {
-                const offerId = offer._id;
-                if(offer.status == true){
-                    await products.updateOne({_id:matchingProduct._id},{
-                        offer:offerId
-                    })
-                }
-                
-            }
-
+    if(offerData ){
+        for(const offer of offerData){
+           if(offer.offerTypeName === 'Product'){
+               const type = offer.product
+                const matchingProducts = productData.filter(product=>product._id == type);
+                for (const matchingProduct of matchingProducts) {
+                   const offerId = offer._id;
+                   if(offer.status == true){
+                       await products.updateOne({_id:matchingProduct._id},{
+                           offer:offerId
+                       })
+                   }
+                   
+               }
+   
+           }
         }
-     }
-    }
-//  console.log('pr',productData);
+       }
+    
 
-
-
-//     console.log('o',offerData);
-
-    // const offerProducts = offerData.map(offer => {
-    //     const offerProductId = new mongoose.Types.ObjectId(offer.product);
-    //     return productData.find(product => product._id.equals(offerProductId));
-    //     }).filter(product => product !== undefined);
-
-    //     console.log('ofpro',offerProducts);
-
-    // const offerCategories = offerData.map(offer => {
-    //         const offerCategoryId = new mongoose.Types.ObjectId(offer.category);
-    //         return categoryData.find(category => category._id.equals(offerCategoryId));
-    //     }).filter(category => category !== undefined);
-        
-    //     console.log("Product Data:", productData);
-    //     console.log("Offer Products:", offerProducts);
-        
-
-
-    //     productData.forEach(value => {
-    //         const offerProduct = offerProducts.find(offerProduct => offerProduct && offerProduct._id.toString() === value._id.toString());
-    //         console.log("Product ID:", value._id.toString());
-    //         console.log("Offer Product:", offerProduct);
-    //     });
-        
-    // console.log('off',offerProducts[0]._id);
-
-    res.render('products.ejs',{products:productData,cartData,wishlistData,categoryData,totalPages:Math.ceil(count/limit),currentPage:page});
+    res.render('products',{products:productData,cartData,wishlistData,categoryData,totalPages:Math.ceil(count/limit),currentPage:page});
    } catch (error) {
-    console.log(error.message)
+    console.log(error)
    }
 }
 
+
+
+// const productPage = async(req,res) => {
+//     try {
+//         console.log(req.query);
+//         const {minPrice, maxPrice, sort} = req.query;
+//         const queryObj = {...req.query};
+//         const page = req.query.page ? parseInt(req.query.page) : 1;
+//         const limit = 12;
+//         // let productQuery = {is_listed:true}
+//         // if (queryObj.minPrice && queryObj.maxPrice && queryObj.categories) {
+//         //     const categories = queryObj.categories.split(',');
+//         //     productQuery = {
+//         //         ...productQuery,
+//         //         price: {'$gte': parseFloat(queryObj.minPrice), '$lte': parseFloat(queryObj.maxPrice)},
+//         //         "categories.name": {$in: categories}
+//         //     };
+        
+//         // } else if (queryObj.minPrice && queryObj.maxPrice) {
+//         //     productQuery = {
+//         //         ...productQuery,
+//         //         price: { '$gte': parseFloat(queryObj.minPrice), '$lte': parseFloat(queryObj.maxPrice)}
+//         //     }
+//         // }
+
+
+//         // const productData = await products.find(productQuery).populate({path:'categories',model:'categories'}).populate('offer')
+//         //     .limit(limit)
+//         //     .skip((page - 1) * limit)  ;
+//         // console.log(productQuery,productData)
+//         console.log("================================================================")
+//         console.log(minPrice,maxPrice)
+//         let query = {price:{$gte:minPrice || 0,$lte:maxPrice || 750}}
+//         const Xproducts = await products.find(query);
+//         console.log(Xproducts)
+//         console.log("================================================================")
+
+//         if(req.query.filter){
+//            return res.json({products:Xproducts}) ;
+//         }
+//         res.render('Xproducts',{hello:Xproducts})
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
+
 const searchProducts = async(req,res)=>{
     try {
-        const productData =await products.find()
+        const query = req.query.query;
+        if (!query) {
+            return res.status(400).json({ error: 'Query parameter is missing' });
+        }
+        const products = await products.find({ name: { $regex: query, $options: 'i' } }, 'name');
 
-        const query = req.query.query.toLowerCase();
-        const filterProducts = productData.filter(product=>product.name.toLowerCase().includes(query));
-        res.json({success:true,products:filterProducts})
+        res.json(products);
     } catch (error) {
-        console.log(error.message);
+        console.error('Error searching products:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 }
 
@@ -243,41 +279,7 @@ const productDetails = async(req,res)=>{
         
 }
 
-const sortProduct = async(req,res)=>{
-    try {
-        const {sortValue} = req.body;
-        let sort;
 
-        const productData = req.session.proQuery
-        console.log('pr',productData);
-        switch(sortValue){
-            case 'Latest':
-            sort = await products.find(productData).populate({path:'categories',model:'categories'}).sort({'_id':-1});
-            res.send({ status: 'success', message: 'sorted successfully',sort});
-            break;
-            case 'Price high to low':
-            sort = await products.find(productData).populate({path:'categories',model:'categories'}).sort({'price':-1});
-            res.send({ status: 'success', message: 'sorted successfully',sort});
-            break;
-            case'Price low to high':
-            sort = await products.find(productData).populate({path:'categories',model:'categories'}).sort({'price':1});
-            res.send({ status: 'success', message: 'sorted successfully',sort});
-            break;
-            case'a to z':
-            sort = await products.find(productData).populate({path:'categories',model:'categories'}).collation({ locale: 'en', strength: 1 }).sort({ 'name': 1 });
-            res.send({ status: 'success', message: 'sorted successfully',sort});
-            break;
-            case'z to a':
-            sort = await products.find(productData).populate({path:'categories',model:'categories'}).collation({ locale: 'en', strength: 1 }).sort({ 'name': -1 });
-            res.send({ status: 'success', message: 'sorted successfully',sort});
-            break;
-            default:
-                break;
-        }
-    } catch (error) {
-        console.log(error.message);
-    }
-}
 
 module.exports={
     loadProductList,
@@ -288,6 +290,6 @@ module.exports={
     updateProducts,
     productPage,
     productDetails,
-    sortProduct,
+    // sortProduct,
     searchProducts
 }

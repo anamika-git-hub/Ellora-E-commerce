@@ -45,11 +45,13 @@ const orderSchema = new mongoose.Schema({
     paymentId:{
         type:String
     },
-    couponDiscound:{
-      type:Number
+    couponDiscount:{
+      type:Number,
+      default:0
     },
-    offerDiscound:{
-      type:Number
+    offerDiscount:{
+      type:Number,
+      default:0
     },
     products:[{
         productId:{

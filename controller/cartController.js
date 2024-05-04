@@ -2,6 +2,7 @@ const User = require('../models/userModel')
 const Cart = require('../models/cartModel');
 const Product = require('../models/productsModel');
 const Wishlist = require('../models/wishlistModel');
+const Offer = require('../models/offerModel');
 
 const loadCart = async(req,res)=>{
     try {
@@ -39,8 +40,9 @@ const loadCart = async(req,res)=>{
 const addtoCart = async(req,res)=>{
     try {
         const {productId,productQuantity} = req.body;
-        const productData = await Product.findById({_id:productId});
+        const productData = await Product.findById({_id:productId}).populate('offer');
         const cartData = await Cart.findOne({userId:req.session.user_id});
+        
         if(!req.session.user_id){
                res.json({login:true})
         }else{
@@ -50,6 +52,7 @@ const addtoCart = async(req,res)=>{
             if(existProduct){
                 res.json({success:false})
             } else{
+            
             await Cart.findOneAndUpdate({
                 userId :req.session.user_id
             },{

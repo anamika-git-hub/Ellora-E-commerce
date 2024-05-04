@@ -2,6 +2,8 @@ const User = require('../models/userModel');
 const Cart = require('../models/cartModel');
 const Order = require('../models/orderModel');
 const Product = require('../models/productsModel');
+const Wallet = require('../models/walletModel');
+const Coupon = require('../models/couponModel');
 const Razorpay = require('razorpay');
 const {RAZORPAY_ID_KEY,RAZORPAY_SECRET_KEY} = process.env;
 
@@ -15,6 +17,9 @@ const placeOrder = async(req,res)=>{
     try {
         
         const userId = req.session.user_id;
+        const couponCode = req.session.couponCode;
+
+         console.log('code:',couponCode);
         const {shippingAddress,subTotal,shippingMethod} = req.body;
         const amount =subTotal*100
         if(shippingMethod == 'Razorpay'){
@@ -26,7 +31,6 @@ const placeOrder = async(req,res)=>{
     
             razorpayInstance.orders.create(options,
             (err,order)=>{
-                console.log('or',order);
                 if(!err){
                     res.status(200).json({
                         success:true,
@@ -65,7 +69,10 @@ const placeOrder = async(req,res)=>{
             month: 'short',
             day: '2-digit'
         }).replace(/\//g, '-');
-
+        if(couponCode){
+            var couponData = await Coupon.findOne({couponCode:couponCode});
+            
+        }
         const myOrders = await Order.create({
             userId:userId,
             delivery_address:address,
@@ -76,6 +83,7 @@ const placeOrder = async(req,res)=>{
             status:status,
             statusLevel:statusLevel,
             payment:shippingMethod,
+            couponDiscount:couponData.offerPrice,
             products:productData
         })
         res.redirect('/successPage');
@@ -98,7 +106,9 @@ const placeOrder = async(req,res)=>{
                 // })
                 const data = await Product.findOne({_id:productId});
                 data.stock=data.stock-quantity;
+                console.log('stock:',data.stock);
                  await  data.save()
+                 res.redirect('/successPage');
             }
         }else if(proData[i].status === 'cancelled'){
             await Cart.deleteOne({userId:userId})
@@ -138,40 +148,98 @@ const loadOrderList = async(req,res)=>{
     }
     const limit = 5;
         const orderData = await Order.find().populate('products.productId').populate('userId')
+        .limit(limit * 1)
+      .skip((page-1)* limit)
+      .exec();
         
-        const products = orderData.flatMap(order => order.products.map(product => product.productId))
-        const paginatedProductIds = products.slice((page - 1) * limit, page * limit);
-        console.log('pro',paginatedProductIds);
-        
-      
     const count = await Order.find({
     }).countDocuments();
-    console.log("length of oderData:"+orderData.length)
-        res.render('orderList',{orderData,paginatedProductIds,totalPages:Math.ceil(count/limit),currentPage:page})
+        res.render('orderList',{orderData,totalPages:Math.ceil(count/limit),currentPage:page})
     } catch (error) {
         console.log(error.message);
     }
 }
 
+const loadOrderDetails = async (req, res) => {
+    try {
+        const { orderId } = req.query; // Access orderId from req.params
+        console.log('orderId:', orderId);
+        const orderData = await Order.findById(orderId).populate('products.productId').populate('userId');
+        res.render('orderDetail', { order: orderData });
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+
+
+
 const cancelOrder = async(req,res)=>{
     try {
-        const {orderId} = req.query;
-        
-        const orderData = await Order.findOne({userId:req.session.user_id});
-        const a = orderData.products.find((p)=>{
-           return p.productId.equals(orderId);
+        const {productId,orderId} = req.query;
+        console.log('rode',req.query);
+        const orderData = await Order.findOne({_id: orderId});
+        console.log('orderData:',orderData.total_amount);
+        const product = orderData.products.find((p)=>{
+           return p.productId.equals(productId);
+         
         });
-        a.status="cancelled";
+        
+        product.status="cancelled";
         await orderData.save()
+        const userId = req.session.user_id
+       if(product.status === 'cancelled'){
+        const walletData = await Wallet.findOne({userId});
+        if(walletData){
+            walletData.walletAmount += product.totalPrice;
+            walletData.walletHistory.push({
+                date:new Date(),
+                amount:product.totalPrice,
+                description:'Order Cancellation',
+                status:'In'
+            })
+           await walletData.save();
+        }else{
+
+            const newWallet = new Wallet({
+                userId:req.session.user_id,
+                walletAmount:product.totalPrice,
+                walletHistory:[
+                    {
+                        date:new Date(),
+                        amount:product.totalPrice,
+                        description:'Order Cancellation',
+                        status:'In'  
+                    }
+                ]
+            })
+
+            await newWallet.save()
+        }
+       }
        
     } catch (error) {
         console.log(error.message);
     }
 }
 
+
+
+const salesReport = async(req,res)=>{
+    try {
+        
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+
 module.exports={
     placeOrder,
     loadSuccessPage,
     loadOrderList,
-    cancelOrder
+    cancelOrder,
+    salesReport,
+    loadOrderDetails
 }

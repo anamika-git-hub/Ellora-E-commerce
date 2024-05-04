@@ -1,13 +1,13 @@
 // Main Js File
 var minPrice = 0;
 var maxPrice = 0;
-
+var selectedCategories=[]
 function filterChecked(){
     console.log('--------------------------------------------------======');
     selectedCategories = Array.from(document.querySelectorAll('.custom-control-input:checked')).map(checkbox => checkbox.value);
     console.log(selectedCategories,'ddddd')
     
-    fetch(`/products?categories=${selectedCategories}&minPrice=${minPrice}&maxPrice=${maxPrice}`); 
+    fetch(`/products?categories=${selectedCategories}&minPrice=${minPrice}&maxPrice=${maxPrice}&sort=latest`); 
 }
 
 $(document).ready(function () {
@@ -171,54 +171,54 @@ $(document).ready(function () {
             $this.find('.product-body').css('transform', 'translateY(0)');
         });
     }
-    //select categories
-    let selectedCategories = []; // Declare selectedCategories globally
+    // //select categories
+    // let selectedCategories = []; // Declare selectedCategories globally
     
-    console.log(document.getElementsByClassName('custom-control-input'),'juijiikj')
-    document.addEventListener('DOMContentLoaded', function() {
+//     console.log(document.getElementsByClassName('custom-control-input'),'juijiikj')
+//     document.addEventListener('DOMContentLoaded', function() {
         
-    function handleFilterChange() {
-        // const selectedCategories = Array.from(document.querySelectorAll('.custom-control-input:checked')).map(checkbox => checkbox.value);
+//     function handleFilterChange() {
+//         // const selectedCategories = Array.from(document.querySelectorAll('.custom-control-input:checked')).map(checkbox => checkbox.value);
         
 
-        console.log('sc',selectedCategories);
-        fetch(`/products?categories=${selectedCategories}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                const products = data.data;
-                updateUIWithFilteredProducts(products); 
-            } else {
-                console.error('Error:', data); 
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
+//         console.log('sc',selectedCategories);
+//         fetch(`/products?categories=${selectedCategories}`)
+//         .then(response => {
+//             if (!response.ok) {
+//                 throw new Error('Network response was not ok');
+//             }
+//             return response.json();
+//         })
+//         .then(data => {
+//             if (data.success) {
+//                 const products = data.data;
+//                 updateUIWithFilteredProducts(products); 
+//             } else {
+//                 console.error('Error:', data); 
+//             }
+//         })
+//         .catch(error => {
+//             console.error('Error:', error);
+//         });
+//     }
 
-    document.querySelectorAll('.custom-control-input').forEach(checkbox => {
-        checkbox.addEventListener('change', handleFilterChange);
-    });
+//     document.querySelectorAll('.custom-control-input').forEach(checkbox => {
+//         checkbox.addEventListener('change', handleFilterChange);
+//     });
 
-    const clearFiltersLink = document.querySelector('.sidebar-filter-clear');
-    clearFiltersLink.addEventListener('click', function(event) {
-        event.preventDefault();
+//     const clearFiltersLink = document.querySelector('.sidebar-filter-clear');
+//     clearFiltersLink.addEventListener('click', function(event) {
+//         event.preventDefault();
 
-    document.querySelectorAll('.custom-control-input:checked').forEach(checkbox => {
-        checkbox.checked = false;
-    });
+//     document.querySelectorAll('.custom-control-input:checked').forEach(checkbox => {
+//         checkbox.checked = false;
+//     });
 
-        handleFilterChange();
-    });
-});
+//         handleFilterChange();
+//     });
+// });
 
-    console.log('sel',selectedCategories);
+//     console.log('sel',selectedCategories);
 
     // Slider For category pages / filter price
     if (typeof noUiSlider === 'object') {
@@ -253,7 +253,20 @@ $(document).ready(function () {
             maxPrice = parseFloat(values[1].replace('$', ''));
             $('#filter-price-range').text('$'+minPrice+' - '+'$'+maxPrice);
 
-            fetch(`/products?minPrice=${minPrice}&maxPrice=${maxPrice}`)
+        fetch(`/products?minPrice=${minPrice}&maxPrice=${maxPrice}&sort=latest,&filter=${true}`)
+        .then(response => {
+            if (!response.ok) {
+            throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data); // Log the result data
+            // Further processing of data can be done here
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
 		});
 	}
 

@@ -65,6 +65,9 @@ adminRouter.get('/addOffer',offerController.loadAddOffer);
 adminRouter.post('/addOffer',offerController.addOffer);
 
 adminRouter.get('/orderList',isLogin,orderController.loadOrderList);
+adminRouter.get('/orderDetail', orderController.loadOrderDetails);
+
+adminRouter.get('/salesReport',orderController.salesReport);
 
 
 
