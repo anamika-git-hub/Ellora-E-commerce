@@ -8,6 +8,7 @@ const Order = require('../models/orderModel');
 const Cart = require('../models/cartModel');
 const Wishlist = require('../models/wishlistModel');
 const Coupon = require('../models/couponModel');
+const Wallet = require('../models/walletModel')
 
 // password hasing
 const securePassword =async(password)=>{
@@ -271,7 +272,9 @@ const loadProfile = async(req,res)=>{
         const userData = await User.findById(userId)
         const cartData = await Cart.findOne({userId:req.session.user_id}).populate('userId').populate({path:'products.productId'});
         const wishlistData = await Wishlist.findOne({userId:userId}).populate('userId').populate('products.productId');
+        const walletData = await Wallet.findOne();
         const orderData = await Order.find({userId:userId}).sort({'_id':-1}).populate('products.productId').populate('userId')
+        
         .limit(limit * 1)
         .skip((page-1)* limit)
         const couponData = await Coupon.find()
@@ -279,7 +282,7 @@ const loadProfile = async(req,res)=>{
          const count = await Order.find({
       }).countDocuments();
        if(orderData){
-        res.render('profile',{userData,cartData,wishlistData,couponData,orderData,totalPages:Math.ceil(count/limit),currentPage:page});
+        res.render('profile',{userData,cartData,wishlistData,couponData,walletData,orderData,totalPages:Math.ceil(count/limit),currentPage:page});
        }else{
         res.render('profile',{userData,cartData,wishlistData,couponData});
        }
@@ -376,7 +379,8 @@ const addAddress = async(req,res)=>{
                 }
             }
         })
-        res.redirect('/profile')
+        res.json({success:true})
+
     }catch(error){
         console.log(error.message);
     }

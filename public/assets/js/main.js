@@ -1,14 +1,14 @@
 // Main Js File
 var minPrice = 0;
 var maxPrice = 0;
-var selectedCategories=[]
-function filterChecked(){
-    console.log('--------------------------------------------------======');
-    selectedCategories = Array.from(document.querySelectorAll('.custom-control-input:checked')).map(checkbox => checkbox.value);
-    console.log(selectedCategories,'ddddd')
+// var selectedCategories=[]
+// function filterChecked(){
+//     console.log('--------------------------------------------------======');
+//     selectedCategories = Array.from(document.querySelectorAll('.custom-control-input:checked')).map(checkbox => checkbox.value);
+//     console.log(selectedCategories,'ddddd')
     
-    fetch(`/products?categories=${selectedCategories}&minPrice=${minPrice}&maxPrice=${maxPrice}&sort=latest`); 
-}
+//     fetch(`/products?categories=${selectedCategories}&minPrice=${minPrice}&maxPrice=${maxPrice}&sort=latest`); 
+// }
 
 $(document).ready(function () {
     'use strict';
@@ -248,26 +248,26 @@ $(document).ready(function () {
         // var maxPrice = 0;
 
 
-		priceSlider.noUiSlider.on('update', function( values, handle ){
-            minPrice = parseFloat(values[0].replace('$', ''));
-            maxPrice = parseFloat(values[1].replace('$', ''));
-            $('#filter-price-range').text('$'+minPrice+' - '+'$'+maxPrice);
+		// priceSlider.noUiSlider.on('update', function( values, handle ){
+        //     minPrice = parseFloat(values[0].replace('$', ''));
+        //     maxPrice = parseFloat(values[1].replace('$', ''));
+        //     $('#filter-price-range').text('$'+minPrice+' - '+'$'+maxPrice);
 
-        fetch(`/products?minPrice=${minPrice}&maxPrice=${maxPrice}&sort=latest,&filter=${true}`)
-        .then(response => {
-            if (!response.ok) {
-            throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log(data); // Log the result data
-            // Further processing of data can be done here
-        })
-        .catch(error => {
-            console.error('Error fetching data:', error);
-        });
-		});
+        // fetch(`/products?minPrice=${minPrice}&maxPrice=${maxPrice}&sort=latest,&filter=${true}`)
+        // .then(response => {
+        //     if (!response.ok) {
+        //     throw new Error('Network response was not ok');
+        //     }
+        //     return response.json();
+        // })
+        // .then(data => {
+        //     console.log(data); // Log the result data
+        //     // Further processing of data can be done here
+        // })
+        // .catch(error => {
+        //     console.error('Error fetching data:', error);
+        // });
+		// });
 	}
 
    

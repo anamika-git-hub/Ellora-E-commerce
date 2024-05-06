@@ -34,6 +34,9 @@ const loadProductList=async(req,res)=>{
    }
     
 }
+
+
+
 const loadAddProducts = async(req,res)=>{
     try {
         const categoryData = await category.find({}) 
@@ -63,6 +66,38 @@ const addProducts = async(req,res)=>{
         console.log(error.message)
     }
 }
+
+
+// const addProducts = async(req,res)=>{
+//     try {
+//         console.log('body:',req.body);
+//        const value= await joiProductSchema.validateAsync(req.body)
+//        const {name,description,price,categories,image,stock} = value
+//        const result = await cloudinary.uploader.upload(image, {
+//         folder: "products",
+//         // width: 300,
+//         // crop: "scale"
+//     })
+
+//          await products.create(
+//              {name:name,
+//              description:description,
+//              price:price,
+//              categories:categories,
+//              image:{
+//                   public_id:result.public_id,
+//                   url:result.secure_url
+//              },
+//              stock:stock,
+//              is_listed:true,
+//              size:['s','xs']
+//              })
+//                  res.redirect('/admin/productList')
+       
+//     } catch (error) {
+//         console.log(error.message)
+//     }
+// }
 
 const listProduct=async (req,res)=>{
     try {
@@ -138,22 +173,30 @@ const productPage = async(req,res)=>{
     const limit = 12;
     let productQuery = {is_listed:true}
         
-    console.log('productQuery:',productQuery);
-    console.log('productQuery:',queryObj);
-    if (queryObj.minPrice && queryObj.maxPrice && queryObj.categories) {
-        const categories = queryObj.categories.split(',');
-        productQuery = {
-            ...productQuery,
-            price: {'$gte': parseFloat(queryObj.minPrice), '$lte': parseFloat(queryObj.maxPrice)},
-            "categories.name": {$in: categories}
-        };
+    // console.log('productQuery:',productQuery);
+    // console.log('productQuery:',queryObj);
+
+    // if(queryObj.categories){
+    //     const categories = queryObj.categories.split(',')
+    //     productQuery = {
+    //         ...productQuery,"categories.name":{$in:categories}
+    //     }
+    // }
+    // if (queryObj.minPrice && queryObj.maxPrice && queryObj.categories) {
+    //     const categories = queryObj.categories.split(',');
+    //     productQuery = {
+    //         ...productQuery,
+    //         price: {'$gte': parseFloat(queryObj.minPrice), '$lte': parseFloat(queryObj.maxPrice)},
+    //         "categories.name": {$in: categories}
+    //     };
     
-    } else if (queryObj.minPrice && queryObj.maxPrice) {
-        productQuery = {
-            ...productQuery,
-            price: { '$gte': parseFloat(queryObj.minPrice), '$lte': parseFloat(queryObj.maxPrice)}
-        }
-    }
+    // } 
+    // else if (queryObj.minPrice && queryObj.maxPrice) {
+    //     productQuery = {
+    //         ...productQuery,
+    //         price: { '$gte': parseFloat(queryObj.minPrice), '$lte': parseFloat(queryObj.maxPrice)}
+    //     }
+    // }
 
     const sortOptions = {
         Latest: {_id:-1},
@@ -166,7 +209,12 @@ const productPage = async(req,res)=>{
 
     const sort = sortOptions[req.query.sort] || {name:1}
 
-          console.log('prqo',productQuery);
+    if (req.query.search) {
+        const searchPattern = new RegExp(`.*${req.query.search.trim()}.*`, 'i');
+        productQuery['$or'] = [{ name: searchPattern }, { description: searchPattern }];
+      }
+
+        //   console.log('prqo',productQuery);
         const productData = await products.find(productQuery).populate({path:'categories',model:'categories'}).populate('offer')
             .sort(sort)
             .limit(limit)
@@ -253,13 +301,12 @@ const productPage = async(req,res)=>{
 
 const searchProducts = async(req,res)=>{
     try {
-        const query = req.query.query;
-        if (!query) {
-            return res.status(400).json({ error: 'Query parameter is missing' });
-        }
-        const products = await products.find({ name: { $regex: query, $options: 'i' } }, 'name');
-
-        res.json(products);
+        const { query } = req.query;
+        console.log('query:',query);
+        const regex = new RegExp(query, 'i'); 
+        
+        const products = await products.find({ name: { $regex: regex } });
+        res.json(products); 
     } catch (error) {
         console.error('Error searching products:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -290,6 +337,5 @@ module.exports={
     updateProducts,
     productPage,
     productDetails,
-    // sortProduct,
     searchProducts
 }

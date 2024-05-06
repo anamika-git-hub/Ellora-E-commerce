@@ -13,124 +13,107 @@ const razorpayInstance = new Razorpay({
 });
 
 
-const placeOrder = async(req,res)=>{
+const placeOrder = async (req, res) => {
     try {
-        
         const userId = req.session.user_id;
         const couponCode = req.session.couponCode;
-
-         console.log('code:',couponCode);
-        const {shippingAddress,subTotal,shippingMethod} = req.body;
-        const amount =subTotal*100
-        if(shippingMethod == 'Razorpay'){
-            const options = {
-                amount:amount,
-                currency:'INR',
-                receipt :'anamikap9895@gmail.com'
-            }
-    
-            razorpayInstance.orders.create(options,
-            (err,order)=>{
-                if(!err){
-                    res.status(200).json({
-                        success:true,
-                        msg:'Order Created',
-                        order_id:order.id,
-                        amount:amount,
-                        key_id:RAZORPAY_ID_KEY,
-                        // product_name:req.body.name,
-                        // description:req.body.description,
-                        contact:'9896754325',
-                        name:'Anamika',
-                        email:'anamikap9895@gmail.com'
-                    })
-                }else{
-                    res.status(400).json({success:false,msg:'Something went wrong!'})
-                }
-            })
-           
-        }
-        const userData = await User.findById({_id:userId});
-        const address = userData.addresses.find((address=>{
-            return address._id.equals(shippingAddress)
-        }))
-        const name = userData.name;
-        const cartData = await Cart.findOne({userId:userId}).populate("products.productId")
-        const productData = cartData.products;
         
-        const status = shippingMethod === "Cash on delivery" ? "placed" : "pending";
-        const statusLevel = status === "placed" ? 1 : 0;
+        console.log('code:', couponCode);
+        const { shippingAddress, subTotal, shippingMethod } = req.body;
+        console.log(shippingMethod)
+         req.session.totalAmount = subTotal;
+        const amount = subTotal * 100;
 
+        if (shippingMethod === 'Razorpay') {
+            const options = {
+                amount: amount,
+                currency: 'INR',
+                receipt: 'anamikap9895@gmail.com'
+            };
 
-        const date = new Date();
-        const delivery = new Date(date.getTime() + 10 * 24 * 60 * 60 * 1000);
-        const deliveryDate = delivery.toLocaleString('en-US', {
-            year: 'numeric',
-            month: 'short',
-            day: '2-digit'
-        }).replace(/\//g, '-');
-        if(couponCode){
-            var couponData = await Coupon.findOne({couponCode:couponCode});
-            
+            razorpayInstance.orders.create(options, (err, order) => {
+                if (!err) {
+                    res.status(200).json({
+                        success: true,
+                        msg: 'Order Created',
+                        order_id: order.id,
+                        amount: amount,
+                        key_id: RAZORPAY_ID_KEY,
+                        contact: '9896754325',
+                        name: 'Anamika',
+                        email: 'anamikap9895@gmail.com'
+                    });
+                } else {
+                    res.status(400).json({ success: false, msg: 'Something went wrong!' });
+                }
+            });
+        }else{
+
+        if(shippingMethod == 'Wallet'){
+                   walletData =await Wallet.findOne({userId:req.session.user_id})
+                   console.log('walletData:',walletData.walletAmount);
+
+                   walletData.walletAmount = walletData.walletAmount-subTotal;
+                             console.log('subTotal:',subTotal);
+                            await walletData.save();
+                //    res.json({cashOnDelivery:true})
         }
-        const myOrders = await Order.create({
-            userId:userId,
-            delivery_address:address,
-            user_name:name,
-            total_amount:subTotal,
-            date:date,
-            expected_delivery:deliveryDate,
-            status:status,
-            statusLevel:statusLevel,
-            payment:shippingMethod,
-            couponDiscount:couponData.offerPrice,
-            products:productData
-        })
-        res.redirect('/successPage');
-        const orderData = await Order.findOne({userId:userId});
-        const proData = orderData.products;
-        for(let i=0;i<proData.length;i++){
-        if(proData[i].status === 'placed'){
-            // await Cart.deleteOne({userId:userId})
-           for(let i=0;i<cartData.products.length;i++){
-                const productId = productData[i].productId;
-                const quantity = productData[i].quantity;
-                console.log('quantity',quantity);
+            const userData = await User.findById(userId);
+            const address = userData.addresses.find(address => address._id.equals(shippingAddress));
+            const name = userData.name;
+            const cartData = await Cart.findOne({ userId: userId }).populate({path:'products.productId',populate:{path:'offer'}});
+            const productData = cartData.products;
 
-                // const result = await Product.updateOne({
-                //     _id:productId
-                // },{
-                //     $inc:{
-                //         stock : -quantity
-                //     }
-                // })
-                const data = await Product.findOne({_id:productId});
-                data.stock=data.stock-quantity;
-                console.log('stock:',data.stock);
-                 await  data.save()
-                 res.redirect('/successPage');
+            const status = shippingMethod === 'Cash on delivery' ? 'placed' : 'pending';
+            const statusLevel = status === 'placed' ? 1 : 0;
+
+            const date = new Date();
+            const delivery = new Date(date.getTime() + 10 * 24 * 60 * 60 * 1000);
+            const deliveryDate = delivery.toLocaleString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: '2-digit'
+            }).replace(/\//g, '-');
+            let offerDiscount = 0 ;
+            let couponDiscount = 0;
+            if (couponCode) {
+                const couponData = await Coupon.findOne({ couponCode: couponCode });
+               couponDiscount = couponData? couponData.offerPrice:0;
             }
-        }else if(proData[i].status === 'cancelled'){
-            await Cart.deleteOne({userId:userId})
-            for(let i=0;i<cartData.products.length;i++){
-                 const productId = productData[i].productId;
-                 const quantity = productData[i].quantity
+            if( cartData){
+               productData.forEach(value=>{
+                if(value.productId.offer && value.productId.offer.status == true){
+                    const offer = value.productId.offer.offerPrice;
+                    const productPrice = value.productPrice * value.quantity;
+                    const offerPrice = (productPrice * offer)/100;
+                    offerDiscount += offerPrice
+                }
+               })
+            }
 
-                 await Product.updateOne({
-                     _id:productId
-                 },{
-                     $inc:{
-                         stock : quantity
-                     }
-                 })
-             }
+
+            const myOrders = await Order.create({
+                userId: userId,
+                delivery_address: address,
+                user_name: name,
+                total_amount: subTotal,
+                date: date,
+                expected_delivery: deliveryDate,
+                status: status,
+                statusLevel: statusLevel,
+                payment: shippingMethod,
+                couponDiscount: couponDiscount,
+                offerDiscount : offerDiscount,
+                products: productData
+            });
+               res.json({cashOnDelivery:true})
         }
-        }
-      
+        
     } catch (error) {
         console.log(error.message);
     }
-}
+};
+
 
 const loadSuccessPage = async(req,res)=>{
     try {
@@ -162,9 +145,11 @@ const loadOrderList = async(req,res)=>{
 
 const loadOrderDetails = async (req, res) => {
     try {
-        const { orderId } = req.query; // Access orderId from req.params
-        console.log('orderId:', orderId);
+        const { orderId } = req.query; 
         const orderData = await Order.findById(orderId).populate('products.productId').populate('userId');
+        const totalAmount = orderData.products.reduce((price,product)=>{
+            return price + product.totalPrice
+        })
         res.render('orderDetail', { order: orderData });
     } catch (error) {
         console.log(error.message);
@@ -227,11 +212,62 @@ const cancelOrder = async(req,res)=>{
 
 const salesReport = async(req,res)=>{
     try {
-        
+        const orderData = await Order.find().populate('products.productId').populate('userId')
+        let grandTotal = 0;
+        let couponTotal = 0;
+        let offerTotal = 0;
+        orderData.forEach (order=>{
+            const DeliveredOrder = order.products.every(product=> product.status === 'Delivered');
+
+            if(DeliveredOrder){
+                grandTotal += order.total_amount;
+                 couponTotal += order.couponDiscount;
+                 offerTotal += order.offerDiscount;
+            } 
+        })
+      
+        res.render('salesReport',{orderData,grandTotal,couponTotal,offerTotal})
     } catch (error) {
         console.log(error.message);
     }
 }
+
+const statusChange = async(req,res)=>{
+    try {
+        console.log(req.body.status);
+        
+        const orderId = req.params.orderId;
+        const order = await Order.findOne({_id:orderId});
+        if(req.body.status== 'Shipped'){
+            let productToUpdate = order.products.find(product=>product.status ==='placed')
+            productToUpdate.status = 'Shipped';
+            await order.save();
+        }else if(req.body.status == 'Delivered'){
+             let productToUpdate = null;
+             for(const product of order.products){
+                if(product.status === 'Shipped'){
+                    productToUpdate = product;
+                }
+                
+             }
+
+             if(!productToUpdate){
+                return res.json({error:'product is not shipped yet'})
+             }
+
+             productToUpdate.status = 'Delivered';
+             await order.save();
+        }
+      
+
+         return res.json({message:'Status updated successfully'})
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+
 
 
 
@@ -241,5 +277,6 @@ module.exports={
     loadOrderList,
     cancelOrder,
     salesReport,
-    loadOrderDetails
+    loadOrderDetails,
+    statusChange
 }

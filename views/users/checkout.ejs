@@ -394,7 +394,7 @@
                                                         <div class="card-header" id="heading-1">
                                                             <h2 class="card-title">
                                                                 <a role="button" data-toggle="collapse" href="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
-                                                                    Direct bank transfer
+                                                                    Wallet
                                                                 </a>
                                                             </h2>
                                                         </div><!-- End .card-header -->
@@ -879,6 +879,8 @@
 						"order_id": ""+res.data.order_id+"",
 						"handler": function (response){
 							alert("Payment Succeeded");
+                                            window.location='/successPage'
+
 							// window.open("/","_self")
 						},
 						"prefill": {
@@ -893,7 +895,10 @@
 							alert("Payment Failed");
 					});
 					razorpayObject.open();
-				}
+				}else if (res.data.cashOnDelivery == true){
+                    window.location= '/successPage'
+                }
+
                
               }).catch(function(error){
                   console.error('Error:', error);

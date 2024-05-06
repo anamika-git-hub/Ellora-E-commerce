@@ -15,22 +15,33 @@ const loadCart = async(req,res)=>{
         }else{
 
             const userId = req.session.user_id;
-            const cartData = await Cart.findOne({userId:userId}).populate('userId').populate({path:'products.productId'});
+            const cartData = await Cart.findOne({userId:userId}).populate('userId').populate({path:'products.productId',populate:{ path:'offer' }});
             const wishlistData = await Wishlist.findOne({userId:req.session.user_id}).populate('userId').populate('products.productId');
-            let initialAmount = 0;
-            if(cartData){
-                cartData.products.forEach((item)=>{
-                    let itemPrice = item.productPrice;
-                    initialAmount += itemPrice*item.quantity
-                })
+
+            let totalAmount = 0;
+            if(cartData  ){
+               
+               cartData.products.forEach(value=>{
+
+                if(value.productId.offer && value.productId.offer.status == true){
+                    const offer = value.productId.offer.offerPrice;
+                    
+                    const productPrice = value.productPrice * value.quantity;
+                    const offerPrice = productPrice-(productPrice * offer)/100;
+                    console.log('offerPrice:',offerPrice);
+                    totalAmount += offerPrice;
+
+                }else{
+                    const productPrice = value.productId.productPrice * value.quantity;
+                    totalAmount += productPrice;
+                }
+               })  
             }
-            const totalAfterDiscound =  req.flash('totalAfterDiscound')[0] || initialAmount;
-             req.session.total = totalAfterDiscound
-                res.render('cart',{cartData, subTotal : initialAmount,wishlistData,totalAfterDiscound});
-           
-                
-           
-        }
+            const totalAfterDiscount =  req.flash('totalAfterDiscound')[0] || totalAmount;
+            const discountAmount = req.flash('discoundAmount')[0] || 0;
+             req.session.total = totalAfterDiscount
+                res.render('cart',{cartData, subTotal : totalAmount,wishlistData,totalAfterDiscount,discountAmount});
+            }
 
     }catch (error){
         console.log(error.message);
@@ -52,7 +63,8 @@ const addtoCart = async(req,res)=>{
             if(existProduct){
                 res.json({success:false})
             } else{
-            
+                
+
             await Cart.findOneAndUpdate({
                 userId :req.session.user_id
             },{

@@ -55,6 +55,7 @@ const addtoWishlist = async(req,res)=>{
                 })
                 await newWishlist.save();
             }
+            res.json({success:true})
         }
     } catch (error) {
         console.log(error.message);

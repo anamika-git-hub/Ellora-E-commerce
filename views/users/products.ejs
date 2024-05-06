@@ -139,11 +139,11 @@
                     <div class="header-right">
                         <div class="header-search">
                             <a href="#" class="search-toggle" role="button" title="Search"><i class="icon-search"></i></a>
-                            <form action="#" method="get">
+                            <form action="" method="">
                                 <div class="header-search-wrapper">
                                     <label for="q" class="sr-only">Search</label>
-                                    <input type="search" class="form-control" name="q" id="searchInput" placeholder="Search in..." required>
-                                    <div id="suggestionsContainer"></div> <!-- Container for search suggestions -->
+                                    <input type="search" class="form-control" name="search" id="search" placeholder="Search in..." required>
+                                    <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button><!-- Container for search suggestions -->
                                 </div><!-- End .header-search-wrapper -->
                             </form>
                         </div><!-- End .header-search -->
@@ -831,7 +831,7 @@
    });
   </script> -->
 
-<!-- <script>
+<script>
     document.addEventListener('DOMContentLoaded', function() {
         
         function handleFilterChange() {
@@ -874,8 +874,8 @@
             handleFilterChange();
         });
     });
-</script> -->
-<script>
+</script>
+<!-- <script>
 const searchInput = document.getElementById('searchInput');
 const suggestionsContainer = document.getElementById('suggestionsContainer');
 
@@ -894,7 +894,7 @@ searchInput.addEventListener('input', async (event) => {
         suggestionsContainer.appendChild(suggestion);
     });
 });
-</script>
+</script> -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
     const dropdownTrigger = document.getElementById("sortby-trigger");

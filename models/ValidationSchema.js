@@ -15,7 +15,7 @@ const joiProductSchema = joi.object({
     categories : joi.string().required(),
     price : joi.number().positive().required(),
     stock : joi.number().positive().required(),
-    image: joi.array().items(joi.string()).max(4).required(),
+    image: joi.array().items().max(4).required(),
     
 })
 

@@ -302,29 +302,12 @@
         <!-- Main Script -->
         <script src="assets/js/main.js" type="text/javascript"></script>
         <script>
-            function searchName(){
-        
-               var table,input,tr,i,filter
-               input = document.getElementById('inputThings')
-               table = document.getElementById('tableId')
-               filter = input.value.toUpperCase()
-
-               tr = table.getElementsByTagName('tr')
-               for(i=0;i<tr.length;i++){
-                    td=tr[i].getElementsByClassName('nameSearch')[0]
-                    if(td){
-                        txtValue=td.textContent
-                        console.log(txtValue)
-                        if(txtValue.toUpperCase().indexOf(filter)>-1){
-                             tr[i].style.display=""
-                        }else{
-                            tr[i].style.display="none"
-                        }
-                    }
-                }
-
-
-             }
+        function searchName() {
+            var input, filter, table, tr, td, i, txtValue;
+            input = document.getElementById("inputThings").value
+            console.log('in:',input);
+            fetch(`/admin/searchProduct?query=${input}`)
+        }
         </script>
         <script>
             function listProduct(tag,productId){

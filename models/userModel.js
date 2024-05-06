@@ -36,6 +36,11 @@ const mongoose=require('mongoose');
             type:Boolean,
             default:false
         },
+        wallet:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'Wallet',
+            required:true
+        },
         addresses:[{
             name:{
                 type:String

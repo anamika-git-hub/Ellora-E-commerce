@@ -30,21 +30,27 @@
             <nav>
                 <ul class="menu-aside">
                     <li class="menu-item">
-                        <a class="menu-link" href="index.html">
+                        <a class="menu-link" href="home">
                             <i class="icon material-icons md-home"></i>
                             <span class="text">Dashboard</span>
                         </a>
                     </li>
-                    <li class="menu-item has-submenu">
+                    <li class="menu-item has-submenu ">
                         <a class="menu-link" href="page-products-list.html">
                             <i class="icon material-icons md-shopping_bag"></i>
                             <span class="text">Products</span>
                         </a>
                         <div class="submenu">
-                            <a href="page-products-list.html">Product List</a>
-                            <a href="page-products-grid.html">Product grid</a>
-                            <a href="page-products-grid-2.html">Product grid 2</a>
-                            <a href="page-categories.html">Categories</a>
+                            <a href="productList">Product List</a>
+                        </div>
+                    </li>
+                    <li class="menu-item has-submenu">
+                        <a class="menu-link" href="page-orders-1.html">
+                            <i class="icon material-icons md-people"></i>
+                            <span class="text">Users</span>
+                        </a>
+                        <div class="submenu">
+                            <a href="userList">User list </a>
                         </div>
                     </li>
                     <li class="menu-item has-submenu active">
@@ -53,32 +59,25 @@
                             <span class="text">Orders</span>
                         </a>
                         <div class="submenu">
-                            <a href="page-orders-1.html" class="active">Order list 1</a>
-                            <a href="page-orders-2.html">Order list 2</a>
-                            <a href="page-orders-detail.html">Order detail</a>
+                            <a href="orderList"  class="active">Order list</a>
                         </div>
                     </li>
                     <li class="menu-item has-submenu">
                         <a class="menu-link" href="page-sellers-cards.html">
                             <i class="icon material-icons md-store"></i>
-                            <span class="text">Sellers</span>
+                            <span class="text">Coupon</span>
                         </a>
                         <div class="submenu">
-                            <a href="page-sellers-cards.html">Sellers cards</a>
-                            <a href="page-sellers-list.html">Sellers list</a>
-                            <a href="page-seller-detail.html">Seller profile</a>
+                            <a href="couponList">Coupon list</a>
                         </div>
                     </li>
-                    <li class="menu-item has-submenu">
+                    <li class="menu-item has-submenu ">
                         <a class="menu-link" href="page-form-product-1.html">
                             <i class="icon material-icons md-add_box"></i>
-                            <span class="text">Add product</span>
+                            <span class="text">Categories</span>
                         </a>
                         <div class="submenu">
-                            <a href="page-form-product-1.html">Add product 1</a>
-                            <a href="page-form-product-2.html">Add product 2</a>
-                            <a href="page-form-product-3.html">Add product 3</a>
-                            <a href="page-form-product-4.html">Add product 4</a>
+                            <a href="Categories">Categories list</a>
                         </div>
                     </li>
                     <li class="menu-item has-submenu">
@@ -212,21 +211,7 @@
                             <div class="col-lg-4 col-md-6 me-auto">
                                 <input type="text" placeholder="Search..." class="form-control" />
                             </div>
-                            <div class="col-lg-2 col-6 col-md-3">
-                                <select class="form-select">
-                                    <option>Status</option>
-                                    <option>Active</option>
-                                    <option>Disabled</option>
-                                    <option>Show all</option>
-                                </select>
-                            </div>
-                            <div class="col-lg-2 col-6 col-md-3">
-                                <select class="form-select">
-                                    <option>Show 20</option>
-                                    <option>Show 30</option>
-                                    <option>Show 40</option>
-                                </select>
-                            </div>
+                           
                         </div>
                     </header>
                     <!-- card-header end// -->
@@ -239,6 +224,7 @@
                                         <th scope="col">Name</th>
                                         <th scope="col">Email</th>
                                         <th scope="col">Total</th>
+                                        <th scope="col">Status</th>
                                         <th scope="col">Date</th>
                                         <th scope="col" class="text-end">Action</th>
                                     </tr>
@@ -246,31 +232,34 @@
                                 <tbody>
                                     
                                         <% orderData.forEach((order,indexes)=>{%>
+                                            <% order.products.forEach((value,index)=>{%>
+                                               
                                     <tr>
                                         
                                         <input type="hidden" name="productId" value="<%= order.productId %>">
-                                        <td>090<%= indexes+1 %></td>
+                                        <td><%=order._id.toString().toUpperCase().slice(-6) %></td>
                                         <td><b><%= order.user_name %></b></td>
                                         <td><%= order.userId.email %></td>
                                         <td>$<%= order.total_amount %></td>
+                                        <td><span class="badge rounded-pill alert-warning"><%=value.status %></span></td>
                                         <td><%= new Date(order.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %></td>
                                         <td class="text-end">
                                             <a href="/admin/orderDetail?orderId=<%= order._id %>" class="btn btn-md rounded font-sm detail-btn">Detail</a>
 
 
                                             <div class="dropdown">
-                                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> change Status </a>
                                                 <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#">View detail</a>
-                                                    <a class="dropdown-item" href="#">Edit info</a>
-                                                    <a class="dropdown-item text-danger" href="#">Delete</a>
+                                                    <a class="dropdown-item" href="#"  onclick="statusChange('<%= order._id%>','Delivered')">Delivered</a>
+                                                    <a class="dropdown-item" href="#" onclick="statusChange('<%= order._id%>','Shipped')">Shipped</a>
+                                                    <a class="dropdown-item text-danger" href="#" onclick="statusChange('<%= order._id%>','Cancelled')">Cancelled</a>
                                                 </div>
                                             </div>
                                             <!-- dropdown //end -->
                                         </td>
                                     </tr>
                                     <%})%>
-                 
+                                    <%}) %>
                                     
                                 </tbody>
                             </table>
@@ -318,6 +307,29 @@
     });
 
         </script>
+
+<script>
+     async function statusChange(orderId, status){
+
+        console.log('status:',status);
+    try {
+        const response = await fetch(`/admin/statusChanged/${orderId}`,{
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json' 
+            },
+            body: JSON.stringify({ status }) 
+        });
+
+        const responseData = await response.json();
+        window.location = '/admin/orderList'
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+</script>
+
 
 
         <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>

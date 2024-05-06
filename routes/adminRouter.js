@@ -52,6 +52,7 @@ adminRouter.post('/addProducts',imageUpload,productController.addProducts);
 adminRouter.get('/listProduct',isLogin,productController.listProduct);
 adminRouter.get('/editproducts',isLogin,productController.editProductLoad);
 adminRouter.post('/editproducts',productController.updateProducts);
+adminRouter.get('/searchProduct',productController.searchProducts);
 
 adminRouter.get('/couponList',isLogin,couponController.loadCouponList);
 adminRouter.get('/addCoupon',isLogin,couponController.loadAddCoupon);
@@ -68,6 +69,7 @@ adminRouter.get('/orderList',isLogin,orderController.loadOrderList);
 adminRouter.get('/orderDetail', orderController.loadOrderDetails);
 
 adminRouter.get('/salesReport',orderController.salesReport);
+adminRouter.post('/statusChanged/:orderId',orderController.statusChange);
 
 
 

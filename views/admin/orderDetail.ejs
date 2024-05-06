@@ -30,21 +30,27 @@
             <nav>
                 <ul class="menu-aside">
                     <li class="menu-item">
-                        <a class="menu-link" href="index.html">
+                        <a class="menu-link" href="home">
                             <i class="icon material-icons md-home"></i>
                             <span class="text">Dashboard</span>
                         </a>
                     </li>
-                    <li class="menu-item has-submenu">
+                    <li class="menu-item has-submenu ">
                         <a class="menu-link" href="page-products-list.html">
                             <i class="icon material-icons md-shopping_bag"></i>
                             <span class="text">Products</span>
                         </a>
                         <div class="submenu">
-                            <a href="page-products-list.html">Product List</a>
-                            <a href="page-products-grid.html">Product grid</a>
-                            <a href="page-products-grid-2.html">Product grid 2</a>
-                            <a href="page-categories.html">Categories</a>
+                            <a href="productList">Product List</a>
+                        </div>
+                    </li>
+                    <li class="menu-item has-submenu">
+                        <a class="menu-link" href="page-orders-1.html">
+                            <i class="icon material-icons md-people"></i>
+                            <span class="text">Users</span>
+                        </a>
+                        <div class="submenu">
+                            <a href="userList">User list </a>
                         </div>
                     </li>
                     <li class="menu-item has-submenu active">
@@ -53,32 +59,25 @@
                             <span class="text">Orders</span>
                         </a>
                         <div class="submenu">
-                            <a href="page-orders-1.html">Order list 1</a>
-                            <a href="page-orders-2.html">Order list 2</a>
-                            <a href="page-orders-detail.html" class="active">Order detail</a>
+                            <a href="orderList"  class="active">Order list</a>
                         </div>
                     </li>
                     <li class="menu-item has-submenu">
                         <a class="menu-link" href="page-sellers-cards.html">
                             <i class="icon material-icons md-store"></i>
-                            <span class="text">Sellers</span>
+                            <span class="text">Coupon</span>
                         </a>
                         <div class="submenu">
-                            <a href="page-sellers-cards.html">Sellers cards</a>
-                            <a href="page-sellers-list.html">Sellers list</a>
-                            <a href="page-seller-detail.html">Seller profile</a>
+                            <a href="couponList">Coupon list</a>
                         </div>
                     </li>
-                    <li class="menu-item has-submenu">
+                    <li class="menu-item has-submenu ">
                         <a class="menu-link" href="page-form-product-1.html">
                             <i class="icon material-icons md-add_box"></i>
-                            <span class="text">Add product</span>
+                            <span class="text">Categories</span>
                         </a>
                         <div class="submenu">
-                            <a href="page-form-product-1.html">Add product 1</a>
-                            <a href="page-form-product-2.html">Add product 2</a>
-                            <a href="page-form-product-3.html">Add product 3</a>
-                            <a href="page-form-product-4.html">Add product 4</a>
+                            <a href="Categories">Categories list</a>
                         </div>
                     </li>
                     <li class="menu-item has-submenu">
@@ -207,20 +206,10 @@
                     <header class="card-header">
                         <div class="row align-items-center">
                             <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
-                                <span> <i class="material-icons md-calendar_today"></i> <b>Wed, Aug 13, 2020, 4:34PM</b> </span> <br />
-                                <small class="text-muted">Order ID: 3453012</small>
+                                <span> <i class="material-icons md-calendar_today"></i> <b><%= new Date(order.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %></b> </span> <br />
+                                <small class="text-muted">Order ID:<%=order._id.toString().toUpperCase().slice(-6) %></small>
                             </div>
-                            <div class="col-lg-6 col-md-6 ms-auto text-md-end">
-                                <select class="form-select d-inline-block mb-lg-0 mr-5 mw-200">
-                                    <option>Change status</option>
-                                    <option>Awaiting payment</option>
-                                    <option>Confirmed</option>
-                                    <option>Shipped</option>
-                                    <option>Delivered</option>
-                                </select>
-                                <a class="btn btn-primary" href="#">Save</a>
-                                <a class="btn btn-secondary print ms-2" href="#"><i class="icon material-icons md-print"></i></a>
-                            </div>
+                            
                         </div>
                     </header>
                     <!-- card-header end// -->
@@ -281,7 +270,7 @@
                         </div>
                         <!-- row // -->
                         <div class="row">
-                            <div class="col-lg-7">
+                            <div class="col-lg-10">
                                 <div class="table-responsive">
                                     <table class="table">
                                         <thead>
@@ -308,14 +297,15 @@
                                                 <td>$<%= value.productPrice %></td>
                                                 <td><span class="badge rounded-pill alert-warning"><%=value.status %></span></td>
                                                 <td><%= value.quantity %></td>
+                                                
                                                 <td class="text-end">$<%= value.totalPrice%></td>
                                             </tr>
-                                            <tr class="ml-5">
-                                                <td colspan="4" >
+                                            <tr class="justify-content  ">
+                                                <td colspan="6">
                                                     <article class="float-end">
                                                         <dl class="dlist">
                                                             <dt>Subtotal:</dt>
-                                                            <dd>$973.35</dd>
+                                                            <dd></dd>
                                                         </dl>
                                                         <dl class="dlist">
                                                             <dt>Shipping cost:</dt>
@@ -341,26 +331,7 @@
                                 </div>
                                 <!-- table-responsive// -->
                             </div>
-                            <!-- col// -->
-                            <div class="col-lg-1"></div>
-                            <div class="col-lg-4">
-                                <div class="box shadow-sm bg-light">
-                                    <h6 class="mb-15">Payment info</h6>
-                                    <p>
-                                        <img src="assets/imgs/card-brands/2.png" class="border" height="20" /> Master Card **** **** 4768 <br />
-                                        Business name: Grand Market LLC <br />
-                                        Phone: +1 (800) 555-154-52
-                                    </p>
-                                </div>
-                                <div class="h-25 pt-4">
-                                    <div class="mb-3">
-                                        <label>Notes</label>
-                                        <textarea class="form-control" name="notes" id="notes" placeholder="Type some note"></textarea>
-                                    </div>
-                                    <button class="btn btn-primary">Save note</button>
-                                </div>
-                            </div>
-                            <!-- col// -->
+                           
                         </div>
                     </div>
                     <!-- card-body end// -->
