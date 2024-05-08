@@ -28,6 +28,7 @@ const loadProductList=async(req,res)=>{
     }).countDocuments();
 
 
+
     res.render('productList',{products:productData,totalPages:Math.ceil(count/limit),currentPage:page})
    } catch (error) {
      console.log(error.message)
@@ -40,7 +41,10 @@ const loadProductList=async(req,res)=>{
 const loadAddProducts = async(req,res)=>{
     try {
         const categoryData = await category.find({}) 
-        res.render('addProducts',{categoryData});
+        
+    const messages = req.flash('messages')[0] || {}; 
+    const formData = req.flash('formData')[0] || {};
+        res.render('addProducts',{categoryData,messages,formData});
     } catch (error) {
         console.log(error.message)
     }
@@ -48,6 +52,19 @@ const loadAddProducts = async(req,res)=>{
 
 const addProducts = async(req,res)=>{
     try {
+
+        const { error } = joiProductSchema.validate(req.body, {
+            abortEarly: false
+          });
+    if(error){ 
+        const errorMessages = error.details.reduce((acc, cur) => {
+            acc[cur.context.key] = cur.message;
+            return acc;
+        }, {});
+        req.flash('messages', errorMessages);
+        req.flash('formData', req.body);
+        res.redirect('/admin/addProducts')
+    }
        const value= await joiProductSchema.validateAsync(req.body)
        const {name,description,price,categories,image,stock} = value
          await products.create(
@@ -209,10 +226,8 @@ const productPage = async(req,res)=>{
 
     const sort = sortOptions[req.query.sort] || {name:1}
 
-    if (req.query.search) {
-        const searchPattern = new RegExp(`.*${req.query.search.trim()}.*`, 'i');
-        productQuery['$or'] = [{ name: searchPattern }, { description: searchPattern }];
-      }
+    let query = {};
+    console.log('search:',req.query.search);
 
         //   console.log('prqo',productQuery);
         const productData = await products.find(productQuery).populate({path:'categories',model:'categories'}).populate('offer')

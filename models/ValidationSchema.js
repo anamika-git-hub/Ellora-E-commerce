@@ -1,4 +1,5 @@
 const joi = require('@hapi/joi');
+const { description } = require('@hapi/joi/lib/base');
 
 
 const joiRegistrationSchema = joi.object({
@@ -26,7 +27,8 @@ const joiUserSchema = joi.object({
 })
 
 const joiCategorySchema = joi.object({
-
+  name:joi.string().required(),
+  description:joi.string().required()
 })
 
 const joiCouponSchema = joi.object({

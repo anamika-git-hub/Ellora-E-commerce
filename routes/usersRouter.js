@@ -44,12 +44,12 @@ userRouter.post('/editAddress',userController.editAddress);
 userRouter.post('/deleteAddress',userController.deleteAddress);
 
 userRouter.get('/products',isLogin,productController.productPage);
-userRouter.get('/searchProduct',productController.searchProducts);
+userRouter.get('/searchProduct',isLogin,productController.searchProducts);
 userRouter.get('/productDetail',isLogin,productController.productDetails);
 
 // userRouter.post('/sort',productController.sortProduct);
 
-userRouter.get('/wishlist',wishlistController.loadWishlist);
+userRouter.get('/wishlist',isLogin,wishlistController.loadWishlist);
 userRouter.post('/wishlist',wishlistController.addtoWishlist);
 userRouter.post('/deleteWishlistItem',wishlistController.deleteWishlistItem);
 
@@ -62,7 +62,7 @@ userRouter.post('/applyCoupon',couponController.applyCoupon);
 
 userRouter.get('/CheckOut',isLogin,cartController.loadCheckOut);
 userRouter.post('/placeOrder',orderController.placeOrder);
-userRouter.get('/successPage',orderController.loadSuccessPage);
+userRouter.get('/successPage',isLogin,orderController.loadSuccessPage);
 userRouter.get('/cancelOrder',isLogin,orderController.cancelOrder);
 
 

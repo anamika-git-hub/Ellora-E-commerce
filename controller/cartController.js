@@ -18,29 +18,24 @@ const loadCart = async(req,res)=>{
             const cartData = await Cart.findOne({userId:userId}).populate('userId').populate({path:'products.productId',populate:{ path:'offer' }});
             const wishlistData = await Wishlist.findOne({userId:req.session.user_id}).populate('userId').populate('products.productId');
 
-            let totalAmount = 0;
-            if(cartData  ){
-               
+            let subTotal = 0;
+            let totalAmount = 0 ;
                cartData.products.forEach(value=>{
-
+                  
                 if(value.productId.offer && value.productId.offer.status == true){
                     const offer = value.productId.offer.offerPrice;
-                    
-                    const productPrice = value.productPrice * value.quantity;
-                    const offerPrice = productPrice-(productPrice * offer)/100;
-                    console.log('offerPrice:',offerPrice);
-                    totalAmount += offerPrice;
-
+                    totalAmount = value.productPrice * value.quantity
+                    totalAmount  = totalAmount-(totalAmount * offer)/100;
+                    value.totalPrice = totalAmount
+                    subTotal += totalAmount;
                 }else{
-                    const productPrice = value.productId.productPrice * value.quantity;
-                    totalAmount += productPrice;
+                    totalAmount = value.productPrice * value.quantity
+                    value.totalPrice = totalAmount
+                    subTotal += totalAmount;
                 }
                })  
-            }
-            const totalAfterDiscount =  req.flash('totalAfterDiscound')[0] || totalAmount;
-            const discountAmount = req.flash('discoundAmount')[0] || 0;
-             req.session.total = totalAfterDiscount
-                res.render('cart',{cartData, subTotal : totalAmount,wishlistData,totalAfterDiscount,discountAmount});
+             await cartData.save()
+                res.render('cart',{cartData, subTotal,wishlistData});
             }
 
     }catch (error){
@@ -109,14 +104,26 @@ const addtoCart = async(req,res)=>{
 const updatequantity = async(req,res)=>{
     try {
         const {productId,productQuantity} = req.body;
-        const cartData = await Cart.findOne({userId:req.session.user_id});
+        const cartData = await Cart.findOne({userId:req.session.user_id}).populate({path:'products.productId',populate:{ path:'offer' }});
         
         const products = cartData.products.find((product)=>product.productId.equals(productId))
+        
         products.quantity=productQuantity
-       const totalPrice = products.totalPrice=productQuantity* products.productPrice
+           
+            if(products.productId.offer && products.productId.offer.status === true){
+                const offer = products.productId.offer.offerPrice;
+                products.totalPrice = products.productPrice*productQuantity;
+                products.totalPrice  = products.totalPrice -(products.totalPrice * offer)/100;
+
+            }else{
+                products.totalPrice  = products.productPrice*productQuantity
+            }
+     
+
        const subTotal = cartData.products.reduce((total,products)=>total + products.totalPrice,0)
+       
         await cartData.save();
-        res.status(200).json({ status: 'success', message: 'Quantity updated successfully',totalPrice,subTotal});
+        res.status(200).json({ status: 'success', message: 'Quantity updated successfully',totalPrice:products.totalPrice ,subTotal});
 
     } catch (error) {
         console.log(error.message);

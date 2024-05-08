@@ -266,17 +266,19 @@ const loadProfile = async(req,res)=>{
         if(req.query.page){
             page = req.query.page;
         }
-        const limit = 3;
-      
+        const limit = 5;
         const userId = req.session.user_id;
         const userData = await User.findById(userId)
         const cartData = await Cart.findOne({userId:req.session.user_id}).populate('userId').populate({path:'products.productId'});
         const wishlistData = await Wishlist.findOne({userId:userId}).populate('userId').populate('products.productId');
         const walletData = await Wallet.findOne();
         const orderData = await Order.find({userId:userId}).sort({'_id':-1}).populate('products.productId').populate('userId')
-        
         .limit(limit * 1)
         .skip((page-1)* limit)
+
+        
+
+        
         const couponData = await Coupon.find()
         
          const count = await Order.find({

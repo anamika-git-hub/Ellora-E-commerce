@@ -58,17 +58,17 @@ adminRouter.get('/couponList',isLogin,couponController.loadCouponList);
 adminRouter.get('/addCoupon',isLogin,couponController.loadAddCoupon);
 adminRouter.post('/addCoupon',isLogin,couponController.addCoupon);
 adminRouter.get('/deleteCoupon',isLogin,couponController.deleteCoupon);
-adminRouter.get('/editCoupon',couponController.loadEditCoupon);
+adminRouter.get('/editCoupon',isLogin,couponController.loadEditCoupon);
 adminRouter.post('/editCoupon',couponController.editCoupon);
 
-adminRouter.get('/offerList',offerController.loadOfferList);
-adminRouter.get('/addOffer',offerController.loadAddOffer);
+adminRouter.get('/offerList',isLogin,offerController.loadOfferList);
+adminRouter.get('/addOffer',isLogin,offerController.loadAddOffer);
 adminRouter.post('/addOffer',offerController.addOffer);
 
 adminRouter.get('/orderList',isLogin,orderController.loadOrderList);
-adminRouter.get('/orderDetail', orderController.loadOrderDetails);
+adminRouter.get('/orderDetail',isLogin, orderController.loadOrderDetails);
 
-adminRouter.get('/salesReport',orderController.salesReport);
+adminRouter.get('/salesReport',isLogin,orderController.salesReport);
 adminRouter.post('/statusChanged/:orderId',orderController.statusChange);
 
 
