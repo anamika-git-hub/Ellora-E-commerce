@@ -185,20 +185,18 @@ const productPage = async(req,res)=>{
    try {
     console.log('filter',req.query);
     const queryObj = {...req.query};
-    // console.log('qo',queryObj.minPrice ,queryObj.maxPrice ,queryObj.categories);
     const page = req.query.page ? parseInt(req.query.page) : 1;
     const limit = 12;
-    let productQuery = {is_listed:true}
-        
-    // console.log('productQuery:',productQuery);
-    // console.log('productQuery:',queryObj);
+    let productQuery =   { is_listed: true }
+    console.log('lkkkkkkkkkkk',req.query.category);
 
-    // if(queryObj.categories){
-    //     const categories = queryObj.categories.split(',')
-    //     productQuery = {
-    //         ...productQuery,"categories.name":{$in:categories}
-    //     }
-    // }
+    if(queryObj.category){
+        const categories = queryObj.category.split(',')
+        console.log('cccccccccccccc',categories);
+        productQuery = {
+            ...productQuery,"categories.name":"men"
+        }
+    }
     // if (queryObj.minPrice && queryObj.maxPrice && queryObj.categories) {
     //     const categories = queryObj.categories.split(',');
     //     productQuery = {
@@ -215,6 +213,21 @@ const productPage = async(req,res)=>{
     //     }
     // }
 
+    //  apply search
+
+    if (queryObj.search && queryObj.search.trim() !== '') {
+        const searchPattern = new RegExp(queryObj.search.trim(), 'i').source;
+        console.log('searchPattern:', searchPattern); 
+    
+        productQuery = {...productQuery,
+                 $or: [{ name: { $regex: searchPattern } }, { description: { $regex: searchPattern } }] ,
+        };
+    }
+    console.log('productQuery:', productQuery);
+
+
+// apply sort
+
     const sortOptions = {
         Latest: {_id:-1},
         PriceHighTolow : {price:-1},
@@ -225,18 +238,12 @@ const productPage = async(req,res)=>{
     
 
     const sort = sortOptions[req.query.sort] || {name:1}
+   
+    let productData = await products.find(productQuery).populate({ path: 'categories', model: 'categories' }).populate('offer').sort(sort);
 
-    let query = {};
-    console.log('search:',req.query.search);
-
-        //   console.log('prqo',productQuery);
-        const productData = await products.find(productQuery).populate({path:'categories',model:'categories'}).populate('offer')
-            .sort(sort)
-            .limit(limit)
-            .skip((page - 1) * limit)  ;
-
-
-
+    
+// Apply pagination
+productData = productData.slice((page - 1) * limit, page * limit);
     const count = await products.countDocuments(productQuery);
     const cartData = await Cart.findOne({userId:req.session.user_id}).populate('userId').populate({path:'products.productId'});
     const wishlistData = await Wishlist.findOne({userId:req.session.user_id}).populate('userId').populate('products.productId');

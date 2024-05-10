@@ -274,6 +274,10 @@
             					<label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
             				</form>
             			</div><!-- End .checkout-discount -->
+
+                       
+
+
                         
                         <a href="" id="showAddAddress" aria-controls="addAddress" aria-selected="false">Add address <i class="icon-edit"></i></a></p>
                       
@@ -381,9 +385,13 @@
                                                             <td>Shipping:</td>
                                                             <td>Free shipping</td>
                                                         </tr>
+                                                        <tr>
+                                                            <td>Offer Amount:</td>
+                                                            <td>Rs.<%= discoundAmount %></td>
+                                                        </tr>
                                                         <tr class="summary-total">
                                                             <td>Total:</td>
-                                                            <td>$<%= subTotal %></td>
+                                                            <td>$<%= totalAfterDiscound %></td>
                                                         </tr><!-- End .summary-total -->
                                                     </tbody>
                                                 <%}%>
@@ -465,7 +473,7 @@
                                                     </div><!-- End .card -->
                                                 </div><!-- End .accordion -->
         
-                                                <button onclick="placeOrder('<%= subTotal %>')" type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+                                                <button onclick="placeOrder('<%= totalAfterDiscound %>')" type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
                                                     <span class="btn-text">Place Order</span>
                                                     <span class="btn-hover-text">Place Order</span>
                                                 </button>
@@ -727,6 +735,16 @@
         </div><!-- End .mobile-menu-wrapper -->
     </div><!-- End .mobile-menu-container -->
 
+
+    <% if (locals.error) { %>
+        <div id="errorModal" class="modal">
+            <div class="modal-content">
+              <span class="close">&times;</span>
+              <p id="errorMessage"><%= locals.error %></p>
+            </div>
+        </div>
+        <% } %>
+
     <!-- Sign in / Register Modal -->
     <div class="modal fade" id="signin-modal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -850,6 +868,9 @@
     <script src="assets/js/owl.carousel.min.js"></script>
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
+    
+
+
     <script>
         $(document).ready(function() {
             $('#showAddAddress').click(function(e) {
@@ -905,6 +926,41 @@
           });
       }
   </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    // Your modal script here
+    
+    // Get the modal
+    var modal = document.getElementById("errorModal");
+    console.log("Modal element:", modal);
+
+    
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+    
+    // Function to show the modal with error message
+    function showModal() {
+      modal.style.display = "block";
+    }
+    
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+    
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+    
+    // Show modal if there's an error
+    showModal();
+});
+
+    </script>
 </body>
 
 

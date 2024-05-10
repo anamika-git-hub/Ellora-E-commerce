@@ -1,6 +1,8 @@
 const User=require('../models/userModel');
 const bcrypt=require('bcrypt')
 const randomstring =require('randomstring');
+const {joiUserSchema} = require('../models/ValidationSchema');
+
 
 const securePassword=async(password)=>{
     try {
@@ -98,7 +100,10 @@ const blockUser=async (req,res)=>{
 
 const loadAddUsers = async(req,res)=>{
     try {
-        res.render('addUsers');
+        
+        const messages = req.flash('messages')[0] || {}; 
+        const formData = req.flash('formData')[0] || {};
+        res.render('addUsers',{messages,formData});
     } catch (error) {
         console.log(error.message)
     }
@@ -106,16 +111,25 @@ const loadAddUsers = async(req,res)=>{
 
 const addUser=async(req,res)=>{
     try {
-        if(/^[A-Za-z]+(?:[A-Za-z]+)?$/.test(req.body.name)){
-         const email = req.body.email;
-         if(/^[A-Za-z0-9.%+-]+@gmail\.com$/.test(req.body.email)){
+        const { error } = joiUserSchema.validate(req.body,{password:2}, {
+            abortEarly: false
+          });
+    if(error){ 
+        const errorMessages = error.details.reduce((acc, cur) => {
+            acc[cur.context.key] = cur.message;
+            return acc;
+        }, {});
+        req.flash('messages', errorMessages);
+        req.flash('formData', req.body);
+        res.redirect('/admin/addUsers')
+    }
+        const value = await joiUserSchema.validateAsync(req.body)
+       
+        const {name,email,mobile} = value;
+
+        
              const emailCheck = await User.findOne({email:email});
              if(!emailCheck){
-                 let moblength = (req.body.mobile).length;
-                 if(moblength>0 && moblength<=10){
-                     const name = req.body.name;
-                        const email = req.body.email;
-                        const mobile = req.body.mobile;
                         const password = randomstring.generate(8);
                         
                         const spassword = await securePassword(password)
@@ -138,18 +152,12 @@ const addUser=async(req,res)=>{
                         }else{
                          res.render('addUsers',{message:"Somthing wrong..."});
                         }
-                 }else{
-                     res.render('addUsers',{message:"mobile number should be 10 degit"})
-                 }
+                
              }else{
                  res.render('addUsers',{message:" Email Already existed "})
              }
-         }else{
-             res.render('addUsers',{message:"Please check your Email structure "})
-         }
-        }else{
-         res.render('addUsers',{message:"Invalid name"})
-        }
+         
+       
        
  
  

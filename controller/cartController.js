@@ -156,8 +156,12 @@ const loadCheckOut = async(req,res)=>{
       if(cartData.products.length<=0){
         res.redirect('/cart'); 
       }else{
-        
-        res.render('checkout',{cartData,subTotal:total,addresses:addresses,wishlistData});
+        const subTotal = req.flash('subTotal')[0]||total;
+        const discoundAmount = req.flash('discoundAmount')[0]|| 0;
+        console.log('diddddddddd',discoundAmount);
+        const totalAfterDiscound =  req.flash('totalAfterDiscound')[0] || subTotal;
+        console.log('tttttoooot',totalAfterDiscound);
+        res.render('checkout',{cartData,subTotal,addresses:addresses,totalAfterDiscound,wishlistData,discoundAmount});
       }
      
    } catch (error) {

@@ -23,7 +23,20 @@ const joiProductSchema = joi.object({
 const joiUserSchema = joi.object({
     name : joi.string().required(),
     email : joi.string().email().required(),
-    mobile : joi.number().max(10).min(10). required()
+    mobile : joi.string().length(10).pattern(/^[0-9]+$/).required()
+})
+
+const joiAddressSchema = joi.object({
+    name : joi.string().required(),
+    country : joi.string().required(),
+    streetName : joi.string().required(),
+    landMark : joi.string().required(),
+    town : joi.string().required(),
+    state : joi.string().required(),
+    pin : joi.string().length(6).pattern(/^[0-9]+$/).required(),
+    phone : joi.string().length(10).pattern(/^[0-9]+$/).required(),
+    email : joi.string().email().required()
+
 })
 
 const joiCategorySchema = joi.object({
@@ -33,9 +46,9 @@ const joiCategorySchema = joi.object({
 
 const joiCouponSchema = joi.object({
     name: joi.string(),
-    ValidityDate: joi.date(),
+    expiryDate: joi.date(),
     offerPrice: joi.number(),
-    maximumLimit: joi.number().positive(),
+    miniLimit: joi.number().positive(),
     couponCode: joi.string()
     
 })
@@ -54,5 +67,6 @@ module.exports = {
     joiUserSchema,
     joiCouponSchema,
     joiOfferSchema,
-    joiCategorySchema
+    joiCategorySchema,
+    joiAddressSchema
 }

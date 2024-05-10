@@ -14,7 +14,10 @@ const loadCouponList = async(req,res)=>{
 
 const loadAddCoupon = async(req,res)=>{
     try {
-        res.render('addCoupon')
+        const messages = req.flash('messages')[0] || {}; 
+        const formData = req.flash('formData')[0] || {};
+
+        res.render('addCoupon',{messages,formData})
     } catch (error) {
         console.log(error.message);
     }
@@ -22,14 +25,28 @@ const loadAddCoupon = async(req,res)=>{
 
 const addCoupon = async(req,res)=>{
     try {
+        const { error } = joiCouponSchema.validate(req.body,{password:2}, {
+            abortEarly: false
+          });
+    if(error){ 
+        const errorMessages = error.details.reduce((acc, cur) => {
+            acc[cur.context.key] = cur.message;
+            return acc;
+        }, {});
+        req.flash('messages', errorMessages);
+        req.flash('formData', req.body);
+        res.redirect('/admin/addCoupon')
+    }
+
+     console.log('reeeeeeee',req.body);
         const value = await joiCouponSchema.validateAsync(req.body)
         console.log('val',value);
-        const {name,ValidityDate,offerPrice,maximumLimit,couponCode} = value;
+        const {name,expiryDate,offerPrice,miniLimit,couponCode} = value;
         const data = new Coupon({
             name:name,
-            expiryDate:ValidityDate,
+            expiryDate:expiryDate,
             offerPrice:offerPrice,
-            miniLimit:maximumLimit,
+            miniLimit:miniLimit,
             couponCode:couponCode
         });
         await data.save()
@@ -63,7 +80,7 @@ const loadEditCoupon = async(req,res)=>{
 const editCoupon = async(req,res)=>{
     try {
         const {couponId} = req.query
-        const couponData = await Coupon.findOneAndUpdate({_id:couponId},{$set:{name:req.body.name,expiryDate:req.body.ValidityDate,offerPrice:req.body.offerPrice,miniLimit:req.body.maximumLimit,couponCode:req.body.couponCode}})
+        const couponData = await Coupon.findOneAndUpdate({_id:couponId},{$set:{name:req.body.name,expiryDate:req.body.expiryDate,offerPrice:req.body.offerPrice,miniLimit:req.body.miniLimit,couponCode:req.body.couponCode}})
         res.redirect('/admin/couponList')
     } catch (error) {
         console.log(error.message);
@@ -72,23 +89,30 @@ const editCoupon = async(req,res)=>{
 
 const applyCoupon = async(req,res)=>{
     try {
-        const {couponCode }= req.body 
-        console.log('couponnnnnnnnnnnnnn',couponCode);
+        const { couponCode }= req.body 
 
-        const couponData = await Coupon.findOne({couponCode:couponCode});
-        
-        const cartData = await Cart.findOne({userId:req.session.user_id});
-        
-       const subTotal = cartData.products.reduce((total,products)=>total + products.totalPrice,0)
-       const totalAfterDiscound = subTotal - couponData.offerPrice
-       req.flash('totalAfterDiscound',totalAfterDiscound)
-       req.flash('discoundAmount',couponData.offerPrice);
-       req.flash('subTotal',subTotal)
-       req.session.couponCode = couponCode
-       res.redirect('/CheckOut');
-        
+        const couponData = await Coupon.findOne({ couponCode });
+        const cartData = await Cart.findOne({ userId: req.session.user_id });
+        const usedUser = couponData.usedUsers.find(usedUser => usedUser.userId == req.session.user_id);
+
+        if (usedUser && usedUser.status === 'true') {
+            req.flash('error', 'This coupon has already been used');
+            return res.redirect('/CheckOut');
+        } else {
+            const subTotal = cartData.products.reduce((total, products) => total + products.totalPrice, 0);
+            const totalAfterDiscount = subTotal - couponData.offerPrice;
+
+            req.flash('totalAfterDiscount', totalAfterDiscount);
+            req.flash('discountAmount', couponData.offerPrice);
+            req.flash('subTotal', subTotal);
+            req.session.couponCode = couponCode;
+
+            return res.redirect('/CheckOut');
+        }
     } catch (error) {
         console.log(error.message);
+        req.flash('error', 'Internal Server Error');
+        return res.redirect('/CheckOut');
     }
 }
 

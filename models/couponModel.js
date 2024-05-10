@@ -26,10 +26,17 @@ const couponModel = new mongoose.Schema({
         type:String,
         required:true
     },
-    usedUsers:{
-        type:Array,
-        default:[]
-    },
+    usedUsers:[{
+        userId:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'User'
+        },
+        status:{
+            type:Boolean,
+            default:false
+        }
+       
+    }],
     is_listed:{
         type:Boolean,
         required:true,

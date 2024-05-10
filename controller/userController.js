@@ -3,6 +3,7 @@ const bcrypt=require('bcrypt');
 const userOtpVerification = require('../models/userOTPModel')
 const nodemailer=require('nodemailer');
 const {joiRegistrationSchema} = require('../models/ValidationSchema');
+const {joiAddressSchema} = require('../models/ValidationSchema')
 const Boom = require('boom');
 const Order = require('../models/orderModel');
 const Cart = require('../models/cartModel');
@@ -353,6 +354,21 @@ const resetPasswithOld = async(req,res)=>{
 
 const addAddress = async(req,res)=>{
     try{
+        const { error } = joiAddressSchema.validate(req.body, {
+            abortEarly: false
+          });
+    if(error){ 
+        const errorMessages = error.details.reduce((acc, cur) => {
+            acc[cur.context.key] = cur.message;
+            return acc;
+        }, {});
+        req.flash('messages', errorMessages);
+        req.flash('formData', req.body);            
+        res.redirect('/profile#tab-address')
+    }
+        const value = await joiAddressSchema.validateAsync(req.body)
+
+
         const{
             name,
             country,
@@ -381,7 +397,6 @@ const addAddress = async(req,res)=>{
                 }
             }
         })
-        res.json({success:true})
 
     }catch(error){
         console.log(error.message);

@@ -38,8 +38,7 @@ const mongoose=require('mongoose');
         },
         wallet:{
             type:mongoose.Schema.Types.ObjectId,
-            ref:'Wallet',
-            required:true
+            ref:'Wallet'
         },
         addresses:[{
             name:{

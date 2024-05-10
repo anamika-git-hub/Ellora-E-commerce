@@ -217,15 +217,18 @@
                                             
                                           <% } %>
                                         <label for="product_name" class="form-label">Name</label>
-                                        <input type="text" placeholder="Type here" name="name" class="form-control" id="product_name" />
+                                        <input type="text" value="<%= formData.name %>"  placeholder="Type here" name="name" class="form-control" id="product_name" />
+                                        <span class="error-message" style="color: red;"><%= messages.name %></span>
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Email</label>
-                                        <input placeholder="Type here" name="email" class="form-control"></input>
+                                        <input type="email" value="<%= formData.email %>"  placeholder="Type here"  name="email" class="form-control"></input>
+                                        <span class="error-message" style="color: red;"><%= messages.email %></span>
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Mobile</label>
-                                        <input placeholder="Type here" name="mobile" class="form-control"></input>
+                                        <input type="text" value="<%= formData.mobile %>"  placeholder="Type here" name="mobile" class="form-control"></input>
+                                        <span class="error-message" style="color: red;"><%= messages.mobile %></span>
                                     </div>
                                     <div class="d-grid">
                                         <button class="btn btn-primary" type="submit">Create User</button>

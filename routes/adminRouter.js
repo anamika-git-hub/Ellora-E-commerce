@@ -56,7 +56,7 @@ adminRouter.get('/searchProduct',productController.searchProducts);
 
 adminRouter.get('/couponList',isLogin,couponController.loadCouponList);
 adminRouter.get('/addCoupon',isLogin,couponController.loadAddCoupon);
-adminRouter.post('/addCoupon',isLogin,couponController.addCoupon);
+adminRouter.post('/addCoupon',couponController.addCoupon);
 adminRouter.get('/deleteCoupon',isLogin,couponController.deleteCoupon);
 adminRouter.get('/editCoupon',isLogin,couponController.loadEditCoupon);
 adminRouter.post('/editCoupon',couponController.editCoupon);
@@ -70,6 +70,7 @@ adminRouter.get('/orderDetail',isLogin, orderController.loadOrderDetails);
 
 adminRouter.get('/salesReport',isLogin,orderController.salesReport);
 adminRouter.post('/statusChanged/:orderId',orderController.statusChange);
+adminRouter.post('/cancelStatusChanged/:orderId',orderController.cancelStatusChange)
 
 
 

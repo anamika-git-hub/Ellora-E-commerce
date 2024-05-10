@@ -47,9 +47,7 @@ const placeOrder = async (req, res) => {
                     res.status(400).json({ success: false, msg: 'Something went wrong!' });
                 }
             });
-        }else{
-
-        if(shippingMethod == 'Wallet'){
+        }else if(shippingMethod == 'Wallet'){
                    walletData =await Wallet.findOne({userId:req.session.user_id})
                    console.log('walletData:',walletData.walletAmount);
 
@@ -57,7 +55,7 @@ const placeOrder = async (req, res) => {
                              console.log('subTotal:',subTotal);
                             await walletData.save();
                 //    res.json({cashOnDelivery:true})
-        }
+        }else{
             const userData = await User.findById(userId);
             const address = userData.addresses.find(address => address._id.equals(shippingAddress));
             const name = userData.name;
@@ -78,7 +76,15 @@ const placeOrder = async (req, res) => {
             let couponDiscount = 0;
             if (couponCode) {
                 const couponData = await Coupon.findOne({ couponCode: couponCode });
-               couponDiscount = couponData? couponData.offerPrice:0;
+                couponDiscount = couponData? couponData.offerPrice:0;
+                if(couponData){
+                    const isCouponUsed = couponData.usedUsers.some(coupon=>coupon.userId.equals(req.session.user_id));
+                    if(!isCouponUsed){
+                        couponData.usedUsers.push({ userId: req.session.user_id,status:true});
+                        await couponData.save();
+                    }
+                 }              
+
             }
             if( cartData){
                productData.forEach(value=>{
@@ -106,9 +112,12 @@ const placeOrder = async (req, res) => {
                 offerDiscount : offerDiscount,
                 products: productData
             });
+
+            
+
                res.json({cashOnDelivery:true})
-        }
         
+        }
     } catch (error) {
         console.log(error.message);
     }
@@ -266,6 +275,30 @@ const statusChange = async(req,res)=>{
     }
 }
 
+const cancelStatusChange = async(req,res)=>{
+    try {
+     const {productId} = req.body;
+     const {orderId} = req.params;
+
+     const orderData =await  Order.findOne({_id:orderId})
+     const product = orderData.products.find(product=>product._id == productId)
+     if(product.status == 'cancelled'){
+        return res.json({error:'Product is alread cancelled'});
+     }
+
+     if(product.status == 'Delivered'){
+        return res.json({error:'Delivered products cannot be cancelled '});
+     }
+
+     product.status = 'Cancelled by Admin'
+     await orderData.save();
+      return res.json ({message:'Order status changed to Cancel'})
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 
 
 
@@ -278,5 +311,6 @@ module.exports={
     cancelOrder,
     salesReport,
     loadOrderDetails,
-    statusChange
+    statusChange,
+    cancelStatusChange
 }

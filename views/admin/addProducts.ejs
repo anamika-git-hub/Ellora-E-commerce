@@ -225,7 +225,7 @@
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Description</label>
-                                        <textarea placeholder="Type here" value="<%= formData.description %>" name="description" class="form-control" rows="4"></textarea>
+                                        <textarea placeholder="Type here"  name="description" class="form-control" rows="4"><%formData.description %></textarea>
                                         <span class="error-message" style="color: red;"><%= messages.description %></span>
                                     </div>
                                     <div class="mb-4">
@@ -275,9 +275,9 @@
                                         <div class="col-lg-6 col-md-6 mb-3 rounded-image-preview">
                                             <label for="imageInput<%= i %>" class="image-label">Image <%= i+1 %>
                                                 <div class="rounded-image-preview">
-                                                    <img id="imagePreview<%= i %>"  alt="Preview">
+                                                    <img src="" id="imagePreview<%= i %>"  alt="Preview">
                                                 </div>
-                                                <input name="image" type="file" accept="image/*" id="imageInput<%= i %>" class="imageInput" multiple onchange="previewImage(this, 'imagePreview<%= i %>')">
+                                                <input name="image" type="file"  accept="image/*" id="imageInput<%= i %>" class="imageInput" multiple onchange="previewImage(this, 'imagePreview<%= i %>')">
                                             </label>
                                         </div>
                                     <% } %>

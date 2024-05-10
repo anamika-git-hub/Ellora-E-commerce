@@ -225,7 +225,6 @@
                     
 
                                 <% products.forEach((element)=>{ %>
-                                    <% console.log('name:',element.name); %>
                                 <div class="col-6 col-md-4 col-lg-4 col-xl-3">
                                     <div class="product">
                                         <figure class="product-media">
@@ -296,7 +295,7 @@
                             </nav>
                         </div>
                     </div><!-- End .products -->
-                    <form action="/products">
+                   
                     <div class="sidebar-filter-overlay"></div><!-- End .sidebar-filter-overlay -->
                     <aside class="sidebar-shop sidebar-filter">
                         <div class="sidebar-filter-wrapper">
@@ -304,13 +303,17 @@
                                 <label><i class="icon-close"></i>Filters</label>
                                 <a href="#" class="sidebar-filter-clear">Clean All</a>
                             </div><!-- End .widget -->
+                            <form id="categoryForm" action="/products" method="GET">
+                                <input type="hidden" name="category" id="categoryInput">
+                            </form>
+                            
                             <div class="widget widget-collapsible">
                                 <h3 class="widget-title">
                                     <a data-toggle="collapse" href="#widget-1" role="button" aria-expanded="true" aria-controls="widget-1">
                                         Category
                                     </a>
                                 </h3><!-- End .widget-title -->
-
+                            
                                 <div class="collapse show" id="widget-1">
                                     <div class="widget-body">
                                         
@@ -319,7 +322,7 @@
                                                
                                             <div class="filter-item">
                                                 <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" onclick="filterChecked()" value="<%= category.name %>"  class="custom-control-input" id="cat<%= category._id %>">
+                                                    <input type="checkbox" value="<%= category.name %>" class="custom-control-input category-checkbox" id="cat<%= category._id %>">
                                                     <label class="custom-control-label" for="cat<%= category._id %>"><%= category.name %></label>
                                                 </div><!-- End .custom-checkbox --> 
                                                 <span class="item-count">3</span>
@@ -353,7 +356,7 @@
                             </div><!-- End .widget -->
                         </div><!-- End .sidebar-filter-wrapper -->
                     </aside><!-- End .sidebar-filter -->
-                </form>
+             
                 </div><!-- End .container -->
             </div><!-- End .page-content -->
         </main><!-- End .main -->
@@ -817,6 +820,54 @@
       }
   </script>
 
+<script>
+    // Get all checkbox inputs
+    const checkboxes = document.querySelectorAll('.category-checkbox');
+    
+    // Get the hidden input element
+    const categoryInput = document.getElementById('categoryInput');
+
+    // Function to handle checkbox change event
+    function handleCheckboxChange(event) {
+        // Prevent default form submission behavior
+        event.preventDefault();
+
+        let selectedCategories = [];
+        checkboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                selectedCategories.push(checkbox.value);
+            }
+        });
+
+        // Set the value of the hidden input
+        categoryInput.value = selectedCategories.join(',');
+        
+        // Submit form data via AJAX
+        const formData = new FormData(document.getElementById('categoryForm'));
+        const xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    // Update page content or handle response data
+                    // For example, you can update a specific section of the page with new data
+                    // Replace '#content' with the actual selector of the content area you want to update
+                    document.querySelector('#content').innerHTML = xhr.responseText;
+                } else {
+                    // Handle errors
+                }
+            }
+        };
+        xhr.open('GET', '/products?' + new URLSearchParams(formData).toString());
+        xhr.send();
+    }
+
+    // Add event listener to each checkbox
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', handleCheckboxChange);
+    });
+</script>
+
+
   <!-- <script>
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -831,7 +882,7 @@
    });
   </script> -->
 
-<script>
+<!-- <script>
     document.addEventListener('DOMContentLoaded', function() {
         
         function handleFilterChange() {
@@ -874,7 +925,7 @@
             handleFilterChange();
         });
     });
-</script>
+</script> -->
 <!-- <script>
 const searchInput = document.getElementById('searchInput');
 const suggestionsContainer = document.getElementById('suggestionsContainer');

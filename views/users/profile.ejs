@@ -1070,7 +1070,19 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        // Check if there's a hash in the URL
+        if (window.location.hash) {
+            // Scroll to the element with the corresponding ID
+            var element = document.querySelector(window.location.hash);
+            if (element) {
+                element.scrollIntoView();
+            }
+        }
+    });
+    </script>
+    
 <script>
     document.getElementById('addAddressButton').addEventListener('click', async function(event) {
         event.preventDefault(); 

@@ -230,12 +230,10 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    
                                         <% orderData.forEach((order,indexes)=>{%>
                                             <% order.products.forEach((value,index)=>{%>
                                                
                                     <tr>
-                                        
                                         <input type="hidden" name="productId" value="<%= order.productId %>">
                                         <td><%=order._id.toString().toUpperCase().slice(-6) %></td>
                                         <td><b><%= order.user_name %></b></td>
@@ -252,7 +250,7 @@
                                                 <div class="dropdown-menu">
                                                     <a class="dropdown-item" href="#"  onclick="statusChange('<%= order._id%>','Delivered')">Delivered</a>
                                                     <a class="dropdown-item" href="#" onclick="statusChange('<%= order._id%>','Shipped')">Shipped</a>
-                                                    <a class="dropdown-item text-danger" href="#" onclick="statusChange('<%= order._id%>','Cancelled')">Cancelled</a>
+                                                    <a class="dropdown-item text-danger" href="#" onclick="cancelStatusChange('<%= order._id%>','<%= value._id%>','Cancelled')">Cancelled</a>
                                                 </div>
                                             </div>
                                             <!-- dropdown //end -->
@@ -308,10 +306,12 @@
 
         </script>
 
-<script>
-     async function statusChange(orderId, status){
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
-        console.log('status:',status);
+
+<script>
+async function statusChange(orderId, status){
+    console.log('status:',status);
     try {
         const response = await fetch(`/admin/statusChanged/${orderId}`,{
             method: 'POST', 
@@ -322,13 +322,69 @@
         });
 
         const responseData = await response.json();
-        window.location = '/admin/orderList'
+        if (responseData.error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: responseData.error
+            });
+        } else {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: responseData.message
+            }).then(() => {
+                window.location = '/admin/orderList';
+            });
+        }
     } catch (error) {
         console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'An error occurred. Please try again later.'
+        });
     }
 }
-
 </script>
+<script>
+    async function cancelStatusChange(orderId,productId, status){
+        console.log('status:',status);
+        try {
+            const response = await fetch(`/admin/cancelStatusChanged/${orderId}`,{
+                method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json' 
+                },
+                body: JSON.stringify({ status,productId }) 
+            });
+    
+            const responseData = await response.json();
+            if (responseData.error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: responseData.error
+                });
+            } else {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: responseData.message
+                }).then(() => {
+                    window.location = '/admin/orderList';
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'An error occurred. Please try again later.'
+            });
+        }
+    }
+    </script>
 
 
 
