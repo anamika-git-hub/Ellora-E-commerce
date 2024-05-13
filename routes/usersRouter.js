@@ -37,11 +37,11 @@ userRouter.get('/contact',isLogin,userController.loadContact);
 userRouter.get('/about',isLogin,userController.loadAbout);
 
 userRouter.get('/profile',isLogin,userController.loadProfile);
-userRouter.put('/profile',userController.editProfile);
-userRouter.post('/profile',userController.resetPasswithOld);
-userRouter.post('/addAddress',userController.addAddress);
-userRouter.post('/editAddress',userController.editAddress);
-userRouter.post('/deleteAddress',userController.deleteAddress);
+userRouter.put('/profile',isLogin,userController.editProfile);
+userRouter.post('/profile',isLogin,userController.resetPasswithOld);
+userRouter.post('/addAddress',isLogin,userController.addAddress);
+userRouter.post('/editAddress',isLogin,userController.editAddress);
+userRouter.post('/deleteAddress',isLogin,userController.deleteAddress);
 
 userRouter.get('/products',isLogin,productController.productPage);
 userRouter.get('/searchProduct',isLogin,productController.searchProducts);
@@ -50,18 +50,18 @@ userRouter.get('/productDetail',isLogin,productController.productDetails);
 // userRouter.post('/sort',productController.sortProduct);
 
 userRouter.get('/wishlist',isLogin,wishlistController.loadWishlist);
-userRouter.post('/wishlist',wishlistController.addtoWishlist);
-userRouter.post('/deleteWishlistItem',wishlistController.deleteWishlistItem);
+userRouter.post('/wishlist',isLogin,wishlistController.addtoWishlist);
+userRouter.post('/deleteWishlistItem',isLogin,wishlistController.deleteWishlistItem);
 
 
 userRouter.get('/cart',isLogin,cartController.loadCart);
-userRouter.post('/cart',cartController.addtoCart);
-userRouter.post('/cartUpdate',cartController.updatequantity);
-userRouter.post('/deleteCartItem',cartController.deleteCartItem);
-userRouter.post('/applyCoupon',couponController.applyCoupon);
+userRouter.post('/cart',isLogin,cartController.addtoCart);
+userRouter.post('/cartUpdate',isLogin,cartController.updatequantity);
+userRouter.post('/deleteCartItem',isLogin,cartController.deleteCartItem);
+userRouter.post('/applyCoupon',isLogin,couponController.applyCoupon);
 
 userRouter.get('/CheckOut',isLogin,cartController.loadCheckOut);
-userRouter.post('/placeOrder',orderController.placeOrder);
+userRouter.post('/placeOrder',isLogin,orderController.placeOrder);
 userRouter.get('/successPage',isLogin,orderController.loadSuccessPage);
 userRouter.get('/cancelOrder',isLogin,orderController.cancelOrder);
 

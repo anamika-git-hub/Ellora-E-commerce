@@ -293,9 +293,14 @@
                                                       
                                                         <td class="price-col" id="totalPrice"><%= new Date(order.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %></td>
                                                         <td>
+                                                            
                                                             <%if(value.status === 'cancelled'){%>
                                                                 <button type="submit" class="btn btn-outline-primary-2 disabled">
                                                                     <span>Cancelled</span>
+                                                                    </button>
+                                                            <%}else if(value.status === 'Delivered'){%>
+                                                                <button type="submit"  class="btn btn-outline-primary-2 " onclick="returnOrder(this,'<%= value.productId._id %>','<%= order._id%>')">
+                                                                    <span>Return</span>
                                                                     </button>
                                                             <%}else{%>
                                                                 <button type="submit"  class="btn btn-outline-primary-2 " onclick="cancelOrder(this,'<%= value.productId._id %>','<%= order._id%>')">
@@ -552,10 +557,52 @@
                                             <div class="card">
                                                 <div class="card-body">
                                                     <h5 class="card-title">Wallet Amount</h5>
-                                                    <h4><%= walletData.walletAmount %></h4> 
+                                                    <h4><%= walletData.walletAmount.toFixed(2) %></h4> 
+                                                    <button onclick="showWalletHistory()" class="btn btn-outline-primary">Wallet History</button>
                                                 </div>
                                             </div>
                                         </div>
+                                       
+                                            
+                                            
+                                         <div id="walletHistory" style="display: none;">
+                                            <div class="table-responsive">
+                                                <table id="tableId" class="table table-hover">
+                                                    <thead >
+                                                        <tr>
+                                                            <th scope="col">Description</th>
+                                                            <th scope="col">Amount</th>
+                                                            <th scope="col">Date</th>
+                                                            <th scope="col">Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <% walletData.walletHistory.forEach(wallet=>{%>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><%= wallet.description %></td>
+                                                            <td><%= wallet.amount %></td>
+                                                            <td><%= wallet.date.toLocaleDateString() %></td>
+                                                            <td><%= wallet.status %></td>
+                                                        </tr>
+                                                    </tbody>
+                                                    <%}) %>
+
+                                                </table>
+                                                <div id="paginationId" class="pagination-area mt-30 mb-50">
+                                                    <nav aria-label="Page navigation example ">
+                                                        <ul class="pagination justify-content-center">
+                                                            <% for(let j=1; j<=totalPages; j++){ %>
+                                                            <li class="page-item <%= j === currentPage ? "active":" "%>"><a class="page-link" href="?page=<%= j%>"><%= j%></a></li>
+                                                            <% } %>
+                                                            <li class="page-item">
+                                                                <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                                                            </li>
+                                                        </ul>
+                                                    </nav>
+                                                </div> 
+                                            </div>
+                                         </div>
+                                       
                                         
                                         <div id="editDetails" style="display: none;">
                                             <a href="#accountDetails" class="btn btn-outline-primary">Back</a>
@@ -592,7 +639,7 @@
 			            						<i class="icon-long-arrow-right"></i>
 			                				</button>
 			                			</form>
-                                    </div>
+                                        </div>
                                    
 								    </div><!-- .End .tab-pane -->
                                   
@@ -1053,6 +1100,12 @@
     }
 </script>
 <script>
+    function showWalletHistory(){
+        $('#accountDetails').hide();
+        $('#walletHistory').show();
+    }
+</script>
+<script>
     function toOrder(id){
         $('#orderList,#paginationId').hide();
         $(`#orderDetails${id}`).show();
@@ -1161,26 +1214,25 @@
         }
     }
 </script>
-
 <script>
-    // Add this script section after your closing body tag
-    const copyButtons = document.querySelectorAll('.copy-btn');
-    console.log('ksdlkjfa',copyButtons);
-    copyButtons.forEach(button => {
-      button.addEventListener('click', function() {
-        const couponCode = this.dataset.couponCode;
-        navigator.clipboard.writeText(couponCode)
-          .then(() => {
-            // Success message (optional)
-            console.log('Coupon code copied to clipboard!');
-          })
-          .catch(error => {
-            // Error message (optional)
-            console.error('Failed to copy coupon code:', error);
-          });
-      });
+    document.addEventListener('DOMContentLoaded', function () {
+        const copyButtons = document.querySelectorAll('.copy-btn');
+        copyButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const couponCode = button.dataset.couponCode;
+
+                const tempInput = document.createElement('input');
+                tempInput.setAttribute('value', couponCode);
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                alert('Coupon code copied to clipboard: ' + couponCode);
+            });
+        });
     });
-    </script>
+</script>
+
 </body>
 
 

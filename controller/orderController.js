@@ -24,39 +24,7 @@ const placeOrder = async (req, res) => {
          req.session.totalAmount = subTotal;
         const amount = subTotal * 100;
 
-        if (shippingMethod === 'Razorpay') {
-            const options = {
-                amount: amount,
-                currency: 'INR',
-                receipt: 'anamikap9895@gmail.com'
-            };
-
-            razorpayInstance.orders.create(options, (err, order) => {
-                if (!err) {
-                    res.status(200).json({
-                        success: true,
-                        msg: 'Order Created',
-                        order_id: order.id,
-                        amount: amount,
-                        key_id: RAZORPAY_ID_KEY,
-                        contact: '9896754325',
-                        name: 'Anamika',
-                        email: 'anamikap9895@gmail.com'
-                    });
-                } else {
-                    res.status(400).json({ success: false, msg: 'Something went wrong!' });
-                }
-            });
-        }else if(shippingMethod == 'Wallet'){
-                   walletData =await Wallet.findOne({userId:req.session.user_id})
-                   console.log('walletData:',walletData.walletAmount);
-
-                   walletData.walletAmount = walletData.walletAmount-subTotal;
-                             console.log('subTotal:',subTotal);
-                            await walletData.save();
-                //    res.json({cashOnDelivery:true})
-        }else{
-            const userData = await User.findById(userId);
+        const userData = await User.findById(userId);
             const address = userData.addresses.find(address => address._id.equals(shippingAddress));
             const name = userData.name;
             const cartData = await Cart.findOne({ userId: userId }).populate({path:'products.productId',populate:{path:'offer'}});
@@ -96,28 +64,61 @@ const placeOrder = async (req, res) => {
                 }
                })
             }
-
-
-            const myOrders = await Order.create({
-                userId: userId,
-                delivery_address: address,
-                user_name: name,
-                total_amount: subTotal,
-                date: date,
-                expected_delivery: deliveryDate,
-                status: status,
-                statusLevel: statusLevel,
-                payment: shippingMethod,
-                couponDiscount: couponDiscount,
-                offerDiscount : offerDiscount,
-                products: productData
-            });
-
-            
-
-               res.json({cashOnDelivery:true})
-        
+        let order = {
+            userId: userId,
+            delivery_address: address,
+            user_name: name,
+            total_amount: subTotal,
+            date: date,
+            expected_delivery: deliveryDate,
+            status: status,
+            statusLevel: statusLevel,
+            payment: shippingMethod,
+            couponDiscount: couponDiscount,
+            offerDiscount : offerDiscount,
+            products: productData
         }
+
+        if (shippingMethod === 'Razorpay') {
+            const options = {
+                amount: amount,
+                currency: 'INR',
+                receipt: 'anamikap9895@gmail.com'
+            };
+
+            razorpayInstance.orders.create(options, (err, order) => {
+                if (!err) {
+                    res.status(200).json({
+                        success: true,
+                        msg: 'Order Created',
+                        order_id: order.id,
+                        amount: amount,
+                        key_id: RAZORPAY_ID_KEY,
+                        contact: '9896754325',
+                        name: 'Anamika',
+                        email: 'anamikap9895@gmail.com'
+                    });
+                } else {
+                    res.status(400).json({ success: false, msg: 'Something went wrong!' });
+                }
+            });
+        }else if(shippingMethod == 'Wallet'){
+                   walletData =await Wallet.findOne({userId:req.session.user_id})
+                   console.log('walletData:',walletData.walletAmount);
+                    if(walletData.walletAmount && walletData.walletAmount>=subTotal){
+
+                        walletData.walletAmount = walletData.walletAmount-subTotal;
+                        console.log('subTotal:',subTotal);
+                       await walletData.save();
+                    }else{
+                        res.send({message:'Your wallet is empty'})
+                    }
+                          
+        }
+        
+        const myOrders = await Order.create(order); 
+       
+            
     } catch (error) {
         console.log(error.message);
     }
@@ -126,7 +127,8 @@ const placeOrder = async (req, res) => {
 
 const loadSuccessPage = async(req,res)=>{
     try {
-        res.render('successPage')
+        console.log('rewwwww',req.query);
+        // res.render('successPage')
     } catch (error) {
         console.log(error.message);
     }
@@ -164,9 +166,6 @@ const loadOrderDetails = async (req, res) => {
         console.log(error.message);
     }
 };
-
-
-
 
 const cancelOrder = async(req,res)=>{
     try {
@@ -217,8 +216,6 @@ const cancelOrder = async(req,res)=>{
     }
 }
 
-
-
 const salesReport = async(req,res)=>{
     try {
         const orderData = await Order.find().populate('products.productId').populate('userId')
@@ -239,7 +236,7 @@ const salesReport = async(req,res)=>{
     } catch (error) {
         console.log(error.message);
     }
-}
+} 
 
 const statusChange = async(req,res)=>{
     try {
@@ -298,12 +295,6 @@ const cancelStatusChange = async(req,res)=>{
         console.log(error);
     }
 }
-
-
-
-
-
-
 module.exports={
     placeOrder,
     loadSuccessPage,

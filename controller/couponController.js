@@ -33,20 +33,20 @@ const addCoupon = async(req,res)=>{
             acc[cur.context.key] = cur.message;
             return acc;
         }, {});
+        errorMessages['expiryDate'] = error.details.find(detail => detail.context.key === 'expiryDate' && detail.type === 'date.min')?.message;
+         errorMessages['expiryDate_iso'] = error.details.find(detail => detail.context.key === 'expiryDate' && detail.type === 'date.iso')?.message;
+
         req.flash('messages', errorMessages);
         req.flash('formData', req.body);
         res.redirect('/admin/addCoupon')
     }
-
-     console.log('reeeeeeee',req.body);
         const value = await joiCouponSchema.validateAsync(req.body)
-        console.log('val',value);
-        const {name,expiryDate,offerPrice,miniLimit,couponCode} = value;
+        const {name,expiryDate,offerPrice,minimumLimit,couponCode} = value;
         const data = new Coupon({
             name:name,
             expiryDate:expiryDate,
             offerPrice:offerPrice,
-            miniLimit:miniLimit,
+            minimumLimit:minimumLimit,
             couponCode:couponCode
         });
         await data.save()
@@ -80,7 +80,7 @@ const loadEditCoupon = async(req,res)=>{
 const editCoupon = async(req,res)=>{
     try {
         const {couponId} = req.query
-        const couponData = await Coupon.findOneAndUpdate({_id:couponId},{$set:{name:req.body.name,expiryDate:req.body.expiryDate,offerPrice:req.body.offerPrice,miniLimit:req.body.miniLimit,couponCode:req.body.couponCode}})
+        const couponData = await Coupon.findOneAndUpdate({_id:couponId},{$set:{name:req.body.name,expiryDate:req.body.expiryDate,offerPrice:req.body.offerPrice,minimumLimit:req.body.minimumLimit,couponCode:req.body.couponCode}})
         res.redirect('/admin/couponList')
     } catch (error) {
         console.log(error.message);

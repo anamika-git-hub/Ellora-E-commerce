@@ -18,7 +18,7 @@ const couponModel = new mongoose.Schema({
         required:true
     },
    
-    miniLimit:{
+    minimumLimit:{
         type:Number,
         required:true
     },

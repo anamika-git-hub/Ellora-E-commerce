@@ -194,7 +194,7 @@ const productPage = async(req,res)=>{
         const categories = queryObj.category.split(',')
         console.log('cccccccccccccc',categories);
         productQuery = {
-            ...productQuery,"categories.name":"men"
+            ...productQuery,"categories.name":categories
         }
     }
     // if (queryObj.minPrice && queryObj.maxPrice && queryObj.categories) {
@@ -238,7 +238,7 @@ const productPage = async(req,res)=>{
     
 
     const sort = sortOptions[req.query.sort] || {name:1}
-   
+   console.log("-----------------------",productQuery)
     let productData = await products.find(productQuery).populate({ path: 'categories', model: 'categories' }).populate('offer').sort(sort);
 
     

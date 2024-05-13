@@ -900,9 +900,9 @@
 						"order_id": ""+res.data.order_id+"",
 						"handler": function (response){
 							alert("Payment Succeeded");
-                                            window.location='/successPage'
+                                            window.location=`/successPage`
 
-							// window.open("/","_self")
+							// window.open("/successPage","_self")
 						},
 						"prefill": {
 						
@@ -916,7 +916,7 @@
 							alert("Payment Failed");
 					});
 					razorpayObject.open();
-				}else if (res.data.cashOnDelivery == true){
+				}else if (res.data.deliverySuccess == true){
                     window.location= '/successPage'
                 }
 

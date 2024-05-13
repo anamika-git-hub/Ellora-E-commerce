@@ -45,10 +45,13 @@ const joiCategorySchema = joi.object({
 })
 
 const joiCouponSchema = joi.object({
-    name: joi.string(),
-    expiryDate: joi.date(),
+    name: joi.string(), 
+    expiryDate: joi.date().min(new Date()).iso().messages({
+        'date.min': 'Expiry date must be after today',
+        'date.iso': 'Expiry date must be a valid date'
+    }),
     offerPrice: joi.number(),
-    miniLimit: joi.number().positive(),
+    minimumLimit: joi.number().positive(),
     couponCode: joi.string()
     
 })

@@ -34,43 +34,43 @@ adminRouter.get('/logout',isLogin,adminController.loadSignout);
 
 adminRouter.get('/Categories',isLogin,categoryController.loadCategories);
 adminRouter.get('/addCategories',isLogin,categoryController.loadAddCategories);
-adminRouter.post('/addCategories',categoryController.insertCategory);
+adminRouter.post('/addCategories',isLogin,categoryController.insertCategory);
 adminRouter.get('/listCategory',isLogin,categoryController.listCategory);
 adminRouter.get('/editCategories',isLogin,categoryController.editCategoryLoad);
-adminRouter.post('/editCategories',categoryController.updateCategories);
+adminRouter.post('/editCategories',isLogin,categoryController.updateCategories);
 
 adminRouter.get('/userList',isLogin,adminController.loadUserList);
 adminRouter.get('/blockUser',isLogin,adminController.blockUser);
 adminRouter.get('/addUsers',isLogin,adminController.loadAddUsers);
-adminRouter.post('/addUsers',adminController.addUser);
+adminRouter.post('/addUsers',isLogin,adminController.addUser);
 adminRouter.get('/editUsers',isLogin,adminController.editUserLoad);
-adminRouter.post('/editUsers',adminController.updateUser);
+adminRouter.post('/editUsers',isLogin,adminController.updateUser);
 
 adminRouter.get('/productList',isLogin,productController.loadProductList);
 adminRouter.get('/addProducts',isLogin,productController.loadAddProducts);
 adminRouter.post('/addProducts',imageUpload,productController.addProducts);
 adminRouter.get('/listProduct',isLogin,productController.listProduct);
 adminRouter.get('/editproducts',isLogin,productController.editProductLoad);
-adminRouter.post('/editproducts',productController.updateProducts);
-adminRouter.get('/searchProduct',productController.searchProducts);
+adminRouter.post('/editproducts',isLogin,productController.updateProducts);
+adminRouter.get('/searchProduct',isLogin,productController.searchProducts);
 
 adminRouter.get('/couponList',isLogin,couponController.loadCouponList);
 adminRouter.get('/addCoupon',isLogin,couponController.loadAddCoupon);
-adminRouter.post('/addCoupon',couponController.addCoupon);
+adminRouter.post('/addCoupon',isLogin,couponController.addCoupon);
 adminRouter.get('/deleteCoupon',isLogin,couponController.deleteCoupon);
 adminRouter.get('/editCoupon',isLogin,couponController.loadEditCoupon);
-adminRouter.post('/editCoupon',couponController.editCoupon);
+adminRouter.post('/editCoupon',isLogin,couponController.editCoupon);
 
 adminRouter.get('/offerList',isLogin,offerController.loadOfferList);
 adminRouter.get('/addOffer',isLogin,offerController.loadAddOffer);
-adminRouter.post('/addOffer',offerController.addOffer);
+adminRouter.post('/addOffer',isLogin,offerController.addOffer);
 
 adminRouter.get('/orderList',isLogin,orderController.loadOrderList);
 adminRouter.get('/orderDetail',isLogin, orderController.loadOrderDetails);
 
 adminRouter.get('/salesReport',isLogin,orderController.salesReport);
-adminRouter.post('/statusChanged/:orderId',orderController.statusChange);
-adminRouter.post('/cancelStatusChanged/:orderId',orderController.cancelStatusChange)
+adminRouter.post('/statusChanged/:orderId',isLogin,orderController.statusChange);
+adminRouter.post('/cancelStatusChanged/:orderId',isLogin,orderController.cancelStatusChange)
 
 
 
