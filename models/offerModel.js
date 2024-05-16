@@ -1,3 +1,4 @@
+const { type } = require('@hapi/joi/lib/extend');
 const { required } = require('joi');
 const mongoose = require('mongoose');
 
@@ -9,7 +10,8 @@ const offerModel = new mongoose.Schema({
     product:{type:String},
     category:{type:String},
     expiredAt:{type:Date,required:true},
-    status:{type:Boolean}
+    status:{type:Boolean},
+    is_listed:{type:Boolean,default:true}
 })
 
 module.exports = mongoose.model('Offer',offerModel)

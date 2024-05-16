@@ -74,6 +74,10 @@ const orderSchema = new mongoose.Schema({
         status:{
             type:String,
             default:"placed"
+        },
+        returnReason:{
+            type:String,
+            default:""
         }
     }]
 

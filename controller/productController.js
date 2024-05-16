@@ -15,19 +15,25 @@ const loadProductList=async(req,res)=>{
    try {
 
     var page = 1;
+    let productQuery;
     if(req.query.page){
         page = req.query.page;
     }
-    const limit = 2;
-    const productData = await products.find().populate({path:'categories',model:'categories'})
+    const limit = 5;
+    if (req.query.search && req.query.search.trim() !== '') {
+        const searchPattern = new RegExp(req.query.search.trim(), 'i').source;
+        console.log('searchPattern:', searchPattern); 
+    
+        productQuery = {
+                 $or: [{ name: { $regex: searchPattern } }, { description: { $regex: searchPattern } }] ,
+        };
+    }
+    const productData = await products.find(productQuery).populate({path:'categories',model:'categories'})
      .limit(limit * 1)
       .skip((page-1)* limit)
       .exec();
-      
     const count = await products.find({
     }).countDocuments();
-
-
 
     res.render('productList',{products:productData,totalPages:Math.ceil(count/limit),currentPage:page})
    } catch (error) {
@@ -183,20 +189,18 @@ const updateProducts = async (req,res)=>{
 
 const productPage = async(req,res)=>{
    try {
-    console.log('filter',req.query);
     const queryObj = {...req.query};
     const page = req.query.page ? parseInt(req.query.page) : 1;
     const limit = 12;
     let productQuery =   { is_listed: true }
-    console.log('lkkkkkkkkkkk',req.query.category);
 
-    if(queryObj.category){
-        const categories = queryObj.category.split(',')
-        console.log('cccccccccccccc',categories);
-        productQuery = {
-            ...productQuery,"categories.name":categories
-        }
-    }
+    // if(queryObj.category){
+    //     const categories = queryObj.category.split(',')
+    //     console.log('cccccccccccccc',categories);
+    //     productQuery = {
+    //         ...productQuery,"categories.name":categories
+    //     }
+    // }
     // if (queryObj.minPrice && queryObj.maxPrice && queryObj.categories) {
     //     const categories = queryObj.categories.split(',');
     //     productQuery = {
@@ -238,7 +242,6 @@ const productPage = async(req,res)=>{
     
 
     const sort = sortOptions[req.query.sort] || {name:1}
-   console.log("-----------------------",productQuery)
     let productData = await products.find(productQuery).populate({ path: 'categories', model: 'categories' }).populate('offer').sort(sort);
 
     
@@ -270,10 +273,39 @@ productData = productData.slice((page - 1) * limit, page * limit);
     
 
     res.render('products',{products:productData,cartData,wishlistData,categoryData,totalPages:Math.ceil(count/limit),currentPage:page});
+    
    } catch (error) {
     console.log(error)
    }
 }
+
+
+// filter products
+const filterProduct = async (req, res) => {
+    try {
+
+        let categoryData;
+        let productData;
+        const selectedCategories = req.query.category.split(',');
+        if (selectedCategories && selectedCategories.length > 0) {
+            categoryData = await category.find({name:{$in:selectedCategories}})
+
+              const ids = categoryData.filter(doc => doc._id)
+           productData = await products.find({categories:{$in:ids}}).populate({ path: 'categories', model: 'categories' })
+        } else {
+
+            productData = await products.find().populate({ path: 'categories', model: 'categories' });
+        }
+        
+        res.json({ success: true, data: productData });
+        
+    } catch (error) {
+        console.log(error.message);
+        res.render("404");
+    }
+}
+
+
 
 
 
@@ -321,19 +353,6 @@ productData = productData.slice((page - 1) * limit, page * limit);
 //     }
 // }
 
-const searchProducts = async(req,res)=>{
-    try {
-        const { query } = req.query;
-        console.log('query:',query);
-        const regex = new RegExp(query, 'i'); 
-        
-        const products = await products.find({ name: { $regex: regex } });
-        res.json(products); 
-    } catch (error) {
-        console.error('Error searching products:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-}
 
 const productDetails = async(req,res)=>{
     try {
@@ -359,5 +378,5 @@ module.exports={
     updateProducts,
     productPage,
     productDetails,
-    searchProducts
+    filterProduct
 }

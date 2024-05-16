@@ -52,7 +52,6 @@ adminRouter.post('/addProducts',imageUpload,productController.addProducts);
 adminRouter.get('/listProduct',isLogin,productController.listProduct);
 adminRouter.get('/editproducts',isLogin,productController.editProductLoad);
 adminRouter.post('/editproducts',isLogin,productController.updateProducts);
-adminRouter.get('/searchProduct',isLogin,productController.searchProducts);
 
 adminRouter.get('/couponList',isLogin,couponController.loadCouponList);
 adminRouter.get('/addCoupon',isLogin,couponController.loadAddCoupon);
@@ -64,11 +63,16 @@ adminRouter.post('/editCoupon',isLogin,couponController.editCoupon);
 adminRouter.get('/offerList',isLogin,offerController.loadOfferList);
 adminRouter.get('/addOffer',isLogin,offerController.loadAddOffer);
 adminRouter.post('/addOffer',isLogin,offerController.addOffer);
+adminRouter.get('/listOffer',isLogin,offerController.listOffer);
+adminRouter.get('/editOffer',isLogin,offerController.loadEditOffer);
+adminRouter.post('/editOffer',isLogin,offerController.editOffer);
 
 adminRouter.get('/orderList',isLogin,orderController.loadOrderList);
 adminRouter.get('/orderDetail',isLogin, orderController.loadOrderDetails);
+adminRouter.post('/returnApproval',isLogin,orderController.returnApproval);
 
 adminRouter.get('/salesReport',isLogin,orderController.salesReport);
+adminRouter.get('/excelDownload',orderController.excelDownload);
 adminRouter.post('/statusChanged/:orderId',isLogin,orderController.statusChange);
 adminRouter.post('/cancelStatusChanged/:orderId',isLogin,orderController.cancelStatusChange)
 

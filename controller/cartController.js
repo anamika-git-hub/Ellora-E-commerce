@@ -7,8 +7,6 @@ const Offer = require('../models/offerModel');
 const loadCart = async(req,res)=>{
     try {
         if(!req.session.user_id){
-
-            console.log('please login to get our service')
             req.flash('cart','Please login to get our service')
             res.json({login:true});
            return res.redirect('/login')
@@ -86,7 +84,6 @@ const addtoCart = async(req,res)=>{
                 }
             ]
            
-            // subTotal:products.totalPrice.forEach((item,index)=>{item*index})
            
         })
         
@@ -145,8 +142,6 @@ const loadCheckOut = async(req,res)=>{
    try {
 
       const {total} = req.query;
-      console.log('totals',total);
-      
       const userId = req.session.user_id;
       const user = await User.findById(userId);
       const addresses = user.addresses;
@@ -158,9 +153,7 @@ const loadCheckOut = async(req,res)=>{
       }else{
         const subTotal = req.flash('subTotal')[0]||total;
         const discoundAmount = req.flash('discoundAmount')[0]|| 0;
-        console.log('diddddddddd',discoundAmount);
         const totalAfterDiscound =  req.flash('totalAfterDiscound')[0] || subTotal;
-        console.log('tttttoooot',totalAfterDiscound);
         res.render('checkout',{cartData,subTotal,addresses:addresses,totalAfterDiscound,wishlistData,discoundAmount});
       }
      

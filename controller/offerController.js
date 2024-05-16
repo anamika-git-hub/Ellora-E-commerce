@@ -34,10 +34,8 @@ const addOffer = async(req,res)=>{
         const value = await joiOfferSchema.validateAsync(req.body)
         const{name,ValidityDate,offerPrice,offerTypeName,offerType} = value
         const currentDate = new Date();
-        console.log('cd',currentDate);
        
         const offerExpiredDate = new Date(ValidityDate)
-        console.log('nd',offerExpiredDate)
         const offerData = await Offer.create({
             name:name,
             offerPrice:offerPrice,
@@ -53,8 +51,50 @@ const addOffer = async(req,res)=>{
     }
 }
 
+const listOffer= async (req,res)=>{
+    try {
+        const {OfferId}= req.query
+        const data = await Offer.findOne({_id:OfferId});
+        data.is_listed=!data.is_listed
+        const d1 =  await data.save();
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
+const loadEditOffer = async(req,res)=>{
+    try {
+        const productData = await Product.find();
+        const categoryData = await Category.find();
+        const offerData = await Offer.findById({_id:req.query.id});
+        res.render('editOffer',{offerData,productData,categoryData})
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+const editOffer = async(req,res)=>{
+    try {
+        const {OfferId} = req.query
+        console.log('offerId:',OfferId);
+        const value = await joiOfferSchema.validateAsync(req.body);
+        console.log('value:',value);
+        const {name,ValidityDate,offerPrice,offerTypeName,offerType} = value;
+        const OfferData = await Offer.findOneAndUpdate({_id:OfferId},{$set:{name:name,offerPrice:offerPrice,offerTypeName:offerTypeName,product:offerTypeName === 'Product'? offerType:undefined,category:offerTypeName === 'Category'?offerType:undefined,expiredAt:ValidityDate}})
+
+        console.log('offerData:',OfferData);
+        res.redirect('/admin/OfferList')
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
 module.exports = {
     loadOfferList,
     loadAddOffer,
-    addOffer
+    addOffer,
+    listOffer,
+    loadEditOffer,
+    editOffer
 }

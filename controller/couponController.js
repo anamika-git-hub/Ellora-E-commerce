@@ -50,8 +50,6 @@ const addCoupon = async(req,res)=>{
             couponCode:couponCode
         });
         await data.save()
-
-        console.log('da',data);
         res.redirect('/admin/couponList')
     } catch (error) {
         console.log(error.message);

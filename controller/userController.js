@@ -88,7 +88,7 @@ const insertUser =async(req,res)=>{
     }
 }
 
-const sendOTPverificationEmail=async({email},res)=>{
+const sendOTPverificationEmail=async ({email},res)=>{
     try {
 
         let transporter=nodemailer.createTransport({
@@ -183,7 +183,7 @@ const resendOtp=async(req,res)=>{
         const userEmail= req.query.email
         await userOtpVerification.deleteMany({email:userEmail})
         if(userEmail){
-            sendOTPverificationEmail({email:userEmail},res);
+            sendOTPverificationEmail(userEmail,res);
         }else{
         }
     } catch (error) {
@@ -332,7 +332,7 @@ const resetPasswithOld = async(req,res)=>{
         const passwordMatch = await bcrypt.compare(oldPass,user.password);
         if(!passwordMatch){
             req.flash('exist', 'The passwod is incorrect');
-            return res.redirect('/signUp')
+            return res.redirect('/signUp');
         }else{
             const passwordSame = await bcrypt.compare(oldPass,confirmPass);
             if(passwordSame || confirmPass===oldPass){

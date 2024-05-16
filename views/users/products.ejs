@@ -30,7 +30,7 @@
     <link rel="stylesheet" href="assets/css/plugins/owl-carousel/owl.carousel.css">
     <link rel="stylesheet" href="assets/css/plugins/magnific-popup/magnific-popup.css">
     <link rel="stylesheet" href="assets/css/plugins/nouislider/nouislider.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-sXQVvSljPzmrYELIYTqzINWWy4CzD/1Im7ZiEgPgP3z57WNYzDGprl15HSzOmXhPytbQyWto8rkM5ffIFE59zw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-sXQVvSljPzmrYELIYTqzINWWy4CzD/1Im7ZiEgPgP3z57WNYzDGprl15HSzOmXhPytbQyWto8rkM5ffIFE59zw==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
 
 </head>
 
@@ -225,7 +225,7 @@
                     
 
                                 <% products.forEach((element)=>{ %>
-                                <div class="col-6 col-md-4 col-lg-4 col-xl-3">
+                                <div  class="col-6 col-md-4 col-lg-4 col-xl-3">
                                     <div class="product">
                                         <figure class="product-media">
                                             <a href="/productDetail?id=<%=element._id%>">
@@ -845,20 +845,79 @@
         // Submit form data via AJAX
         const formData = new FormData(document.getElementById('categoryForm'));
         const xhr = new XMLHttpRequest();
+        console.log('ssssd',xhr);
+       
         xhr.onreadystatechange = function() {
             if (xhr.readyState === XMLHttpRequest.DONE) {
                 if (xhr.status === 200) {
-                    // Update page content or handle response data
-                    // For example, you can update a specific section of the page with new data
-                    // Replace '#content' with the actual selector of the content area you want to update
+
+                    const responseData = JSON.parse(xhr.responseText);
+                   const filteredData = responseData.data;
+                   const productRow = document.getElementById('productRow');
+                  let filterHTML ="";
+                   filteredData.forEach(element=>{
+                       filterHTML += `<div  class="col-6 col-md-4 col-lg-4 col-xl-3">
+                                    <div class="product">
+                                        <figure class="product-media">
+                                            <a href="/productDetail?id${element._id}">
+                                                <img src="${element.image[0]}" alt="Product image" class="product-image">
+                                            </a>
+
+                                            <div class="product-action-vertical">
+                                                <a href="#" onclick="addtoWishlist('${element._id}')" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                             </div><!-- End .product-action -->
+
+                                            <div class="product-action action-icon-top">
+                                                 <button  onclick="addtoCart('${element._id}')" class="btn-product btn-cart"><span>add to cart</span></button>
+                                                <a href="popup/quickView.html" class="btn-product btn-quickview" title="Quick view"><span>quick view</span></a>
+                                                <a href="#" class="btn-product btn-compare" title="Compare"><span>compare</span></a>
+                                            </div><!-- End .product-action -->
+                                        </figure><!-- End .product-media -->
+
+                                        <div class="product-body">
+                                            <div class="product-cat">
+                                                <a href="#">${element.categories.name}</a>
+                                               
+                                            </div><!-- End .product-cat -->
+                                            <h3 class="product-title"> <a class="nameSearch" href="#">${element.name}</a></h3>
+                                            <!-- End .product-title -->
+                                            <div class="product-price">
+                                        ${  element.offer && element.offer.status == true?
+                                            `<p class="old-price mr-3">Rs.${element.price}</p>
+                                            <h6 class="new-price mt-1">Rs.${element.price - (element.offer.offerPrice * element.price)/100 }</h6>`:
+                                                `<p>Rs.${ element.price}</p>` }
+                                        </div>
+                                          
+                                            <div class="ratings-container">
+                                                <div class="ratings">
+                                                    <div class="ratings-val" style="width: 0%;"></div><!-- End .ratings-val -->
+                                                </div><!-- End .ratings -->
+                                                <span class="ratings-text">( 0 Reviews )</span>
+                                            </div><!-- End .rating-container -->
+
+                                            <div class="product-nav product-nav-dots">
+                                                <a href="#" style="background: #cc9966;"><span class="sr-only">Color name</span></a>
+                                                <a href="#" class="active" style="background: #ebebeb;"><span class="sr-only">Color name</span></a>
+                                            </div><!-- End .product-nav -->
+                                        </div><!-- End .product-body -->
+                                    </div><!-- End .product -->
+                                </div><!-- End .col-sm-6 col-lg-4 col-xl-3 -->`
+                     
+                   })
+
+                   productRow.innerHTML = filterHTML;
+                   
+                   console.log(filteredData);
                     document.querySelector('#content').innerHTML = xhr.responseText;
                 } else {
                     // Handle errors
                 }
             }
         };
-        xhr.open('GET', '/products?' + new URLSearchParams(formData).toString());
+
+        xhr.open('GET', '/filterProduct?' + new URLSearchParams(formData).toString());
         xhr.send();
+
     }
 
     // Add event listener to each checkbox

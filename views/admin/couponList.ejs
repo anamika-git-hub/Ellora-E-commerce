@@ -299,13 +299,17 @@
         <script>
             function deleteCoupon(tag,couponId){
                 if(tag.innerText=='List'){
+                    const confirmed = confirm('Are you sure you want to unlist this coupon?');
+                    if(confirmed){
                     tag.innerText='Unlist'
                     tag.style.background='red'
-                    tag.style.color='white'
+                    tag.style.color='white'}
                 }else if(tag.innerText == 'Unlist'){
+                    const confirmed = confirm('Are you sure you want to list this coupon again?');
+                    if(confirmed){
                     tag.innerText='List'
                     tag.style.background='green'
-                    tag.style.color='black'
+                    tag.style.color='black'}
                 }
                 fetch(`/admin/deleteCoupon?couponId=${couponId}`)
             }

@@ -203,7 +203,7 @@
                     <div class="card-body">
                         <form action="">
                             <div class="col-lg-4 col-md-6 me-auto">
-                                <input type="text" placeholder="Search..." class="form-control" id="inputThings" onkeyup="searchName()" />
+                                <input type="text" name="search" placeholder="Search..." class="form-control" id="inputThings" />
                             </div>
                         </form>
                         <br>
@@ -297,24 +297,26 @@
         <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
         <!-- Main Script -->
         <script src="assets/js/main.js" type="text/javascript"></script>
+       
         <script>
-        function searchName() {
-            var input, filter, table, tr, td, i, txtValue;
-            input = document.getElementById("inputThings").value
-            console.log('in:',input);
-            fetch(`/admin/searchProduct?query=${input}`)
-        }
-        </script>
-        <script>
+
             function listProduct(tag,productId){
+        
                 if(tag.innerText=='List'){
+                    const confirmed = confirm("Are you sure you want to Unlist this product?");
+                    if(confirmed){
                     tag.innerText='Unlist'
                     tag.style.background='red'
-                    tag.style.color='white'
+                    tag.style.color='white'}
+                    
                 }else if(tag.innerText == 'Unlist'){
+                    const confirmed = confirm("Are you sure you want to list this product again?");
+                    if(confirmed){
                     tag.innerText='List'
                     tag.style.background='green'
                     tag.style.color='black'
+                    }
+                   
                 }
                 fetch(`/admin/listProduct?productId=${productId}`)
             }

@@ -5,6 +5,7 @@ const Product = require('../models/productsModel');
 const Wallet = require('../models/walletModel');
 const Coupon = require('../models/couponModel');
 const Razorpay = require('razorpay');
+const excelJS = require('exceljs')
 const {RAZORPAY_ID_KEY,RAZORPAY_SECRET_KEY} = process.env;
 
 const razorpayInstance = new Razorpay({
@@ -17,8 +18,6 @@ const placeOrder = async (req, res) => {
     try {
         const userId = req.session.user_id;
         const couponCode = req.session.couponCode;
-        
-        console.log('code:', couponCode);
         const { shippingAddress, subTotal, shippingMethod } = req.body;
         console.log(shippingMethod)
          req.session.totalAmount = subTotal;
@@ -117,7 +116,7 @@ const placeOrder = async (req, res) => {
         }
         
         const myOrders = await Order.create(order); 
-       
+       res.redirect('/successPage');
             
     } catch (error) {
         console.log(error.message);
@@ -184,6 +183,8 @@ const cancelOrder = async(req,res)=>{
        if(product.status === 'cancelled'){
         const walletData = await Wallet.findOne({userId});
         if(walletData){
+            console.log('Current wallet amount:', walletData.walletAmount);
+            console.log('Product price to add:', product.totalPrice);
             walletData.walletAmount += product.totalPrice;
             walletData.walletHistory.push({
                 date:new Date(),
@@ -192,6 +193,7 @@ const cancelOrder = async(req,res)=>{
                 status:'In'
             })
            await walletData.save();
+           console.log('walletData:',walletData);
         }else{
 
             const newWallet = new Wallet({
@@ -216,27 +218,139 @@ const cancelOrder = async(req,res)=>{
     }
 }
 
-const salesReport = async(req,res)=>{
+const returnProduct = async(req,res)=>{
     try {
-        const orderData = await Order.find().populate('products.productId').populate('userId')
-        let grandTotal = 0;
-        let couponTotal = 0;
-        let offerTotal = 0;
-        orderData.forEach (order=>{
-            const DeliveredOrder = order.products.every(product=> product.status === 'Delivered');
+        const {productId, orderId, reason } = req.body;
+        console.log(req.body);
+        const orderData = await Order.findById({_id:orderId});
+        if(orderData.products && orderData.products.length>0){
+            const product = orderData.products.find(product=>{
+                return String(productId)=== String(productId);
+            })
+            if(product){
+                product.status = 'Return Requested';
+                product.returnReason = reason;
 
-            if(DeliveredOrder){
-                grandTotal += order.total_amount;
-                 couponTotal += order.couponDiscount;
-                 offerTotal += order.offerDiscount;
-            } 
-        })
-      
-        res.render('salesReport',{orderData,grandTotal,couponTotal,offerTotal})
+                await orderData.save()
+                res.json({message:'Product return requested successfully.'})
+            }else{
+                res.json({error:'Product not found in the order.'});
+            }
+        }else{
+            res.json({error:"Order is not found."})
+        }
+
     } catch (error) {
         console.log(error.message);
     }
-} 
+}
+
+const returnApproval = async(req,res)=>{
+    try {
+        const {status,productId, orderId,productPrice } = req.body;
+
+        const orderData = await Order.findById({_id:orderId});
+            const product = orderData.products.find(product=>{
+                return String(productId)=== String(productId);
+            })
+        const userData = await User.findById({_id:req.session.user_id}).populate('wallet');
+
+        
+    if(status == 'Return Approved'){
+             product.status = status;
+             await orderData.save();
+             const walletData = await Wallet.findOne({userId:req.session.user_id});
+             if(walletData){
+                
+            console.log('Current wallet amount:', walletData.walletAmount);
+            console.log('Product price to add:',parseInt(productPrice));
+                 walletData.walletAmount += parseInt(productPrice);
+                 walletData.walletHistory.push({
+                     date:new Date(),
+                     amount:productPrice,
+                     description:'Order Returned',
+                     status:'In'
+                 })
+                await walletData.save();
+                console.log('walletData:',walletData);
+             }else{
+     
+                 const newWallet = new Wallet({
+                     userId:req.session.user_id,
+                     walletAmount:parseInt(productPrice),
+                     walletHistory:[
+                         {
+                             date:new Date(),
+                             amount:productPrice,
+                             description:'Order Returned',
+                             status:'In'  
+                         }
+                     ]
+                 })
+     
+                 await newWallet.save()
+             }
+    }
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+
+
+const salesReport = async (req, res) => {
+    try {
+        // let orderData;
+        // const { startDate, endDate } = req.query;
+
+        // console.log('Start Date:', startDate);
+        // console.log('End Date:', endDate);
+
+        // if (startDate && endDate) {
+        //     const start = new Date(startDate);
+        //     const end = new Date(endDate);
+        //     // Set end date to the end of the day
+        //     end.setHours(23, 59, 59, 999);
+
+        //     console.log('Converted Start Date:', start);
+        //     console.log('Converted End Date:', end);
+
+        //     orderData = await Order.find({
+        //         date: {
+        //             $gte: start,
+        //             $lte: end
+        //         }
+        //     }).populate('products.productId').populate('userId');
+
+        // } else {
+          let  orderData = await Order.find().populate('products.productId').populate('userId');
+        // }
+
+        let grandTotal = 0;
+        let couponTotal = 0;
+        let offerTotal = 0;
+
+        orderData.forEach(order => {
+            const DeliveredOrder = order.products.every(product => product.status === 'Delivered');
+
+            if (DeliveredOrder) {
+                grandTotal += order.total_amount;
+                couponTotal += order.couponDiscount;
+                offerTotal += order.offerDiscount;
+            }
+        });
+
+
+        console.log('Order Data:', orderData);
+        res.render('salesReport', { orderData, grandTotal, couponTotal, offerTotal });
+    } catch (error) {
+        console.log(error.message);
+    }
+};
+
+
+
 
 const statusChange = async(req,res)=>{
     try {
@@ -295,6 +409,18 @@ const cancelStatusChange = async(req,res)=>{
         console.log(error);
     }
 }
+
+
+const excelDownload = async(req,res)=>{
+    try {
+
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+
 module.exports={
     placeOrder,
     loadSuccessPage,
@@ -303,5 +429,8 @@ module.exports={
     salesReport,
     loadOrderDetails,
     statusChange,
-    cancelStatusChange
+    cancelStatusChange,
+    excelDownload,
+    returnProduct,
+    returnApproval
 }

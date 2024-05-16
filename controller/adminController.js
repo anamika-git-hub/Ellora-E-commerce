@@ -65,12 +65,23 @@ const loadHome=async(req,res)=>{
 
 const loadUserList=async(req,res)=>{
     try {
+
+        console.log('re',req.query);
+        let userQuery;
         var page = 1;
     if(req.query.page){
         page = req.query.page;
     }
     const limit = 5;
-    const userData=await User.find({email:{$ne:process.env.EMAIL}})
+    if (req.query.search && req.query.search.trim() !== '') {
+        const searchPattern = new RegExp(req.query.search.trim(), 'i').source;
+        console.log('searchPattern:', searchPattern); 
+    
+        userQuery = {$and:[{email:{$ne:process.env.EMAIL}},{
+                 $or: [{ name: { $regex: searchPattern } }, { description: { $regex: searchPattern } }] }]
+        };
+    }
+    const userData=await User.find(userQuery)
     
      .limit(limit * 1)
       .skip((page-1)* limit)

@@ -44,7 +44,7 @@ userRouter.post('/editAddress',isLogin,userController.editAddress);
 userRouter.post('/deleteAddress',isLogin,userController.deleteAddress);
 
 userRouter.get('/products',isLogin,productController.productPage);
-userRouter.get('/searchProduct',isLogin,productController.searchProducts);
+userRouter.get('/filterProduct',isLogin,productController.filterProduct);
 userRouter.get('/productDetail',isLogin,productController.productDetails);
 
 // userRouter.post('/sort',productController.sortProduct);
@@ -64,6 +64,7 @@ userRouter.get('/CheckOut',isLogin,cartController.loadCheckOut);
 userRouter.post('/placeOrder',isLogin,orderController.placeOrder);
 userRouter.get('/successPage',isLogin,orderController.loadSuccessPage);
 userRouter.get('/cancelOrder',isLogin,orderController.cancelOrder);
+userRouter.post('/returnProduct',isLogin,orderController.returnProduct);
 
 
 module.exports = userRouter;

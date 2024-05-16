@@ -16,7 +16,7 @@
         <link href="assets/css/main.css?v=1.1" rel="stylesheet" type="text/css" />
     </head>
 
-    <body>
+    <body class="dark">
         <div class="screen-overlay"></div>
         <aside class="navbar-aside" id="offcanvas_aside">
             <div class="aside-top">
@@ -29,56 +29,50 @@
             </div>
             <nav>
                 <ul class="menu-aside">
-                    <li class="menu-item active">
+                    <li class="menu-item ">
                         <a class="menu-link" href="home">
                             <i class="icon material-icons md-home"></i>
                             <span class="text">Dashboard</span>
                         </a>
                     </li>
-                    <li class="menu-item has-submenu">
-                        <a class="menu-link" href="page-products-list.html">
+                    <li class="menu-item ">
+                        <a class="menu-link" href="productList">
                             <i class="icon material-icons md-shopping_bag"></i>
                             <span class="text">Products</span>
                         </a>
-                        <div class="submenu">
-                            <a href="productList">Product List</a>
-                        </div>
+                    
                     </li>
-                    <li class="menu-item has-submenu">
-                        <a class="menu-link" href="page-orders-1.html">
+                    <li class="menu-item ">
+                        <a class="menu-link" href="userList">
                             <i class="icon material-icons md-people"></i>
                             <span class="text">Users</span>
                         </a>
-                        <div class="submenu">
-                            <a href="userList">User list </a>
-                        </div>
+                       
                     </li>
-                    <li class="menu-item has-submenu">
-                        <a class="menu-link" href="page-orders-1.html">
+                    <li class="menu-item ">
+                        <a class="menu-link" href="orderList">
                             <i class="icon material-icons md-shopping_cart"></i>
                             <span class="text">Orders</span>
                         </a>
-                        <div class="submenu">
-                            <a href="orderList">Order list </a>
-                        </div>
+                       
                     </li>
-                    <li class="menu-item has-submenu">
-                        <a class="menu-link" href="page-sellers-cards.html">
+                    <li class="menu-item ">
+                        <a class="menu-link" href="couponList">
                             <i class="icon material-icons md-store"></i>
                             <span class="text">Coupon</span>
                         </a>
-                        <div class="submenu">
-                            <a href="couponList">Coupon list</a>
-                        </div>
                     </li>
-                    <li class="menu-item has-submenu">
-                        <a class="menu-link" href="page-form-product-1.html">
+                    <li class="menu-item active">
+                        <a class="menu-link" href="offerList">
+                            <i class="icon material-icons md-store"></i>
+                            <span class="text">Offer</span>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a class="menu-link" href="Categories">
                             <i class="icon material-icons md-add_box"></i>
                             <span class="text">Categories</span>
                         </a>
-                        <div class="submenu">
-                            <a href="Categories">Categories list</a>
-                        </div>
                     </li>
                     <li class="menu-item has-submenu">
                         <a class="menu-link" href="page-transactions-1.html">
@@ -196,48 +190,74 @@
                 </div>
             </header>
             <section class="content-main">
-                <form action="/admin/addCoupon" method="post" >
+                <form action="/admin/editOffer" method="post" >
                 <div class="row">
                     <div class="col-9">
                         <div class="content-header">
-                            <h2 class="content-title">Add New Coupon</h2>
+                            <h2 class="content-title">Edit Offer</h2>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="card mb-4">
                             <div class="card-body">
-                                <div class="mb-4">
-                                    <label for="product_title"  class="form-label">Coupon name</label>
-                                    <input type="text" name="name" placeholder="Type here" class="form-control" id="product_title" />
-                                </div>
+                                    <div class="mb-4">
+                                        <label for="product_title"  class="form-label">Offer name</label>
+                                        <input type="text" value="<%= offerData.name %>" name="name" placeholder="Type here" class="form-control" id="product_title" />
+                                    </div>
+                                    <div class="row gx-3">
+                                        <div class="col-md-4 mb-3">
+                                            <label  class="form-label">Validity Date</label>
+                                                <input type="date" value="<%= offerData.ValidityDate %>" name="ValidityDate"  class="form-control" />
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="product_color" class="form-label">Offer Price</label>
+                                            <input type="text" value="<%= offerData.offerPrice %>" name="offerPrice" placeholder="Type here" class="form-control" id="product_color" />
+                                        </div>
+                                    
+                                    </div>
+                            </div><!-- card end// -->
+                                <div class="card-body">
                                 <div class="row gx-3">
-                                    <div class="col-md-4 mb-3">
-                                        <label for="product_sku" class="form-label">Validity Date</label>
-                                            <input type="date" name="ValidityDate"  class="form-control" />
+                                    <div class="col-md-6 mb-3">
+                                        <label for="product_sku" class="form-label">Offer Type</label>
+                                        <div class="ms-auto text-md-end">
+                                            <select class="form-select d-inline-block" name="offerTypeName" id="offerType">
+                                                <option>select</option>
+                                                <option>Product</option>
+                                                <option>Category</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label for="product_color" class="form-label">Offer Price</label>
-                                        <input type="text" name="offerPrice" placeholder="Type here" class="form-control" id="product_color" />
+                                    <div class="col-md-6 mb-3" id="category" hidden>
+                                        <label for="product_sku" class="form-label">Categories</label>
+                                        <div class="ms-auto text-md-end">
+                                            <select class="form-select" name="offerType" id="categorySelect">
+                                                <% categoryData.forEach(element => {  %>
+                                                    <option value="<%= element._id%>"><%= element.name %></option>
+                                                <% }); %>
+                                            </select>
+                                        </div>
                                     </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label for="product_size" class="form-label">Maximum limit</label>
-                                        <input type="text" name="minimumLimit" placeholder="Type here" class="form-control" id="product_size" />
+                                    <div class="col-md-6 mb-3" id="productsDiv" hidden>
+                                        <label for="product_sku" class="form-label">Products</label>
+                                        <div class="ms-auto text-md-end">
+                                            <select class="form-select" name="offerType" id="productSelect">
+                                                <% productData.forEach(element => {  %>
+                                                    <option value="<%= element._id %>"><%= element.name %></option>
+                                                <% }); %>
+                                            </select>
+                                        </div>
                                     </div>
+                                    
+                                    
                                 </div>
-                                <div class="mb-4">
-                                    <label for="product_brand" class="form-label">Coupon code</label>
-                                    <input  placeholder="Type here" name="couponCode" class="form-control" id="product_brand" />
-                                </div>
-                            </div>
+                            </div><!-- card end// -->
                         </div>
-                        <!-- card end// -->
-                      
-                    </div>
                 </div>
                  <!-- row end// -->
                  <div class="row">
                     <div >
-                        <button class="btn btn-primary" type="submit">Add Coupon</button>
+                        <button class="btn btn-primary" type="submit">Edit Offer</button>
                     </div>
                 </div>
             </form>
@@ -256,6 +276,35 @@
                 </div>
             </footer>
         </main>
+        <script>
+            const selectElements = document.getElementById('offerType');
+            selectElements.addEventListener('change', handleChange);
+        
+            function handleChange(event) {
+                const selectedValue = event.target.value;
+                const productsDiv = document.getElementById("productsDiv");
+                const categoryDiv = document.getElementById("category");
+        
+                if (selectedValue === 'Product') {
+                    console.log('Showing Products');
+                    productsDiv.hidden = false;
+                    categoryDiv.hidden = true;
+                    // Set name attribute for the visible select element
+                    document.getElementById("categorySelect").removeAttribute("name");
+                    document.getElementById("productSelect").setAttribute("name", "offerType");
+                } else if (selectedValue === 'Category') {
+                    console.log('Showing Categories');
+                    productsDiv.hidden = true;
+                    categoryDiv.hidden = false;
+                    // Set name attribute for the visible select element
+                    document.getElementById("productSelect").removeAttribute("name");
+                    document.getElementById("categorySelect").setAttribute("name", "offerType");
+                }
+            }
+        
+            document.getElementById("submitButton").addEventListener("click", function(event) {
+            });
+        </script>
         <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
         <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
         <script src="assets/js/vendors/select2.min.js"></script>
@@ -263,24 +312,6 @@
         <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
         <!-- Main Script -->
         <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
-        <script>
-            function generateCouponId() {
-    let couponId = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const length = 10;
-
-    for (let i = 0; i < length; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        couponId += characters.charAt(randomIndex);
-    }
-
-    return couponId;
-}
-
-// Example usage
-const newCouponId = generateCouponId();
-console.log(newCouponId); // Outputs something like "aB3C7EzK9h"
-
-        </script>
+        
     </body>
 </html>

@@ -137,17 +137,11 @@
         <main class="main-wrap">
             <header class="main-header navbar">
                 <div class="col-search">
-                    <form class="searchform">
+                    <form action="" method="" class="searchform">
                         <div class="input-group">
-                            <input list="search_terms" type="text" class="form-control" placeholder="Search term" />
+                            <input list="search_terms" name="search" type="text" class="form-control" placeholder="Search term" />
                             <button class="btn btn-light bg" type="button"><i class="material-icons md-search"></i></button>
                         </div>
-                        <datalist id="search_terms">
-                            <option value="Products"></option>
-                            <option value="New orders"></option>
-                            <option value="Apple iphone"></option>
-                            <option value="Ahmed Hassan"></option>
-                        </datalist>
                     </form>
                 </div>
                 <div class="col-nav">
@@ -196,18 +190,17 @@
                         
                     </div>
                     <div>
-                        <input type="text" placeholder="Search order ID" class="form-control bg-white" />
-                    </div>
-                    <div>
                         <a href="addUsers" class="btn btn-primary btn-sm rounded">Create new</a>
                     </div>
                 </div>
                 <div class="card mb-4">
                     <header class="card-header">
+                        <form action="">
                         <div class="row gx-3">
                             <div class="col-lg-4 col-md-6 me-auto">
-                                <input type="text" placeholder="Search..." class="form-control" id="inputThings" onkeyup="searchName()"/>
+                                <input type="text" name="search" placeholder="Search..." class="form-control" id="inputThings" onkeyup="searchName()"/>
                             </div>
+                       
                             <div class="col-lg-2 col-6 col-md-3">
                                 <select class="form-select">
                                     <option>Status</option>
@@ -224,6 +217,7 @@
                                 </select>
                             </div>
                         </div>
+                     </form>
                     </header>
                     <!-- card-header end// -->
                     <div class="card-body">
@@ -339,13 +333,18 @@
         <script>
             function BlockUser(tag,userId){
                 if(tag.innerText=='Block'){
+                    const confirmed = confirm('Are you sure you want to block this user?');
+                    if(confirmed){
                     tag.innerText='Unblock'
                     tag.style.background='red'
                     tag.style.color='white'
+                    }
                 }else if(tag.innerText == 'Unblock'){
+                    const confirmed = confirm('Are you sure you want to unblock this user again?');
+                    if(confirmed){
                     tag.innerText='Block'
                     tag.style.background='green'
-                    tag.style.color='black'
+                    tag.style.color='black'}
                 }
                 fetch(`/admin/blockUser?userId=${userId}`)
             }

@@ -890,7 +890,7 @@
             const shippingMethod = selectedPaymentMethod.innerText.trim();
           axios.post('/placeOrder',{shippingAddress ,subTotal,shippingMethod})
               .then(function(res){
-                  console.log(res.data);
+                  console.log(res);
                   if(res.data.success){
                     var options = {
 						"key": ""+res.data.key_id+"",

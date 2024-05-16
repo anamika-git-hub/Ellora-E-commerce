@@ -299,8 +299,12 @@
                                                                     <span>Cancelled</span>
                                                                     </button>
                                                             <%}else if(value.status === 'Delivered'){%>
-                                                                <button type="submit"  class="btn btn-outline-primary-2 " onclick="returnOrder(this,'<%= value.productId._id %>','<%= order._id%>')">
+                                                                <button type="submit"  class="btn btn-outline-primary-2 " onclick="returnProduct('<%= value.productId._id %>','<%= order._id%>')">
                                                                     <span>Return</span>
+                                                                    </button>
+                                                            <%}else if(value.status == 'Return Approved'){%>
+                                                                <button type="submit"  class="btn btn-outline-primary-2 " onclick="cancelOrder(this,'<%= value.productId._id %>','<%= order._id%>')">
+                                                                    <span>Return Approved</span>
                                                                     </button>
                                                             <%}else{%>
                                                                 <button type="submit"  class="btn btn-outline-primary-2 " onclick="cancelOrder(this,'<%= value.productId._id %>','<%= order._id%>')">
@@ -390,12 +394,14 @@
 								    <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
 								    	<p>The following addresses will be used on the checkout page by default.</p>
                                        
+                                        <a href="" id="showAddAddress" aria-controls="addAddress" aria-selected="false">Add address <i class="icon-edit"></i></a></p>
 								    	<div class="row">
                                             <%  if(userData && userData.addresses.length>0){ %>
                                                 
                                               <%  userData.addresses.forEach((value)=>{%>
-                                                <div id="cardId<%= value._id %>" class="col-lg-6">
-                                                    <div class="card card-dashboard">
+                                                <div  class="col-lg-6">
+                                                    
+                                                    <div id="cardId<%= value._id %>" class="card card-dashboard">
                                                         <div class="card-body">
                                                             <h3 class="card-title">Billing Address</h3><!-- End .card-title -->
     
@@ -411,14 +417,13 @@
                                                             <button onclick="showEditAddress('<%=value._id%>')" id="showeditAddress" aria-controls="editAddress" aria-selected="false">Edit <i class="icon-edit"></i></button></p>
                                                             
                                                             <button onclick="deleteAddress('<%= value._id %>')" >Delete</button></p>
-                                                            <a href="" id="showAddAddress" aria-controls="addAddress" aria-selected="false">Add address <i class="icon-edit"></i></a></p>
                                                         </div><!-- End .card-body -->
                                                     </div><!-- End .card-dashboard -->
                                                 </div><!-- End .col-lg-6 -->
                                           
-                                                <div class="row" id="editAddress<%=value._id%>"  style="display: none;" >
+                                                <div id="editAddress<%=value._id%>"  style="display: none;" >
                                                     <form action="/editAddress" method="post">
-                                                    <div class="col-lg-12">
+                                                    <div>
                                                         <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
                                       
                                                             <input type="hidden" name="_id" value="<%=value._id%>">
@@ -1203,7 +1208,62 @@
       }
   }
   </script>
-  
+
+<script>
+    function   returnProduct(productId, orderId) {
+        Swal.fire({
+            title: 'Reason for Return',
+            input: 'textarea',
+            inputLabel: 'Please provide a reason for return',
+            inputPlaceholder: 'Enter your reason here...',
+            inputAttributes: {
+                autocapitalize: 'off'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Submit',
+            showLoaderOnConfirm: true,
+            preConfirm: (reason) => {
+                return fetch('/returnProduct', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({productId, orderId, reason })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(response.statusText);
+                    }
+                    return response.json();
+                })
+                .catch(error => {
+                    Swal.showValidationMessage(`Request failed: ${error}`);
+                });
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (result.value && !result.value.error) {
+                    Swal.fire({
+                        title: 'Return Request Submitted!',
+                        text: 'Your return request has been submitted successfully.',
+                        icon: 'success'
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Return Request Failed!',
+                        text: result.value.error || 'An error occurred while processing your request.',
+                        icon: 'error'
+                    });
+                }
+            }
+        })
+    }
+</script>
+
+
+
+
 <script>
     function cancelOrder(tag, productId, orderId){
         const confirmed = confirm("Are you sure you want to cancel this order?");
