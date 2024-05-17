@@ -31,6 +31,7 @@ userRouter.post('/otp',userController.verifyOtp);
 userRouter.post('/resend',userController.resendOtp);
 
 userRouter.post('/login',userController.verifyLogin);
+userRouter.get('/google',userController.googleAuthentication);
 userRouter.get('/logout',isLogin,userController.loadLogout);
 
 userRouter.get('/contact',isLogin,userController.loadContact);
@@ -62,6 +63,7 @@ userRouter.post('/applyCoupon',isLogin,couponController.applyCoupon);
 
 userRouter.get('/CheckOut',isLogin,cartController.loadCheckOut);
 userRouter.post('/placeOrder',isLogin,orderController.placeOrder);
+userRouter.post('/verifyPayment',isLogin,orderController.verifyPayment);
 userRouter.get('/successPage',isLogin,orderController.loadSuccessPage);
 userRouter.get('/cancelOrder',isLogin,orderController.cancelOrder);
 userRouter.post('/returnProduct',isLogin,orderController.returnProduct);

@@ -2,6 +2,7 @@ const User=require('../models/userModel');
 const bcrypt=require('bcrypt');
 const userOtpVerification = require('../models/userOTPModel')
 const nodemailer=require('nodemailer');
+const passport = require('passport');
 const {joiRegistrationSchema} = require('../models/ValidationSchema');
 const {joiAddressSchema} = require('../models/ValidationSchema')
 const Boom = require('boom');
@@ -10,6 +11,7 @@ const Cart = require('../models/cartModel');
 const Wishlist = require('../models/wishlistModel');
 const Coupon = require('../models/couponModel');
 const Wallet = require('../models/walletModel')
+
 
 // password hasing
 const securePassword =async(password)=>{
@@ -222,6 +224,14 @@ const verifyLogin = async(req,res)=>{
         }
     } catch (error) {
         console.log(error.message)
+    }
+}
+
+const googleAuthentication = async(req,res)=>{
+    try {
+        
+    } catch (error) {
+        console.log(error.message);
     }
 }
 
@@ -450,6 +460,7 @@ module.exports={
     verifyOtp,
     loadOtp,
     verifyLogin,
+    googleAuthentication,
     loadHome,
     loadDashboard,
     loadLogout,

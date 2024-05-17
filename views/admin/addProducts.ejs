@@ -270,7 +270,7 @@
                                                 <div class="rounded-image-preview">
                                                     <img src="" id="imagePreview<%= i %>"  alt="Preview">
                                                 </div>
-                                                <input name="image" type="file"  accept="image/*" id="imageInput<%= i %>" class="imageInput" multiple onchange="previewImage(this, 'imagePreview<%= i %>')">
+                                                <input name="image" type="file"  accept="image/*" id="imageInput<%= i %>" class="imageInput" onchange="previewImage(this, 'imagePreview<%= i %>')">
                                             </label>
                                         </div>
                                     <% } %>

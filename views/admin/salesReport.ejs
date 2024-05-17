@@ -252,7 +252,7 @@
                                     <% orderData.forEach((order,indexes)=>{%>
                                         <% order.products.forEach((product,index)=>{%>
                                           <% if(product.status === 'Delivered'){%>
-                                           
+                                            
                                     <tr>
                                         <input type="hidden" name="productId" value="<%= order.productId %>">
                                         <td><%=order._id.toString().toUpperCase().slice(-6) %></td>
@@ -290,21 +290,22 @@
 
                                 </tbody>
                             </table>
-                            <div>
-                                <a href="#" id="downloadPdfBtn" class="btn btn-primary" onclick="convertToPDF()"><i class="text-muted material-icons md-post_add"></i>Download as Pdf</a>
-                                <a href="#" id="downloadExcelBtn" class="btn btn-primary" onclick="convertToExcel()"><i class="text-muted material-icons md-post_add"></i>Download as Excel</a>
-                            </div>
+                          
+                        </div>
+                        <div>
+                            <a href="#" id="downloadPdfBtn" class="btn btn-primary" onclick="convertToPDF()"><i class="text-muted material-icons md-post_add"></i>Download as Pdf</a>
+                            <a href="#" id="downloadExcelBtn" class="btn btn-primary" onclick="convertToExcel()"><i class="text-muted material-icons md-post_add"></i>Download as Excel</a>
+                        </div>
 
-                            <div id="orderLists" class="pagination-area mt-30 mb-50">
-                                <nav aria-label="Page navigation example ">
-                                    <ul class="pagination justify-content-center">
-                                        <li class="page-item "><a class="page-link" href="?page"></a></li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
+                        <div id="orderLists" class="pagination-area mt-30 mb-50">
+                            <nav aria-label="Page navigation example ">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item "><a class="page-link" href="?page"></a></li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                                    </li>
+                                </ul>
+                            </nav>
                         </div>
                         <!-- table-responsive //end -->
                     </div>

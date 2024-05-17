@@ -7,6 +7,7 @@ const Coupon = require('../models/couponModel');
 const Razorpay = require('razorpay');
 const excelJS = require('exceljs')
 const {RAZORPAY_ID_KEY,RAZORPAY_SECRET_KEY} = process.env;
+const crypto = require('crypto');
 
 const razorpayInstance = new Razorpay({
     key_id : RAZORPAY_ID_KEY,
@@ -78,19 +79,25 @@ const placeOrder = async (req, res) => {
             products: productData
         }
 
+        
+        
+        const myOrders = await Order.create(order); 
+
         if (shippingMethod === 'Razorpay') {
             const options = {
                 amount: amount,
                 currency: 'INR',
                 receipt: 'anamikap9895@gmail.com'
             };
-
+            
+ console.log('orddddddddddd',myOrders._id);
             razorpayInstance.orders.create(options, (err, order) => {
                 if (!err) {
                     res.status(200).json({
                         success: true,
                         msg: 'Order Created',
                         order_id: order.id,
+                        razorpayId:myOrders._id,
                         amount: amount,
                         key_id: RAZORPAY_ID_KEY,
                         contact: '9896754325',
@@ -114,20 +121,46 @@ const placeOrder = async (req, res) => {
                     }
                           
         }
-        
-        const myOrders = await Order.create(order); 
-       res.redirect('/successPage');
+    //    res.redirect('/successPage');
             
     } catch (error) {
         console.log(error.message);
     }
 };
 
+const verifyPayment = async(req,res)=>{
+    try {
+        const {paymentId,orderId,signature,order} = req.body
+        console.log('rrrrrrrrrrrrrrr',req.body);
+
+        const hmac = crypto.createHmac('sha256', RAZORPAY_SECRET_KEY);
+        console.log(hmac);
+        hmac.update(orderId + '|' + paymentId);
+        const hmacValue = hmac.digest('hex');
+        console.log(hmacValue);
+
+        if (hmacValue === signature) {
+            console.log("haiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+            const orderAck = await Order.findByIdAndUpdate({_id: order}, {status: 'Paid' });
+            console.log(orderAck);
+            console.log('Payment verification successful.');
+            res.json({ message: "Payment Success" });
+
+        } else {
+
+            console.log('Payment verification failed.');
+            res.json({ error: 'Signature mismatch' });
+
+        }
+    } catch (error) {
+        res.render('404');
+    }
+}
+
 
 const loadSuccessPage = async(req,res)=>{
     try {
-        console.log('rewwwww',req.query);
-        // res.render('successPage')
+        res.render('successPage')
     } catch (error) {
         console.log(error.message);
     }
@@ -183,8 +216,6 @@ const cancelOrder = async(req,res)=>{
        if(product.status === 'cancelled'){
         const walletData = await Wallet.findOne({userId});
         if(walletData){
-            console.log('Current wallet amount:', walletData.walletAmount);
-            console.log('Product price to add:', product.totalPrice);
             walletData.walletAmount += product.totalPrice;
             walletData.walletHistory.push({
                 date:new Date(),
@@ -261,9 +292,6 @@ const returnApproval = async(req,res)=>{
              await orderData.save();
              const walletData = await Wallet.findOne({userId:req.session.user_id});
              if(walletData){
-                
-            console.log('Current wallet amount:', walletData.walletAmount);
-            console.log('Product price to add:',parseInt(productPrice));
                  walletData.walletAmount += parseInt(productPrice);
                  walletData.walletHistory.push({
                      date:new Date(),
@@ -411,15 +439,6 @@ const cancelStatusChange = async(req,res)=>{
 }
 
 
-const excelDownload = async(req,res)=>{
-    try {
-
-    } catch (error) {
-        console.log(error.message);
-    }
-}
-
-
 
 module.exports={
     placeOrder,
@@ -430,7 +449,7 @@ module.exports={
     loadOrderDetails,
     statusChange,
     cancelStatusChange,
-    excelDownload,
     returnProduct,
-    returnApproval
+    returnApproval,
+    verifyPayment
 }

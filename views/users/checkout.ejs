@@ -869,7 +869,7 @@
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
     
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         $(document).ready(function() {
@@ -890,8 +890,9 @@
             const shippingMethod = selectedPaymentMethod.innerText.trim();
           axios.post('/placeOrder',{shippingAddress ,subTotal,shippingMethod})
               .then(function(res){
-                  console.log(res);
+                //   console.log(res);
                   if(res.data.success){
+                    console.log('resssss',res.data);
                     var options = {
 						"key": ""+res.data.key_id+"",
 						"amount": ""+res.data.amount+"",
@@ -899,10 +900,13 @@
 						// "image": "https://dummyimage.com/600x400/000/fff",
 						"order_id": ""+res.data.order_id+"",
 						"handler": function (response){
-							alert("Payment Succeeded");
-                                            window.location=`/successPage`
+                            console.log('res',response);
+                            verifyPayment(response.razorpay_order_id,response.razorpay_payment_id,response.razorpay_signature,res.data.razorpayId)
+							// alert("Payment Succeeded");
+                            //                 window.location='/successPage'
 
 							// window.open("/successPage","_self")
+                            
 						},
 						"prefill": {
 						
@@ -927,7 +931,68 @@
       }
   </script>
 
-<script>
+  <script>
+   function verifyPayment(orderId,paymentId,signature, order){
+        console.log('ord',order);
+        const requestBody = {
+            paymentId: paymentId,
+            orderId: orderId,
+            signature: signature,
+            order: order
+        };
+
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+        }
+
+        fetch("/verifyPayment", options)
+        .then(response => {
+            if(!response.ok){
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if(data.message === 'Payment Success'){
+                Swal.fire({
+                        title: "Success",
+                        text: "Your order has been placed successfully.",
+                        icon: "success",
+                        timer: 1500,
+                        buttons: false
+                    })
+                setTimeout(function() {
+                    window.location.href = '/successPage';
+                    },500);            
+                }else{
+                Swal.fire({
+                    position: "center",
+                    icon: "error",
+                    title: "Payment failed",
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                position: "center",
+                icon: "error",
+                title: "Something went wrong. Please try again later.",
+                showConfirmButton: false,
+                timer: 1500,
+            });
+        });
+
+    }
+  </script>
+
+<!-- <script>
     document.addEventListener("DOMContentLoaded", function() {
     // Your modal script here
     
@@ -960,7 +1025,7 @@
     showModal();
 });
 
-    </script>
+    </script> -->
 </body>
 
 
