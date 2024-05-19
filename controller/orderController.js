@@ -20,68 +20,111 @@ const placeOrder = async (req, res) => {
         const userId = req.session.user_id;
         const couponCode = req.session.couponCode;
         const { shippingAddress, subTotal, shippingMethod } = req.body;
-        console.log(shippingMethod)
-         req.session.totalAmount = subTotal;
+        console.log(shippingMethod);
+        req.session.totalAmount = subTotal;
         const amount = subTotal * 100;
 
         const userData = await User.findById(userId);
-            const address = userData.addresses.find(address => address._id.equals(shippingAddress));
-            const name = userData.name;
-            const cartData = await Cart.findOne({ userId: userId }).populate({path:'products.productId',populate:{path:'offer'}});
-            const productData = cartData.products;
+        const address = userData.addresses.find(address => address._id.equals(shippingAddress));
+        const name = userData.name;
+        const cartData = await Cart.findOne({ userId: userId }).populate({ path: 'products.productId', populate: { path: 'offer' } });
+        const productData = cartData.products;
 
-            const status = shippingMethod === 'Cash on delivery' ? 'placed' : 'pending';
-            const statusLevel = status === 'placed' ? 1 : 0;
+        const status = shippingMethod === 'Cash on delivery' ? 'placed' : 'pending';
+        const statusLevel = status === 'placed' ? 1 : 0;
 
-            const date = new Date();
-            const delivery = new Date(date.getTime() + 10 * 24 * 60 * 60 * 1000);
-            const deliveryDate = delivery.toLocaleString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: '2-digit'
-            }).replace(/\//g, '-');
-            let offerDiscount = 0 ;
-            let couponDiscount = 0;
-            if (couponCode) {
-                const couponData = await Coupon.findOne({ couponCode: couponCode });
-                couponDiscount = couponData? couponData.offerPrice:0;
-                if(couponData){
-                    const isCouponUsed = couponData.usedUsers.some(coupon=>coupon.userId.equals(req.session.user_id));
-                    if(!isCouponUsed){
-                        couponData.usedUsers.push({ userId: req.session.user_id,status:true});
-                        await couponData.save();
-                    }
-                 }              
-
+        const date = new Date();
+        const delivery = new Date(date.getTime() + 10 * 24 * 60 * 60 * 1000);
+        const deliveryDate = delivery.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: '2-digit'
+        }).replace(/\//g, '-');
+        let offerDiscount = 0;
+        let couponDiscount = 0;
+        if (couponCode) {
+            const couponData = await Coupon.findOne({ couponCode: couponCode });
+            couponDiscount = couponData ? couponData.offerPrice : 0;
+            
+            if (couponData) {
+                const isCouponUsed = couponData.usedUsers.some(coupon => coupon.userId.equals(req.session.user_id));
+                if (!isCouponUsed) {
+                    couponData.usedUsers.push({ userId: req.session.user_id, status: true });
+                    await couponData.save();
+                }
             }
-            if( cartData){
-               productData.forEach(value=>{
-                if(value.productId.offer && value.productId.offer.status == true){
+        }
+        if (cartData) {
+            productData.forEach(value => {
+                if (value.productId.offer && value.productId.offer.status == true) {
                     const offer = value.productId.offer.offerPrice;
                     const productPrice = value.productPrice * value.quantity;
-                    const offerPrice = (productPrice * offer)/100;
-                    offerDiscount += offerPrice
+                    const offerPrice = (productPrice * offer) / 100;
+                    offerDiscount += offerPrice;
                 }
-               })
+            });
+        }
+
+        if (shippingMethod === 'Wallet') {
+            const walletData = await Wallet.findOne({ userId: req.session.user_id });
+            console.log('walletData:', walletData.walletAmount);
+            if (walletData.walletAmount < subTotal) {
+                return res.json({message: 'Your wallet does not have enough money' });
+            } else {
+                walletData.walletAmount -= subTotal;
+                console.log('subTotal:', subTotal);
+                await walletData.save();
             }
+        }
+
         let order = {
             userId: userId,
             delivery_address: address,
             user_name: name,
-            total_amount: subTotal,
+            total_amount: subTotal-couponDiscount-offerDiscount,
             date: date,
             expected_delivery: deliveryDate,
             status: status,
             statusLevel: statusLevel,
             payment: shippingMethod,
             couponDiscount: couponDiscount,
-            offerDiscount : offerDiscount,
+            offerDiscount: offerDiscount,
             products: productData
         }
 
-        
-        
-        const myOrders = await Order.create(order); 
+        const myOrders = await Order.create(order);
+
+        const orderData = await Order.findOne({userId:userId});
+        const proData = orderData.products;
+        for(let i=0;i<proData.length;i++){
+            if(proData[i].status === 'placed'){
+                await Cart.deleteOne({userId:userId})
+               for(let i=0;i<cartData.products.length;i++){
+                    const productId = productData[i].productId;
+                    const quantity = productData[i].quantity
+                    await Product.updateOne({
+                        _id:productId
+                    },{
+                        $inc:{
+                            stock : -quantity
+                        }
+                    })
+                }
+            }else if(proData[i].status === 'cancelled'){
+                await Cart.deleteOne({userId:userId})
+                for(let i=0;i<cartData.products.length;i++){
+                     const productId = productData[i].productId;
+                     const quantity = productData[i].quantity
+                     await Product.updateOne({
+                         _id:productId
+                     },{
+                         $inc:{
+                             stock : quantity
+                         }
+                     })
+                 }
+            }
+            }
 
         if (shippingMethod === 'Razorpay') {
             const options = {
@@ -89,15 +132,15 @@ const placeOrder = async (req, res) => {
                 currency: 'INR',
                 receipt: 'anamikap9895@gmail.com'
             };
-            
- console.log('orddddddddddd',myOrders._id);
+
+            console.log('orddddddddddd', myOrders._id);
             razorpayInstance.orders.create(options, (err, order) => {
                 if (!err) {
                     res.status(200).json({
                         success: true,
                         msg: 'Order Created',
                         order_id: order.id,
-                        razorpayId:myOrders._id,
+                        razorpayId: myOrders._id,
                         amount: amount,
                         key_id: RAZORPAY_ID_KEY,
                         contact: '9896754325',
@@ -108,39 +151,26 @@ const placeOrder = async (req, res) => {
                     res.status(400).json({ success: false, msg: 'Something went wrong!' });
                 }
             });
-        }else if(shippingMethod == 'Wallet'){
-                   walletData =await Wallet.findOne({userId:req.session.user_id})
-                   console.log('walletData:',walletData.walletAmount);
-                    if(walletData.walletAmount && walletData.walletAmount>=subTotal){
-
-                        walletData.walletAmount = walletData.walletAmount-subTotal;
-                        console.log('subTotal:',subTotal);
-                       await walletData.save();
-                    }else{
-                        res.send({message:'Your wallet is empty'})
-                    }
-                          
+        } else {
+            res.status(200).json({ success: true, deliverySuccess: true });
         }
-    //    res.redirect('/successPage');
-            
     } catch (error) {
         console.log(error.message);
+        res.status(500).json({ success: false, msg: 'Server Error' });
     }
 };
+
 
 const verifyPayment = async(req,res)=>{
     try {
         const {paymentId,orderId,signature,order} = req.body
-        console.log('rrrrrrrrrrrrrrr',req.body);
 
         const hmac = crypto.createHmac('sha256', RAZORPAY_SECRET_KEY);
-        console.log(hmac);
         hmac.update(orderId + '|' + paymentId);
         const hmacValue = hmac.digest('hex');
         console.log(hmacValue);
 
         if (hmacValue === signature) {
-            console.log("haiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
             const orderAck = await Order.findByIdAndUpdate({_id: order}, {status: 'Paid' });
             console.log(orderAck);
             console.log('Payment verification successful.');
@@ -329,49 +359,59 @@ const returnApproval = async(req,res)=>{
 
 const salesReport = async (req, res) => {
     try {
-        // let orderData;
-        // const { startDate, endDate } = req.query;
+        let orderData;
+        const { startDate, endDate } = req.query;
 
-        // console.log('Start Date:', startDate);
-        // console.log('End Date:', endDate);
+        console.log('Start Date:', startDate);
+        console.log('End Date:', endDate);
 
-        // if (startDate && endDate) {
-        //     const start = new Date(startDate);
-        //     const end = new Date(endDate);
-        //     // Set end date to the end of the day
-        //     end.setHours(23, 59, 59, 999);
+        if (startDate && endDate) {
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            start.setHours(0, 0, 0, 0);
+            end.setHours(23, 59, 59, 999);
 
-        //     console.log('Converted Start Date:', start);
-        //     console.log('Converted End Date:', end);
+            console.log('Converted Start Date:', start);
+            console.log('Converted End Date:', end);
 
-        //     orderData = await Order.find({
-        //         date: {
-        //             $gte: start,
-        //             $lte: end
-        //         }
-        //     }).populate('products.productId').populate('userId');
+            orderData = await Order.find({
+                date: {
+                    $gte: start,
+                    $lte: end
+                }
+            }).populate('products.productId').populate('userId');
+        console.log('Order Data:', orderData);
 
-        // } else {
-          let  orderData = await Order.find().populate('products.productId').populate('userId');
-        // }
-
+        } else {
+           orderData = await Order.find().populate('products.productId').populate('userId');
+        }
+        let count = 0;
         let grandTotal = 0;
         let couponTotal = 0;
         let offerTotal = 0;
+        
+        const DeliveredOrders = orderData.filter(order => 
+          order.products.every(product => product.status === 'Delivered')
+        );
+        
+        console.log('delivere', DeliveredOrders);
+        
+        if (DeliveredOrders.length > 0) {
+          count = DeliveredOrders.length;
+        
+          DeliveredOrders.forEach(order => {
+            grandTotal += order.total_amount;
+            couponTotal += order.couponDiscount;
+            offerTotal += order.offerDiscount;
+          });
+        }
+        
+        console.log('Count:', count);
+        console.log('Grand Total:', grandTotal);
+        console.log('Coupon Total:', couponTotal);
+        console.log('Offer Total:', offerTotal);
 
-        orderData.forEach(order => {
-            const DeliveredOrder = order.products.every(product => product.status === 'Delivered');
-
-            if (DeliveredOrder) {
-                grandTotal += order.total_amount;
-                couponTotal += order.couponDiscount;
-                offerTotal += order.offerDiscount;
-            }
-        });
-
-
-        console.log('Order Data:', orderData);
-        res.render('salesReport', { orderData, grandTotal, couponTotal, offerTotal });
+        res.render('salesReport', { orderData, grandTotal, couponTotal, offerTotal,count });
     } catch (error) {
         console.log(error.message);
     }

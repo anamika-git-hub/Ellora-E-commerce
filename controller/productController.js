@@ -291,10 +291,10 @@ const filterProduct = async (req, res) => {
             categoryData = await category.find({name:{$in:selectedCategories}})
 
               const ids = categoryData.filter(doc => doc._id)
-           productData = await products.find({categories:{$in:ids}}).populate({ path: 'categories', model: 'categories' })
+           productData = await products.find({categories:{$in:ids}}).populate({ path: 'categories', model: 'categories' }).populate('offer')
         } else {
 
-            productData = await products.find().populate({ path: 'categories', model: 'categories' });
+            productData = await products.find().populate({ path: 'categories', model: 'categories' }).populate('offer');
         }
         
         res.json({ success: true, data: productData });
@@ -304,11 +304,6 @@ const filterProduct = async (req, res) => {
         res.render("404");
     }
 }
-
-
-
-
-
 // const productPage = async(req,res) => {
 //     try {
 //         console.log(req.query);

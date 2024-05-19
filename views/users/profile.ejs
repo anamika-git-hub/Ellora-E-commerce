@@ -161,9 +161,6 @@
                                 <li class=" active">
                                     <a href="/profile">Profile</a>
                                 </li>
-                                <li>
-                                    <a href="/login">Login</a>
-                                </li>
                             </ul><!-- End .menu -->
                         </nav><!-- End .main-nav -->
                     </div><!-- End .header-left -->
@@ -392,14 +389,15 @@
 								    </div><!-- .End .tab-pane -->
 
 								    <div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
+                                       
 								    	<p>The following addresses will be used on the checkout page by default.</p>
                                        
                                         <a href="" id="showAddAddress" aria-controls="addAddress" aria-selected="false">Add address <i class="icon-edit"></i></a></p>
-								    	<div class="row">
+								    	<div class="row"  >
                                             <%  if(userData && userData.addresses.length>0){ %>
                                                 
                                               <%  userData.addresses.forEach((value)=>{%>
-                                                <div  class="col-lg-6">
+                                                <div  class="col-lg-6" >
                                                     
                                                     <div id="cardId<%= value._id %>" class="card card-dashboard">
                                                         <div class="card-body">
@@ -422,6 +420,9 @@
                                                 </div><!-- End .col-lg-6 -->
                                           
                                                 <div id="editAddress<%=value._id%>"  style="display: none;" >
+                                                    <div class="col-lg-12 text-right">
+                                                        <a onclick="toAddressList('<%=value._id%>')" href="#tab-address" id="toAddressList">back</a>
+                                                        </div>
                                                     <form action="/editAddress" method="post">
                                                     <div>
                                                         <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
@@ -488,62 +489,66 @@
 								    		</div><!-- End .col-lg-6 -->
                                             <% } %>
 								    	</div><!-- End .row -->
+                                    
 
                                         <div class="row" id="addAddress"  style="display: none;" >
+                                            <div class="col-lg-12 text-right">
+                                                <a onclick="toAddressLists()" href="#tab-address" id="toAddressList">back</a>
+                                                </div>
                                             <form action="/addAddress" method="post">
-                                            <div class="col-lg-9">
-                                                <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
-                              
-            
+                                                <div class="col-lg-9">
+                                                    <h2 class="checkout-title">Billing Details</h2>
                                                     <label>User Name </label>
                                                     <input name="name" type="text" class="form-control">
-            
+                                            
                                                     <label>Country </label>
                                                     <input name="country" type="text" class="form-control" required>
-            
+                                            
                                                     <label>Street address </label>
                                                     <input name="streetName" type="text" class="form-control" placeholder="House number and Street name" required>
                                                     <input name="landMark" type="text" class="form-control" placeholder="LandMark" required>
-            
+                                            
                                                     <div class="row">
                                                         <div class="col-sm-6">
                                                             <label>Town / City </label>
                                                             <input name="town" type="text" class="form-control" required>
-                                                        </div><!-- End .col-sm-6 -->
-            
+                                                        </div>
+                                            
                                                         <div class="col-sm-6">
                                                             <label>State / County </label>
                                                             <input name="state" type="text" class="form-control" required>
-                                                        </div><!-- End .col-sm-6 -->
-                                                    </div><!-- End .row -->
-            
+                                                        </div>
+                                                    </div>
+                                            
                                                     <div class="row">
                                                         <div class="col-sm-6">
                                                             <label>Postcode / ZIP </label>
                                                             <input name="pin" type="text" class="form-control" required>
-                                                        </div><!-- End .col-sm-6 -->
-            
+                                                        </div>
+                                            
                                                         <div class="col-sm-6">
                                                             <label>Phone </label>
                                                             <input name="phone" type="tel" class="form-control" required>
-                                                        </div><!-- End .col-sm-6 -->
-                                                    </div><!-- End .row -->
+                                                        </div>
+                                                    </div>
                                                     
                                                     <label>Email </label>
                                                     <input name="email" type="email" class="form-control" required>
-
+                                            
                                                     <button type="submit" class="btn btn-outline-primary-2">
                                                         <span>Add address</span>
                                                         <i class="icon-long-arrow-right"></i>
                                                     </button>
-                                            </div><!-- End .col-lg-9 -->
+                                                </div>
                                             </form>
+                                            
                                         </div>
+                                   
 								    </div><!-- .End .tab-pane -->
 
-								    <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
-                                      
+                                    <!------------------------------------------------------- Account Details  ---------------------------------------->
 
+								    <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
                                         <div id="accountDetails">
                                             <div class="card mb-3">
                                                 <div class="card-body">
@@ -571,6 +576,9 @@
                                             
                                             
                                          <div id="walletHistory" style="display: none;">
+                                            <div class="col-lg-12 text-right">
+                                                <a onclick="toaccountDetails()" href="#tab-account" id="">back</a>
+                                                </div>
                                             <div class="table-responsive">
                                                 <table id="tableId" class="table table-hover">
                                                     <thead >
@@ -610,7 +618,9 @@
                                        
                                         
                                         <div id="editDetails" style="display: none;">
-                                            <a href="#accountDetails" class="btn btn-outline-primary">Back</a>
+                                            <div class="col-lg-12 text-right">
+                                                <a onclick="toaccountDetail()" href="#tab-account" id="">back</a>
+                                                </div>
 
 								    	<form action="/profile" method="post" >
                                            
@@ -666,8 +676,15 @@
                                                         </div>
                                                         <div class="code text-center mt-4">
                                                             <span>Use code: <%= coupon.couponCode %></span>
-                                                            <button class="copy-btn" data-coupon-code="<%= coupon.couponCode %>">Copy Code</button>
+                                                            <% const usedUser = coupon.usedUsers.find(user => user.userId.toString() === userId) %>
+                                                            <% if (usedUser && Boolean(usedUser.status)) { %>
+                                                                <button class="copy-btn" data-coupon-code="<%= coupon.couponCode %>" disabled>Copy Code</button>
+                                                            <% } else { %>
+                                                                <button class="copy-btn" data-coupon-code="<%= coupon.couponCode %>">Copy Code</button>
+                                                            <% } %>
                                                         </div>
+                                                        
+                                                        
                                                     </div>
                                                 </div>
                                             <%}) %>     
@@ -1104,10 +1121,25 @@
         $(`#editDetails`).show();
     }
 </script>
+
+<script>
+    function toaccountDetail(){
+        $('#editDetails').hide();
+        $(`#accountDetails`).show();
+    }
+</script>
+
 <script>
     function showWalletHistory(){
         $('#accountDetails').hide();
         $('#walletHistory').show();
+    }
+</script>
+
+<script>
+    function toaccountDetails(){
+        $('#walletHistory').hide();
+        $(`#accountDetails`).show();
     }
 </script>
 <script>
@@ -1124,15 +1156,26 @@
     }
 </script>
 
+<script>
+    function toAddressList(id){
+        $(`#editAddress${id}`).hide();
+        $('.col-lg-6').show();
+    }
+</script>
+<script>
+    function toAddressLists(){
+        $(`#addAddress`).hide();
+        $('.card-dashboard').show();
+    }
+</script>
+
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     window.addEventListener('DOMContentLoaded', (event) => {
-        // Check if there's a hash in the URL
         if (window.location.hash) {
-            // Scroll to the element with the corresponding ID
             var element = document.querySelector(window.location.hash);
             if (element) {
                 element.scrollIntoView();
@@ -1141,42 +1184,48 @@
     });
     </script>
     
-<script>
-    document.getElementById('addAddressButton').addEventListener('click', async function(event) {
-        event.preventDefault(); 
-
-        try {
-            const response = await axios.post('/addAddress');
-            if  (response.data.success == true) {
-                      Swal.fire({
-                          position: "center",
-                          title: "Success!",
-                         text: "Address added successfully",
-                         icon: "success", 
-                         buttons: false
-                      });
-                  
-            } else {
-                console.error('Error:', response.data.error);
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Failed to add address.',
-                    icon: 'error'
-                });
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            Swal.fire({
-                title: 'Error!',
-                text: 'Failed to add address.',
-                icon: 'error'
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form[action="/editAddress"]');
+            
+            form.addEventListener('submit', async function(event) {
+                event.preventDefault(); 
+    
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
+    
+                try {
+                    const response = await axios.put('/editAddress', data);
+                    console.log(response.data);
+    
+                    if (response.data.success === true) {
+                        Swal.fire({
+                            position: "center",
+                            title: "Success!",
+                            text: "Address edited successfully",
+                            icon: "success",
+                            buttons: false
+                        });
+                    } else {
+                        console.error('Error:', response.data.error);
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Failed to edit address.',
+                            icon: 'error'
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Failed to edit address.',
+                        icon: 'error'
+                    });
+                }
             });
-        }
-    });
-</script>
-
-
-
+        });
+    </script>
+    
 
 <script>
     async function deleteAddress(addressId) {
@@ -1260,9 +1309,6 @@
         })
     }
 </script>
-
-
-
 
 <script>
     function cancelOrder(tag, productId, orderId){

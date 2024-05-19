@@ -3,43 +3,45 @@ const Cart = require('../models/cartModel');
 const Product = require('../models/productsModel');
 const Wishlist = require('../models/wishlistModel');
 const Offer = require('../models/offerModel');
-
-const loadCart = async(req,res)=>{
-    try {
-        if(!req.session.user_id){
-            req.flash('cart','Please login to get our service')
-            res.json({login:true});
-           return res.redirect('/login')
-        }else{
-
-            const userId = req.session.user_id;
-            const cartData = await Cart.findOne({userId:userId}).populate('userId').populate({path:'products.productId',populate:{ path:'offer' }});
-            const wishlistData = await Wishlist.findOne({userId:req.session.user_id}).populate('userId').populate('products.productId');
-
-            let subTotal = 0;
-            let totalAmount = 0 ;
-               cartData.products.forEach(value=>{
-                  
-                if(value.productId.offer && value.productId.offer.status == true){
-                    const offer = value.productId.offer.offerPrice;
-                    totalAmount = value.productPrice * value.quantity
-                    totalAmount  = totalAmount-(totalAmount * offer)/100;
-                    value.totalPrice = totalAmount
-                    subTotal += totalAmount;
-                }else{
-                    totalAmount = value.productPrice * value.quantity
-                    value.totalPrice = totalAmount
-                    subTotal += totalAmount;
-                }
-               })  
-             await cartData.save()
-                res.render('cart',{cartData, subTotal,wishlistData});
+    const loadCart = async (req, res) => {
+        try {
+            if (!req.session.user_id) {
+                req.flash('cart', 'Please login to get our service');
+                return res.redirect('/login');
             }
+    
+            const userId = req.session.user_id;
+            const cartData = await Cart.findOne({ userId: userId }).populate('userId').populate({ path: 'products.productId', populate: { path: 'offer' } });
+            const wishlistData = await Wishlist.findOne({ userId: userId }).populate('userId').populate('products.productId');
+    
+            let subTotal = 0;
+    
+            if (cartData && cartData.products && cartData.products.length > 0) {
+                cartData.products.forEach(value => {
+                    if (value.productId.offer && value.productId.offer.status && new Date(value.productId.offer.expiredAt) > new Date()) {
+                        const offer = value.productId.offer.offerPrice;
+                        const discountedPrice = value.productId.price - (value.productId.price * offer) / 100;
+                        value.productPrice = discountedPrice;
+                        value.totalPrice = discountedPrice * value.quantity;
+                        subTotal += value.totalPrice;
+                    } else {
+                        value.productPrice = value.productId.price
+                        value.totalPrice = value.productId.price * value.quantity;
+                        subTotal += value.totalPrice;
+                    }
+                });
+    
+                await cartData.save();
+            }
+    
+            res.render('cart', { cartData, subTotal, wishlistData });
+        } catch (error) {
+            console.error('Error loading cart:', error.message);
+            res.status(500).send('Internal Server Error');
+        }
+    };
+    
 
-    }catch (error){
-        console.log(error.message);
-    }
-}
 
 const addtoCart = async(req,res)=>{
     try {
@@ -107,16 +109,7 @@ const updatequantity = async(req,res)=>{
         
         products.quantity=productQuantity
            
-            if(products.productId.offer && products.productId.offer.status === true){
-                const offer = products.productId.offer.offerPrice;
-                products.totalPrice = products.productPrice*productQuantity;
-                products.totalPrice  = products.totalPrice -(products.totalPrice * offer)/100;
-
-            }else{
-                products.totalPrice  = products.productPrice*productQuantity
-            }
-     
-
+        products.totalPrice = products.productPrice * productQuantity
        const subTotal = cartData.products.reduce((total,products)=>total + products.totalPrice,0)
        
         await cartData.save();
@@ -152,9 +145,10 @@ const loadCheckOut = async(req,res)=>{
         res.redirect('/cart'); 
       }else{
         const subTotal = req.flash('subTotal')[0]||total;
-        const discoundAmount = req.flash('discoundAmount')[0]|| 0;
-        const totalAfterDiscound =  req.flash('totalAfterDiscound')[0] || subTotal;
-        res.render('checkout',{cartData,subTotal,addresses:addresses,totalAfterDiscound,wishlistData,discoundAmount});
+        const discountAmount = req.flash('discountAmount')[0]|| 0;
+        const totalAfterDiscount =  req.flash('totalAfterDiscount')[0] || subTotal;
+        const errorMessages = req.flash('error');
+        res.render('checkout',{cartData,subTotal,addresses:addresses,totalAfterDiscount,wishlistData,discountAmount,errorMessages});
       }
      
    } catch (error) {

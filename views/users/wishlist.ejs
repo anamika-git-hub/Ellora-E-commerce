@@ -30,6 +30,20 @@
 </head>
 
 <body>
+    <style>
+        .swal2-cancel.cancel-button-class {
+    color: #333;
+    background-color: transparent; 
+    border-style: solid;
+    border-width: 1px;
+    border-color: #c96;
+}
+.swal2-confirm.confirm-button-class { 
+    border-style: solid;
+    border-width: 1px;
+    border-color: #c96;
+}
+    </style>
     <div class="page-wrapper">
         <header class="header">
             <div class="header-top">
@@ -197,7 +211,7 @@
                                     <% if(value.productId.stock >0){%>
                                         <td class="stock-col"><span class="in-stock">In stock</span></td>
                                         <td class="action-col">
-                                            <button class="btn btn-block btn-outline-primary-2"><i class="icon-cart-plus"></i>Add to Cart</button>
+                                            <button  onclick="addtoCart('<%=value.productId._id%>')" class="btn btn-block btn-outline-primary-2"><i class="icon-cart-plus"></i>Add to Cart</button>
                                         </td>
                                     <%}else{%>
                                         <td class="stock-col"><span class="out-of-stock">Out of stock</span></td>
@@ -588,6 +602,7 @@
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
      <script>
         async function deleteWishlistItem(index,productId){
             
@@ -601,6 +616,77 @@
             })
         }
      </script>
+     <script>
+        async function addtoCart (productId){
+            console.log('pro',productId);
+          productQuantity = 1;
+              axios.post('/cart', { productQuantity,productId })
+                  .then(function(response){
+                      console.log(response.data);
+                      if (response.data.login) {
+                          Swal.fire({
+                              icon: "warning",
+                              title: "Please Login",
+                              confirmButtonColor: "#c96",
+                              confirmButtonText: "Login",
+                              showCancelButton: true,
+                              cancelButtonColor: "#d33",
+                              text: response.data.message,
+                          }).then((result) => {
+                              if (result.isConfirmed) {
+                                  window.location.href = "/login";
+                              }
+                          });
+                      } else if (response.data.success == true) {
+                          Swal.fire({
+                              position: "center",
+                              title: "Success!",
+                              text: "Item added to Cart",
+                              icon: "success",
+                              showConfirmButton: true,
+                              confirmButtonColor: "#c96",
+                              confirmButtonText: "View cart",
+                              showCancelButton: true,
+                              cancelButtonColor: "#fff",
+                              cancelButtonText: "Continue Shopping",
+                              customClass: {
+                                  cancelButton: 'cancel-button-class',
+                                  confirmButton:'confirm-button-class'
+                              }
+                          }).then((result) => {
+                              if (result.isConfirmed) {
+                                  window.location.href = "/cart";
+                              }
+                          });
+                      } else if(response.data.success == false){
+                          Swal.fire({
+                              position: "center",
+                              title: "Failed!",
+                              text: "This item already in the cart",
+                              icon: "info",
+                              showConfirmButton: true,
+                              confirmButtonColor: "#c96",
+                              confirmButtonText: "View cart",
+                              showCancelButton: true,
+                              cancelButtonColor: "#fff",
+                              cancelButtonText: "Continue Shopping",
+                              customClass: {
+                                  cancelButton: 'cancel-button-class',
+                                  confirmButton:'confirm-button-class'
+                              }
+                          }).then((result) => {
+                              if (result.isConfirmed) {
+                                  window.location.href = "/cart";
+                              }else{
+                                window.location.href = "/products";
+                              }
+                          });
+                      }
+                  }).catch(function(error){
+                      console.error('Error:', error);
+              });
+          }
+      </script>
 </body>
 
 

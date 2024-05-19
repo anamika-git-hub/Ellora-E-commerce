@@ -34,7 +34,6 @@ const addOffer = async(req,res)=>{
         const value = await joiOfferSchema.validateAsync(req.body)
         const{name,ValidityDate,offerPrice,offerTypeName,offerType} = value
         const currentDate = new Date();
-       
         const offerExpiredDate = new Date(ValidityDate)
         const offerData = await Offer.create({
             name:name,

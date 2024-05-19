@@ -22,8 +22,8 @@ const wishlistController = require('../controller/wishlistController');
 const couponController = require('../controller/couponController')
 
 userRouter.get('/',userController.loadHome);
-userRouter.get('/login',isLogout,userController.loadLogin);
-userRouter.get('/signUp',isLogout,userController.loadSignup);
+userRouter.get('/login',userController.loadLogin);
+userRouter.get('/signUp',userController.loadSignup);
 userRouter.post('/signUp',userController.insertUser);
 
 userRouter.get('/otp',userController.loadOtp);
@@ -34,17 +34,17 @@ userRouter.post('/login',userController.verifyLogin);
 userRouter.get('/google',userController.googleAuthentication);
 userRouter.get('/logout',isLogin,userController.loadLogout);
 
-userRouter.get('/contact',isLogin,userController.loadContact);
-userRouter.get('/about',isLogin,userController.loadAbout);
+userRouter.get('/contact',userController.loadContact);
+userRouter.get('/about',userController.loadAbout);
 
 userRouter.get('/profile',isLogin,userController.loadProfile);
 userRouter.put('/profile',isLogin,userController.editProfile);
 userRouter.post('/profile',isLogin,userController.resetPasswithOld);
 userRouter.post('/addAddress',isLogin,userController.addAddress);
-userRouter.post('/editAddress',isLogin,userController.editAddress);
+userRouter.put('/editAddress',isLogin,userController.editAddress);
 userRouter.post('/deleteAddress',isLogin,userController.deleteAddress);
 
-userRouter.get('/products',isLogin,productController.productPage);
+userRouter.get('/products',productController.productPage);
 userRouter.get('/filterProduct',isLogin,productController.filterProduct);
 userRouter.get('/productDetail',isLogin,productController.productDetails);
 

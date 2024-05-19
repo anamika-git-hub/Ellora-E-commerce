@@ -296,6 +296,7 @@
                                                 
                                                 <td class="text-end">Rs.<%= value.totalPrice%></td>
                                             </tr>
+                                            <%}) %>
                                             <tr class="justify-content  ">
                                                 <td colspan="6">
                                                     <article class="float-end">
@@ -304,11 +305,11 @@
                                                             <dd></dd>
                                                         </dl>
                                                         <dl class="dlist">
-                                                            <dt>Coupon descount:</dt>
+                                                            <dt>Coupon discount:</dt>
                                                             <dd>Rs.<%= order.couponDiscount.toFixed(2) %></dd>
                                                         </dl>
                                                         <dl class="dlist">
-                                                            <dt>Offer descount:</dt>
+                                                            <dt>Offer discount:</dt>
                                                             <dd>Rs.<%= order.offerDiscount.toFixed(2) %></dd>
                                                         </dl>
                                                         <dl class="dlist">
@@ -319,7 +320,7 @@
                                                     </article>
                                                 </td>
                                             </tr>
-                                            <%}) %>
+                                           
                                         </tbody>
                                     </table>
                                     

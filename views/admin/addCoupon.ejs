@@ -202,29 +202,29 @@
                             <div class="card-body">
                                 <div class="mb-4">
                                     <label for="product_title"  class="form-label">Coupon name</label>
-                                    <input type="text" name="name" placeholder="Type here" class="form-control" id="product_title" />
+                                    <input type="text" name="name" value="<%= formData.name %>" placeholder="Type here" class="form-control" id="product_title" />
                                     <span class="error-message" style="color: red;"><%= messages.name %></span>
                                 </div>
                                 <div class="row gx-3">
                                     <div class="col-md-4 mb-3">
                                         <label for="product_sku" class="form-label">Validity Date</label>
-                                        <input type="date" name="expiryDate" value="2021-05-02" class="form-control" />
+                                        <input type="date" name="expiryDate" value="<%= formData.expiryDate %>" class="form-control" />
                                         <span class="error-message" style="color: red;"><%= messages.expiryDate %></span>
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="product_color" class="form-label">Offer Price</label>
-                                        <input type="text" name="offerPrice" placeholder="Type here" class="form-control" id="product_color" />
+                                        <input type="text" name="offerPrice" value="<%= formData.offerPrice %>" placeholder="Type here" class="form-control" id="product_color" />
                                         <span class="error-message" style="color: red;"><%= messages.offerPrice %></span>
                                     </div>
                                     <div class="col-md-4 mb-3">
                                         <label for="product_size" class="form-label">Minimum limit</label>
-                                        <input type="text" name="minimumLimit" placeholder="Type here" class="form-control" id="product_size" />
+                                        <input type="text" name="minimumLimit" value="<%= formData.minimumLimit %>" placeholder="Type here" class="form-control" id="product_size" />
                                         <span class="error-message" style="color: red;"><%= messages.minimumLimit %></span>
                                     </div>
                                 </div>
                                 <div class="mb-4">
                                     <label for="product_brand" class="form-label">Coupon code</label>
-                                    <input  placeholder="Type here" name="couponCode" class="form-control" id="product_brand" />
+                                    <input  placeholder="Type here" name="couponCode" value="<%= formData.couponCode %>" class="form-control" id="product_brand" />
                                     <span class="error-message" style="color: red;"><%= messages.couponCode %></span>
                                 </div>
                             </div>

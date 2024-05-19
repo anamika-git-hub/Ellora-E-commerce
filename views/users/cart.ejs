@@ -127,9 +127,11 @@
                         <div class="dropdown cart-dropdown">
                             <a href="/wishlist" class="dropdown-toggle" role="button">
                                 <i class="icon-heart-o"></i>
-                                <% if(wishlistData && wishlistData.products.length>0){ %>
+                                <% if(cartData && wishlistData && wishlistData.products.length>0){ %>
                                     <span class="cart-count"><%= wishlistData.products.length %></span>
-                                <% } %>
+                                <% }else{%>
+                                    
+                                    <%} %>
                             </a>
                         </div><!-- End .cart-dropdown -->
                         <div class="dropdown cart-dropdown">
@@ -137,7 +139,8 @@
                                 <i class="icon-shopping-cart"></i>
                                 <% if(cartData && cartData.products.length>0){%>
                                     <span class="cart-count"><%= cartData.products.length %></span>
-                                <%} %>
+                                <%}else{%>
+                                    <%} %>
                             </a>
                         </div><!-- End .cart-dropdown -->
                     </div><!-- End .header-right -->
@@ -197,7 +200,7 @@
                                                         </h3><!-- End .product-title -->
                                                     </div><!-- End .product -->
                                                 </td>
-                                                <td  class="price-col">Rs.<%= value.productPrice %></td>
+                                                <td  class="price-col">Rs.<%= value.productPrice.toFixed(2) %></td>
                                                 <td class="quantity-col">
                                                     <div class="cart-product-quantity">
                                                         <input type="number"  class="form-control" onchange="addToCart(this,'<%= value.productId._id %>')" value="<%= value.quantity %>"  min="1" max="<%= value.productId.stock %>" step="1" data-decimals="0" required>
@@ -665,7 +668,7 @@
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
     
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
   async function addToCart (tag,productId){
@@ -700,19 +703,31 @@
 </script>
 
 <script>
-  async function deleteCartItem (index,productId){
+    async function deleteCartItem(index, productId) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, remove it!',
+            cancelButtonText: 'No, keep it'
+        }).then((result) => {
+            if (result.isConfirmed) {
                 const element = document.getElementById(`cartDelete${index}`);
-                 element.remove();
-                 window.location.reload();
-        axios.post('/deleteCartItem', { productId })
-            .then(function(response){
-                console.log(response.data);
-                
-            }).catch(function(error){
-                console.error('Error:', error);
+                element.remove();
+                axios.post('/deleteCartItem', { productId })
+                    .then(function(response) {
+                        console.log(response.data);
+                        window.location.reload();
+                    }).catch(function(error) {
+                        console.error('Error:', error);
+                    });
+            }
         });
     }
-</script>
+  </script>
 
 
 </body>

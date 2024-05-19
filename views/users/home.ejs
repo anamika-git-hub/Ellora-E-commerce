@@ -47,11 +47,16 @@
                     </div><!-- End .header-left -->
 
                     <div class="header-right">
-                        <a href="/wishlist" class="wishlist-link">
-                            <i class="icon-heart-o"></i>
-                            <span class="wishlist-count">3</span>
-                            <span class="wishlist-txt">My Wishlist</span>
-                        </a>
+                        <% if(wishlistData && wishlistData.products.length>0){%>
+                            <a href="/wishlist" class="wishlist-link">
+                                <i class="icon-heart-o"></i>
+                                <span class="wishlist-count"><%= wishlistData.products.length %></span>
+                            </a>
+                            <%}else{%>
+                                <a href="/login" class="wishlist-link">
+                                    <i class="icon-heart-o"></i>
+                                <%} %>
+                       
 
                         <div class="dropdown cart-dropdown">
                             <% if(cartData && cartData.products.length >0){%>
@@ -61,7 +66,7 @@
                                     
                             </a>
                             <%}else{%>
-                                <a href="#" class="dropdown-toggle" role="button" >
+                                <a href="/login" class="dropdown-toggle" role="button" >
                                     <i class="icon-shopping-cart"></i>
                                 </a>
                                 <%} %>
@@ -89,13 +94,17 @@
                                 <li>
                                     <a href="/contact">Contact</a>
                                 </li>
+                                <% if(userId){%>
                                 <li>
                                     <a href="/profile">Profile</a>
                                 </li>
-                                <li>
-                                    <a href="/login">Login</a>
-
-                                </li>
+                                    <%}else{%>
+                                        <li>
+                                            <a href="/login">Login</a>
+            
+                                        </li>
+                                        <%} %>
+                    
                             </ul><!-- End .menu -->
                         </nav><!-- End .main-nav -->
 

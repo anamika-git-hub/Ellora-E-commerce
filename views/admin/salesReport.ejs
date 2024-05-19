@@ -254,13 +254,12 @@
                                           <% if(product.status === 'Delivered'){%>
                                             
                                     <tr>
-                                        <input type="hidden" name="productId" value="<%= order.productId %>">
                                         <td><%=order._id.toString().toUpperCase().slice(-6) %></td>
                                         <td><b><%= order.user_name %></b></td>
                                         <td><%= new Date(order.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %></td>
                                         <td><%= order.offerDiscount %></td>
                                         <td><%= order.couponDiscount%></td>
-                                        <td></td>
+                                        <td><%= order.total_amount.toFixed(2) %></td>
                                         <td><%= order.payment%></td>
                                     </tr>
                                     <%} %> 
@@ -270,22 +269,22 @@
                                     <tr>
                                        <td colspan="5"></td>
                                         <td>Total Order Count</td>
-                                        <td><%= orderData.length %></td>
+                                        <td><%=count %></td>
                                     </tr>
                                      <tr>
                                         <td colspan="5"></td>
                                          <td>Total Offer Amount</td>
-                                         <td><%= offerTotal.toFixed(2)%></td>
+                                         <td><%= offerTotal %></td>
                                      </tr>
                                      <tr>
                                         <td colspan="5"></td>
                                          <td>Total Coupon Amount</td>
-                                         <td><%=couponTotal.toFixed(2)%></td>
+                                         <td><%= couponTotal%></td>
                                      </tr>
                                      <tr>
                                          <td colspan="5"></td>
                                           <td>Total Order Amount</td>
-                                          <td><%=grandTotal.toFixed(2) %></td>
+                                          <td><%=grandTotal%></td>
                                       </tr>
 
                                 </tbody>
@@ -409,10 +408,6 @@
     
 }
 </script>
-
-
-
-
         <!-- <script>
             function handleFilterChange() {
     const filter = document.getElementById("filter").value;

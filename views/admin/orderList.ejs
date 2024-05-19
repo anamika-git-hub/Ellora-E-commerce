@@ -232,7 +232,7 @@
                                         <td><%=order._id.toString().toUpperCase().slice(-6) %></td>
                                         <td><b><%= order.user_name %></b></td>
                                         <td><%= order.userId.email %></td>
-                                        <td>$<%= order.total_amount %></td>
+                                        <td>Rs.<%= order.total_amount.toFixed(2) %></td>
                                         <td><span class="badge rounded-pill alert-warning"><%=value.status %></span></td>
                                         <td><%= new Date(order.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %></td>
                                         <td class="text-end">

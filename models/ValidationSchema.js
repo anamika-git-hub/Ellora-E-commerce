@@ -37,7 +37,7 @@ const joiAddressSchema = joi.object({
     phone : joi.string().length(10).pattern(/^[0-9]+$/).required(),
     email : joi.string().email().required()
 
-})
+}).unknown(true);
 
 const joiCategorySchema = joi.object({
   name:joi.string().required(),

@@ -39,7 +39,6 @@ const couponModel = new mongoose.Schema({
     }],
     is_listed:{
         type:Boolean,
-        required:true,
         default:true
     }
 })

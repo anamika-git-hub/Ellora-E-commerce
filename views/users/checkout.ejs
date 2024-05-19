@@ -269,10 +269,21 @@
             	<div class="checkout">
 	                <div class="container">
             			<div class="checkout-discount">
-            				<form action="/applyCoupon" method="post">
-        						<input type="text" name="couponCode" class="form-control" required id="checkout-discount-input">
-            					<label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
-            				</form>
+                            <form action="/applyCoupon" method="post">
+                                <input type="text" name="couponCode" class="form-control" required id="checkout-discount-input">
+                                <label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
+                                
+                                <!-- Error messages will be displayed below the input field -->
+                                <% if (errorMessages.length > 0) { %>
+                                    <div class="" style="background-color: transparent; color: red;">
+                                        <% errorMessages.forEach(function(message) { %>
+                                            <p><%= message %></p>
+                                        <% }) %>
+                                    </div>
+                                <% } %>
+                            </form>
+                            
+                            
             			</div><!-- End .checkout-discount -->
 
                        
@@ -379,7 +390,7 @@
                                                     <tbody>
                                                         <tr class="summary-subtotal">
                                                             <td>Subtotal:</td>
-                                                            <td >$<%= subTotal %></td>
+                                                            <td >Rs.<%= subTotal %></td>
                                                         </tr><!-- End .summary-subtotal -->
                                                         <tr>
                                                             <td>Shipping:</td>
@@ -387,11 +398,11 @@
                                                         </tr>
                                                         <tr>
                                                             <td>Offer Amount:</td>
-                                                            <td>Rs.<%= discoundAmount %></td>
+                                                            <td>Rs.<%= discountAmount %></td>
                                                         </tr>
                                                         <tr class="summary-total">
                                                             <td>Total:</td>
-                                                            <td>$<%= totalAfterDiscound %></td>
+                                                            <td>Rs.<%= totalAfterDiscount %></td>
                                                         </tr><!-- End .summary-total -->
                                                     </tbody>
                                                 <%}%>
@@ -473,7 +484,7 @@
                                                     </div><!-- End .card -->
                                                 </div><!-- End .accordion -->
         
-                                                <button onclick="placeOrder('<%= totalAfterDiscound %>')" type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+                                                <button onclick="placeOrder('<%= totalAfterDiscount %>')" type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
                                                     <span class="btn-text">Place Order</span>
                                                     <span class="btn-hover-text">Place Order</span>
                                                 </button>
@@ -884,52 +895,43 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script>
-    async function placeOrder(subTotal){
-         const shippingAddress = document.querySelector('input[name="shippingAddress"]:checked').value;
-         const selectedPaymentMethod = document.querySelector('.accordion-summary .card-header a[aria-expanded="true"]');
-            const shippingMethod = selectedPaymentMethod.innerText.trim();
-          axios.post('/placeOrder',{shippingAddress ,subTotal,shippingMethod})
-              .then(function(res){
-                //   console.log(res);
-                  if(res.data.success){
-                    console.log('resssss',res.data);
+async function placeOrder(subTotal) {
+    const shippingAddress = document.querySelector('input[name="shippingAddress"]:checked').value;
+    const selectedPaymentMethod = document.querySelector('.accordion-summary .card-header a[aria-expanded="true"]');
+    const shippingMethod = selectedPaymentMethod.innerText.trim();
+    axios.post('/placeOrder', { shippingAddress, subTotal, shippingMethod })
+        .then(function (res) {
+            if (res.data.success) {
+                if (shippingMethod === 'Razorpay') {
                     var options = {
-						"key": ""+res.data.key_id+"",
-						"amount": ""+res.data.amount+"",
-						"currency": "INR",
-						// "image": "https://dummyimage.com/600x400/000/fff",
-						"order_id": ""+res.data.order_id+"",
-						"handler": function (response){
-                            console.log('res',response);
-                            verifyPayment(response.razorpay_order_id,response.razorpay_payment_id,response.razorpay_signature,res.data.razorpayId)
-							// alert("Payment Succeeded");
-                            //                 window.location='/successPage'
-
-							// window.open("/successPage","_self")
-                            
-						},
-						"prefill": {
-						
-							"name": ""+res.data.name+"",
-							"email": ""+res.data.email+""
-						},
-						
-					};
-					var razorpayObject = new Razorpay(options);
-					razorpayObject.on('payment.failed', function (response){
-							alert("Payment Failed");
-					});
-					razorpayObject.open();
-				}else if (res.data.deliverySuccess == true){
-                    window.location= '/successPage'
+                        "key": "" + res.data.key_id + "",
+                        "amount": "" + res.data.amount + "",
+                        "currency": "INR",
+                        "order_id": "" + res.data.order_id + "",
+                        "handler": function (response) {
+                            verifyPayment(response.razorpay_order_id, response.razorpay_payment_id, response.razorpay_signature, res.data.razorpayId);
+                        },
+                        "prefill": {
+                            "name": "" + res.data.name + "",
+                            "email": "" + res.data.email + ""
+                        },
+                    };
+                    var razorpayObject = new Razorpay(options);
+                    razorpayObject.on('payment.failed', function (response) {
+                        alert("Payment Failed");
+                    });
+                    razorpayObject.open();
+                } else if (res.data.deliverySuccess == true) {
+                    window.location = '/successPage';
                 }
-
-               
-              }).catch(function(error){
-                  console.error('Error:', error);
-          });
-      }
-  </script>
+            } else if(!res.data.success) {
+                alert(res.data.message); 
+            }
+        }).catch(function (error) {
+            console.error('Error:', error);
+        });
+}
+</script>
 
   <script>
    function verifyPayment(orderId,paymentId,signature, order){

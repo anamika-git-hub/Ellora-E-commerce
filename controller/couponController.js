@@ -57,9 +57,14 @@ const addCoupon = async(req,res)=>{
 }
 
 const deleteCoupon = async(req,res)=>{
+   
+  
     try {
         const {couponId} = req.query
-        await Coupon.findByIdAndDelete({_id:couponId});
+        const data = await Coupon.findOne({_id:couponId});
+        data.is_listed=!data.is_listed
+        const d1 =  await data.save();
+        console.log('dlkj',d1);
         res.redirect('/admin/couponList')
     } catch (error) {
         console.log(error.message);
@@ -88,23 +93,19 @@ const editCoupon = async(req,res)=>{
 const applyCoupon = async(req,res)=>{
     try {
         const { couponCode }= req.body 
-
         const couponData = await Coupon.findOne({ couponCode });
         const cartData = await Cart.findOne({ userId: req.session.user_id });
         const usedUser = couponData.usedUsers.find(usedUser => usedUser.userId == req.session.user_id);
-
-        if (usedUser && usedUser.status === 'true') {
+        if (usedUser && usedUser.status === true) {
             req.flash('error', 'This coupon has already been used');
             return res.redirect('/CheckOut');
         } else {
             const subTotal = cartData.products.reduce((total, products) => total + products.totalPrice, 0);
             const totalAfterDiscount = subTotal - couponData.offerPrice;
-
             req.flash('totalAfterDiscount', totalAfterDiscount);
             req.flash('discountAmount', couponData.offerPrice);
             req.flash('subTotal', subTotal);
             req.session.couponCode = couponCode;
-
             return res.redirect('/CheckOut');
         }
     } catch (error) {

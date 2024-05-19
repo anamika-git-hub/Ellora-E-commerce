@@ -26,8 +26,10 @@ const securePassword =async(password)=>{
 //get home page
 const loadHome = async(req,res)=>{
     try {
-        const cartData = await Cart.findOne({userId:req.session.user_id}).populate('userId').populate({path:'products.productId'});
-            res.render('home',{cartData})
+        const userId = req.session.user_id;
+        const cartData = await Cart.findOne({userId}).populate('userId').populate({path:'products.productId'});
+        const wishlistData = await Wishlist.findOne({userId}).populate('userId').populate('products.productId');
+            res.render('home',{cartData,wishlistData,userId})
     } catch (error) {
         console.log(error.message)
     }
@@ -295,9 +297,9 @@ const loadProfile = async(req,res)=>{
          const count = await Order.find({
       }).countDocuments();
        if(orderData){
-        res.render('profile',{userData,cartData,wishlistData,couponData,walletData,orderData,totalPages:Math.ceil(count/limit),currentPage:page});
+        res.render('profile',{userData,cartData,wishlistData,couponData,userId,walletData,orderData,totalPages:Math.ceil(count/limit),currentPage:page});
        }else{
-        res.render('profile',{userData,cartData,wishlistData,couponData});
+        res.render('profile',{userData,cartData,wishlistData,couponData,userId});
        }
            
 
@@ -378,7 +380,6 @@ const addAddress = async(req,res)=>{
     }
         const value = await joiAddressSchema.validateAsync(req.body)
 
-
         const{
             name,
             country,
@@ -389,7 +390,7 @@ const addAddress = async(req,res)=>{
             pin,
             phone,
             email
-        } = req.body;
+        } = value;
         await User.findOneAndUpdate({
            _id:req.session.user_id
         },{
@@ -407,6 +408,7 @@ const addAddress = async(req,res)=>{
                 }
             }
         })
+        res.json({success:true});
 
     }catch(error){
         console.log(error.message);
@@ -414,11 +416,24 @@ const addAddress = async(req,res)=>{
 }
 
 const editAddress = async(req,res)=>{
-    try {
-         const {name,country,streetName,landMark,town,state,pin,phone,email,_id} = req.body;
+    try { 
+                const { error } = joiAddressSchema.validate(req.body, {
+                abortEarly: false
+            });
+        if(error){ 
+            const errorMessages = error.details.reduce((acc, cur) => {
+                acc[cur.context.key] = cur.message;
+                return acc;
+            }, {});
+            req.flash('messages', errorMessages);
+            req.flash('formData', req.body);            
+            res.redirect('/profile#tab-address')
+        }
+            const value = await joiAddressSchema.validateAsync(req.body)
+         const {name,country,streetName,landMark,town,state,pin,phone,email} = value;
         const user = await User.findById({_id:req.session.user_id})
        const address= user.addresses.find(address=>{
-            return address._id.equals(_id)
+            return address._id.equals(req.body._id)
         })
         address.name=name;
         address.country=country;
@@ -430,8 +445,8 @@ const editAddress = async(req,res)=>{
         address.landMark=landMark;
         address.email = email;
         user.save();
-        res.redirect('/profile')
         res.json({success:true})
+        res.redirect('/profile#tab-address')
     } catch (error) {
         console.log(error.message);
     }
@@ -446,7 +461,6 @@ const deleteAddress = async(req,res)=>{
         }
         )
         res.json({success:true});
-        res.redirect('/profile')
     } catch (error) {
         console.log(error.message);
     }
