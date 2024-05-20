@@ -332,7 +332,7 @@ const returnApproval = async(req,res)=>{
                      date:new Date(),
                      amount:productPrice,
                      description:'Order Returned',
-                     status:'In'
+                     status:'Credited'
                  })
                 await walletData.save();
                 console.log('walletData:',walletData);

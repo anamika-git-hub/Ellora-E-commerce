@@ -105,11 +105,6 @@
 
                                     
                                 </li>
-                                <li>
-                                    <a href="/login" class="sf-with-ul">Login</a>
-
-                                    
-                                </li>
                             </ul><!-- End .menu -->
                         </nav><!-- End .main-nav -->
                     </div><!-- End .header-left -->
@@ -681,6 +676,8 @@
                             document.getElementById(`totalPrice${productId}`).innerHTML = `Rs.${totalPrice.toFixed(2)}`
                             document.getElementById('subTotal').innerHTML = `Rs.${subTotal.toFixed(2)}`
                             document.getElementById('Total').innerHTML = `Rs.${subTotal.toFixed(2)}`
+
+                            window.location='/cart'
                            
             }).catch(function(error){
                 console.error('Error:', error);
