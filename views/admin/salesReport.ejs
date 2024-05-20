@@ -201,15 +201,13 @@
                 </div>
                 <div class="card mb-4">
                     <header class="card-header">
-                        <form action="/admin/salesReport" method="GET">
                         <div class="row gx-3">
                             <div class="col-lg-4 col-md-6 me-auto">
                                 <input type="text" placeholder="Search..." class="form-control" />
                             </div>
-                            
                             <div class="col-lg-2 col-6 col-md-3">
                                 <div class="custom-select">
-                                    <select id="filter" class="form-select" onchange="handleFilterChange()">
+                                    <select id="filter" class="form-select">
                                         <option value="all">All</option>
                                         <option value="daily">Daily</option>
                                         <option value="weekly">Weekly</option>
@@ -220,19 +218,19 @@
                                 </div>
                             </div>
                             <div class="col-md-2 col-6 start-date-container" style="display: none;">
-                                <label for="start-date">Start Date</label>
-                                <input type="date" name="startDate" class="form-control"/>
+                                <label for="startDate">Start Date</label>
+                                <input type="date" id="startDate" name="startDate" class="form-control" />
                             </div>
                             <div class="col-md-2 col-6 end-date-container" style="display: none;">
-                                <label for="end-date">End Date</label>
-                                <input type="date" name="endDate" class="form-control"/>
+                                <label for="endDate">End Date</label>
+                                <input type="date" id="endDate" name="endDate" class="form-control" />
                             </div>                    
                             <div class="col-md-2 col-6">
-                                <button href="#" type="submit" class="btn btn-primary" id="generateButton"><i class="text-muted material-icons"></i>Generate</button>
+                                <button type="submit" class="btn btn-primary" id="generateButton"><i class="text-muted material-icons"></i>Generate</button>
                             </div>
                         </div>
-                    </form>
                     </header>
+                    
                     <!-- card-header end// -->
                     <div class="card-body">
                         <div class="table-responsive" id="downloadPdf">
@@ -385,83 +383,91 @@
         }
         </script>
 
-    <!-- Filtering -->
+    <!-------------------------- Filtering --------------------------->
+    <script>
+   document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("filter").addEventListener("change", handleFilterChange);
+    document.getElementById("generateButton").addEventListener("click", filterSalesReport);
 
-<script>
-     function handleFilterChange() {
-    const filter = document.getElementById("filter").value;
+    document.getElementById("endDate").value = new Date().toISOString().slice(0, 10);
 
+    function handleFilterChange() {
+        const filter = document.getElementById("filter").value;
         const startDateContainer = document.querySelector('.start-date-container');
         const endDateContainer = document.querySelector('.end-date-container');
-        if(filter === "custom") {
+        if (filter === "custom") {
             startDateContainer.style.display = 'block';
             endDateContainer.style.display = 'block';
         } else {
             startDateContainer.style.display = 'none';
             endDateContainer.style.display = 'none';
         }
-
-        if(filter === 'daily'){
-            
-        }
-
-    
-}
-</script>
-        <!-- <script>
-            function handleFilterChange() {
-    const filter = document.getElementById("filter").value;
-    const dateInputs = document.getElementById("dateInputs");
-
-    if (filter === 'custom') {
-        dateInputs.style.display = "block";
-    } else {
-        dateInputs.style.display = "none";
-        document.getElementById("startDate").value = "yyyy-MM-dd";
-        document.getElementById("endDate").value = "yyyy-MM-dd";
-        filterSalesReport();
     }
-}
 
-document.getElementById("endDate").value = new Date().toISOString().slice(0, 10);
+    function filterSalesReport() {
+        const filter = document.getElementById("filter").value;
+        const startDate = document.querySelector("[name='startDate']").value;
+        const endDate = document.querySelector("[name='endDate']").value;
 
-function filterSalesReport() {
-    const filter = document.getElementById("filter").value;
-    const startDate = document.getElementById("startDate").value;
-    const endDate = document.getElementById("endDate").value;
-
-    let url = `/admin/salesReport?`;
-    if (filter === 'custom' && startDate && endDate) {
-        url += `startDate=${startDate}&endDate=${endDate}`;
-    } else {
+        let startDateValue = "";
+        let endDateValue = "";
         const currentDate = new Date();
-        if (filter === 'daily') {
-            const yesterdayDate = new Date(currentDate);
-            yesterdayDate.setDate(yesterdayDate.getDate() - 1);
-            url += `startDate=${yesterdayDate}&endDate=${currentDate}`;
-        } else if (filter === 'weekly') {
-            const lastWeekDate = new Date(currentDate);
-            lastWeekDate.setDate(lastWeekDate.getDate() - 7);
-            url += `startDate=${lastWeekDate}&endDate=${currentDate}`;
-        } else if (filter === 'monthly') {
-            const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-            const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-            url += `startDate=${firstDayOfMonth}&endDate=${lastDayOfMonth}`;
-        } else if (filter === 'yearly') {
-            const firstDayOfYear = new Date(currentDate.getFullYear(), 0, 1);
-            const lastDayOfYear = new Date(currentDate.getFullYear(), 11, 31);
-            url += `startDate=${firstDayOfYear}&endDate=${lastDayOfYear}`;
+
+        if (filter === 'custom' && startDate && endDate) {
+            startDateValue = startDate;
+            endDateValue = endDate;
+        } else {
+            if (filter === 'daily') {
+                const yesterdayDate = new Date(currentDate);
+                yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+                startDateValue = formatDate(yesterdayDate);
+                endDateValue = formatDate(currentDate);
+            } else if (filter === 'weekly') {
+                const lastWeekDate = new Date(currentDate);
+                lastWeekDate.setDate(lastWeekDate.getDate() - 7);
+                startDateValue = formatDate(lastWeekDate);
+                endDateValue = formatDate(currentDate);
+            } else if (filter === 'monthly') {
+                const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+                const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+                startDateValue = formatDate(firstDayOfMonth);
+                endDateValue = formatDate(lastDayOfMonth);
+            } else if (filter === 'yearly') {
+                const firstDayOfYear = new Date(currentDate.getFullYear(), 0, 1);
+                const lastDayOfYear = new Date(currentDate.getFullYear(), 11, 31);
+                startDateValue = formatDate(firstDayOfYear);
+                endDateValue = formatDate(lastDayOfYear);
+            }
         }
+
+        const url = `/admin/filterSalesReport`;
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ filter, startDate: startDateValue, endDate: endDateValue })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            if (data.status === 'success') {
+                console.log('Filter used:', data.filter);
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
     }
 
-    window.location.href = url;
-}
+    function formatDate(date) {
+        return date.toISOString().slice(0, 10);
+    }
+});
 
-function formatDate(date) {
-    return date.toISOString().slice(0, 10);
-}
-
-        </script> -->
+</script>    
+    
 
 
 

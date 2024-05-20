@@ -72,6 +72,7 @@ adminRouter.get('/orderDetail',isLogin, orderController.loadOrderDetails);
 adminRouter.post('/returnApproval',isLogin,orderController.returnApproval);
 
 adminRouter.get('/salesReport',isLogin,orderController.salesReport);
+adminRouter.post('/filterSalesReport',isLogin,orderController.filterSalesReport);
 adminRouter.post('/statusChanged/:orderId',isLogin,orderController.statusChange);
 adminRouter.post('/cancelStatusChanged/:orderId',isLogin,orderController.cancelStatusChange)
 

@@ -67,12 +67,18 @@ const placeOrder = async (req, res) => {
 
         if (shippingMethod === 'Wallet') {
             const walletData = await Wallet.findOne({ userId: req.session.user_id });
-            console.log('walletData:', walletData.walletAmount);
             if (walletData.walletAmount < subTotal) {
                 return res.json({message: 'Your wallet does not have enough money' });
             } else {
                 walletData.walletAmount -= subTotal;
-                console.log('subTotal:', subTotal);
+                walletData.walletHistory.push({
+                    date:new Date(),
+                    amount:subTotal,
+                    description:'Order Placed',
+                    status:'Debited'
+                })
+
+
                 await walletData.save();
             }
         }
@@ -94,8 +100,8 @@ const placeOrder = async (req, res) => {
 
         const myOrders = await Order.create(order);
 
-        const orderData = await Order.findOne({userId:userId});
-        const proData = orderData.products;
+        const proData = myOrders.products;
+        console.log('pppp',proData);
         for(let i=0;i<proData.length;i++){
             if(proData[i].status === 'placed'){
                 await Cart.deleteOne({userId:userId})
@@ -133,7 +139,6 @@ const placeOrder = async (req, res) => {
                 receipt: 'anamikap9895@gmail.com'
             };
 
-            console.log('orddddddddddd', myOrders._id);
             razorpayInstance.orders.create(options, (err, order) => {
                 if (!err) {
                     res.status(200).json({
@@ -251,7 +256,7 @@ const cancelOrder = async(req,res)=>{
                 date:new Date(),
                 amount:product.totalPrice,
                 description:'Order Cancellation',
-                status:'In'
+                status:'Credited'
             })
            await walletData.save();
            console.log('walletData:',walletData);
@@ -359,32 +364,8 @@ const returnApproval = async(req,res)=>{
 
 const salesReport = async (req, res) => {
     try {
-        let orderData;
-        const { startDate, endDate } = req.query;
-
-        console.log('Start Date:', startDate);
-        console.log('End Date:', endDate);
-
-        if (startDate && endDate) {
-            const start = new Date(startDate);
-            const end = new Date(endDate);
-            start.setHours(0, 0, 0, 0);
-            end.setHours(23, 59, 59, 999);
-
-            console.log('Converted Start Date:', start);
-            console.log('Converted End Date:', end);
-
-            orderData = await Order.find({
-                date: {
-                    $gte: start,
-                    $lte: end
-                }
-            }).populate('products.productId').populate('userId');
-        console.log('Order Data:', orderData);
-
-        } else {
-           orderData = await Order.find().populate('products.productId').populate('userId');
-        }
+        const  orderData = await Order.find().populate('products.productId').populate('userId');
+        
         let count = 0;
         let grandTotal = 0;
         let couponTotal = 0;
@@ -393,8 +374,6 @@ const salesReport = async (req, res) => {
         const DeliveredOrders = orderData.filter(order => 
           order.products.every(product => product.status === 'Delivered')
         );
-        
-        console.log('delivere', DeliveredOrders);
         
         if (DeliveredOrders.length > 0) {
           count = DeliveredOrders.length;
@@ -405,19 +384,38 @@ const salesReport = async (req, res) => {
             offerTotal += order.offerDiscount;
           });
         }
-        
-        console.log('Count:', count);
-        console.log('Grand Total:', grandTotal);
-        console.log('Coupon Total:', couponTotal);
-        console.log('Offer Total:', offerTotal);
-
         res.render('salesReport', { orderData, grandTotal, couponTotal, offerTotal,count });
     } catch (error) {
         console.log(error.message);
     }
 };
 
+const filterSalesReport = async (req, res) => {
+    try {
+        const { startDate, endDate } = req.body;
+        console.log('Received dates:', startDate, endDate);
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999); 
 
+        const query = {
+            date: {
+                $gte: start.toISOString(),
+                $lte: end.toISOString()
+            }
+        };
+
+        console.log('Query:', query);
+
+        const filter = await Order.find(query).populate('userId');
+        console.log('Filtered Orders:', filter);
+
+        res.json({ status: 'success', message: 'sorted successfully', filter });
+    } catch (error) {
+        console.error('Error:', error.message);
+        res.status(500).json({ status: 'error', message: error.message });
+    }
+};
 
 
 const statusChange = async(req,res)=>{
@@ -491,5 +489,6 @@ module.exports={
     cancelStatusChange,
     returnProduct,
     returnApproval,
-    verifyPayment
+    verifyPayment,
+    filterSalesReport
 }

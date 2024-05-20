@@ -563,14 +563,18 @@
                                                     </button>
                                                 </div>
                                             </div>
-                                        
+                                            <% if(walletData){%>
                                             <div class="card">
                                                 <div class="card-body">
                                                     <h5 class="card-title">Wallet Amount</h5>
+                                                    
+                                                      
                                                     <h4><%= walletData.walletAmount.toFixed(2) %></h4> 
+                                                   
                                                     <button onclick="showWalletHistory()" class="btn btn-outline-primary">Wallet History</button>
                                                 </div>
                                             </div>
+                                            <%}%>
                                         </div>
                                        
                                             
@@ -589,6 +593,8 @@
                                                             <th scope="col">Status</th>
                                                         </tr>
                                                     </thead>
+                                                    <% if(walletData ){%>
+                                                       
                                                     <% walletData.walletHistory.forEach(wallet=>{%>
                                                     <tbody>
                                                         <tr>
@@ -599,6 +605,7 @@
                                                         </tr>
                                                     </tbody>
                                                     <%}) %>
+                                                    <%} %>
 
                                                 </table>
                                                 <div id="paginationId" class="pagination-area mt-30 mb-50">
