@@ -139,7 +139,9 @@ const editProductLoad = async(req,res)=>{
         const productData=await products.findById({_id:id})
         const categoryData=await category.find()
         if(productData){
-            res.render('editProducts',{categories:categoryData,products:productData})
+            const messages = req.flash('messages')[0] || {}; 
+            const formData = req.flash('formData')[0] || {};
+            res.render('editProducts',{categories:categoryData,products:productData,messages,formData})
         }else{
             res.redirect('/admin/productList');
         }
@@ -151,29 +153,47 @@ const editProductLoad = async(req,res)=>{
 const updateProducts = async (req,res)=>{
     try {
         const productData = await products.findOne({_id:req.body.id});
+        console.log('rerjelkj',productData);
+        const { error } = joiProductSchema.validate(req.body, {
+            abortEarly: false
+          });
+    if(error){ 
+        const errorMessages = error.details.reduce((acc, cur) => {
+            acc[cur.context.key] = cur.message;
+            return acc;
+        }, {});
+        req.flash('messages', errorMessages);
+        req.flash('formData', req.body);
+        res.redirect('/admin/editproducts')
+    }
+
+    const value = await joiProductSchema.validateAsync(req.body)
+    console.log('reeeee',req.body);
+    const {name,description,price,categories,image,stock} = value
         const data = {
-            name : req.body.name,
-            description : req.body.description,
-            price : req.body.price,
-            category : req.body.category,
-            price: req.body.price,
-            stock: req.body.stock
+            name : name,
+            description : description,
+            price : price,
+            categories : categories,
+            price: price,
+            stock: stock,
+            image:image
         }
 
-        if(req.body.image !==''){
-            const imgId = productData.image._id;
-            if(imgId){
-                await cloudinary.uploader.destroy(imgId)
-            }
+        // if(image !==''){
+        //     const imgId = productData.image._id;
+        //     if(imgId){
+        //         await cloudinary.uploader.destroy(imgId)
+        //     }
 
-            const newImage = await cloudinary.uploader.upload(req.body.image,file.path,{
-                folder:"product-images"
-            })
-            data.image = {
-                _id:newImage._id,
-                url:newImage.secure_url
-            }
-        }
+        //     const newImage = await cloudinary.uploader.upload(image,file.path,{
+        //         folder:"product-images"
+        //     })
+        //     data.image = {
+        //         _id:newImage._id,
+        //         url:newImage.secure_url
+        //     }
+        // }
 
         if(productData){
             const pro = await products.findOneAndUpdate({_id:req.body.id},data);

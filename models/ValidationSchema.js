@@ -18,7 +18,7 @@ const joiProductSchema = joi.object({
     stock : joi.number().positive().required(),
     image: joi.array().items().max(4).required(),
     
-})
+}).unknown(true);
 
 const joiUserSchema = joi.object({
     name : joi.string().required(),

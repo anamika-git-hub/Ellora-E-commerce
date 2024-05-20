@@ -664,6 +664,8 @@
                                         </div>
                                    
 								    </div><!-- .End .tab-pane -->
+
+                                    <!---------------------------------Available Coupon----------------------------------------->
                                   
                                         <div class="tab-pane fade " id="tab-coupon" role="tabpanel" aria-labelledby="tab-coupon-link">
                                             <div class=" row wrapper d-flex justify-content-around ">
@@ -684,7 +686,7 @@
                                                         <div class="code text-center mt-4">
                                                             <span>Use code: <%= coupon.couponCode %></span>
                                                             <% const usedUser = coupon.usedUsers.find(user => user.userId.toString() === userId) %>
-                                                            <% if (usedUser && Boolean(usedUser.status)) { %>
+                                                            <% if (usedUser && Boolean(usedUser.status)&& coupon.expiryDate<new Date()) { %>
                                                                 <button class="copy-btn" data-coupon-code="<%= coupon.couponCode %>" disabled>Copy Code</button>
                                                             <% } else { %>
                                                                 <button class="copy-btn" data-coupon-code="<%= coupon.couponCode %>">Copy Code</button>

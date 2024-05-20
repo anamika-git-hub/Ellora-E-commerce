@@ -199,7 +199,7 @@
                 </div>
             </div>
             <div class="row">
-                <form action="" method="post">
+                <form action="/admin/editproducts" method="post" >
                 <div class="col-lg-6">
                     <div class="card mb-4">
                         <div class="card-body">
@@ -211,22 +211,25 @@
                                     <div class="mb-4">
                                         <label class="form-label">Product title</label>
                                         <input type="text" placeholder="Type here" value="<%= products.name %>" name="name" class="form-control">
+                                        <span class="error-message" style="color: red;"><%= messages.name %></span>
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Description</label>
                                         <textarea placeholder="Type here" name="description"   class="form-control" rows="4" ><%= products.description %></textarea>
+                                        <span class="error-message" style="color: red;"><%= messages.description %></span>
                                     </div>
                                     <div class="mb-4">
-                                        <input type="hidden" name="id"  value="<%= products._id %>"  />
+                                        <input type="hidden" name="id" value="<%= products._id %>" />
                                     </div>
                                     <div class="mb-4">
                                         <label class="form-label">Category</label>
-                                        <select class="form-select" name="category">
+                                        <select class="form-select" name="categories">
                                            
                                             <% for (let i = 0; i < categories.length; i++) { %>
                                                 <option value="<%= categories[i]._id %>"><%= categories[i].name %></option>
                                             <% } %>
                                         </select>
+                                        <span class="error-message" style="color: red;"><%= messages.categories %></span>
                                     </div>
                                 </div> <!-- col.// -->
                             </div> <!-- row.// -->
@@ -239,6 +242,7 @@
                                     <div class="mb-4">
                                         <label class="form-label">Cost in USD</label>
                                         <input type="text" placeholder="$00.0" class="form-control" name="price" value="<%= products.price %>">
+                                        <span class="error-message" style="color: red;"><%= messages.price %></span>
                                     </div>
                                 </div> <!-- col.// -->
                             </div> <!-- row.// -->
@@ -250,6 +254,7 @@
                                 <div class="col-md-9">
                                     <div class="mb-4">
                                         <input type="number"  class="form-control" name="stock" value="<%= products.stock %>">
+                                        <span class="error-message" style="color: red;"><%= messages.stock %></span>
                                     </div>
                                 </div> 
                             </div> 
@@ -259,6 +264,7 @@
                                 <div class="col-md-3">
                                     <h6>4. Media</h6>
                                 </div>
+                                <span class="error-message" style="color: red;"><%= messages.image %></span>
                                 <div class="col-md-9">
                                     <% for (let i = 0; i <= 3; i++) { %>
                                         <div class="col-lg-6 col-md-6 mb-3 rounded-image-preview">
@@ -266,7 +272,7 @@
                                                 <div class="rounded-image-preview">
                                                     <img id="imagePreview<%= i %>" src="<%= products.image[i] %>" alt="Preview">
                                                 </div>
-                                                <input name="image" type="file" accept="image/*" id="imageInput<%= i %>" class="imageInput" multiple onchange="previewImage(this, 'imagePreview<%= i %>')">
+                                                <input name="image" type="file" accept="image/*" id="imageInput<%= i %>" class="imageInput"  onchange="previewImage(this, 'imagePreview<%= i %>')">
                                             </label>
                                         </div>
                                         

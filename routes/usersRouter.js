@@ -22,23 +22,23 @@ const wishlistController = require('../controller/wishlistController');
 const couponController = require('../controller/couponController')
 
 userRouter.get('/',userController.loadHome);
-userRouter.get('/login',userController.loadLogin);
-userRouter.get('/signUp',userController.loadSignup);
-userRouter.post('/signUp',userController.insertUser);
+userRouter.get('/login',isLogout,userController.loadLogin);
+userRouter.get('/signUp',isLogout,userController.loadSignup);
+userRouter.post('/signUp',isLogout,userController.insertUser);
 
-userRouter.get('/otp',userController.loadOtp);
-userRouter.post('/otp',userController.verifyOtp);
-userRouter.post('/resend',userController.resendOtp);
+userRouter.get('/otp',isLogout,userController.loadOtp);
+userRouter.post('/otp',isLogout,userController.verifyOtp);
+userRouter.post('/resend',isLogout,userController.resendOtp);
 
-userRouter.post('/login',userController.verifyLogin);
-userRouter.get('/google',userController.googleAuthentication);
+userRouter.post('/login',isLogout,userController.verifyLogin);
+userRouter.get('/google',isLogout,userController.googleAuthentication);
 userRouter.get('/logout',isLogin,userController.loadLogout);
 
-userRouter.get('/contact',userController.loadContact);
-userRouter.get('/about',userController.loadAbout);
+userRouter.get('/contact',isLogin,userController.loadContact);
+userRouter.get('/about',isLogin,userController.loadAbout);
 
 userRouter.get('/profile',isLogin,userController.loadProfile);
-userRouter.put('/profile',isLogin,userController.editProfile);
+userRouter.post('/profile',isLogin,userController.editProfile);
 userRouter.post('/profile',isLogin,userController.resetPasswithOld);
 userRouter.post('/addAddress',isLogin,userController.addAddress);
 userRouter.put('/editAddress',isLogin,userController.editAddress);
