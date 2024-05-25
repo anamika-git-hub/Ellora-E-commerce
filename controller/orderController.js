@@ -19,8 +19,8 @@ const placeOrder = async (req, res) => {
     try {
         const userId = req.session.user_id;
         const couponCode = req.session.couponCode;
-        const { shippingAddress, subTotal, shippingMethod } = req.body;
-        console.log(shippingMethod);
+        const { shippingAddress, subTotal, paymentMethod } = req.body;
+        console.log(paymentMethod);
         req.session.totalAmount = subTotal;
         const amount = subTotal * 100;
 
@@ -30,7 +30,7 @@ const placeOrder = async (req, res) => {
         const cartData = await Cart.findOne({ userId: userId }).populate({ path: 'products.productId', populate: { path: 'offer' } });
         const productData = cartData.products;
 
-        const status = shippingMethod === 'Cash on delivery' ? 'placed' : 'pending';
+        const status = paymentMethod === 'Cash on delivery' ? 'placed' : 'pending';
         const statusLevel = status === 'placed' ? 1 : 0;
 
         const date = new Date();
@@ -65,7 +65,13 @@ const placeOrder = async (req, res) => {
             });
         }
 
-        if (shippingMethod === 'Wallet') {
+        if(paymentMethod == 'Cash on delivery'){
+             if(subTotal<1000){
+               return res.json({message:'Only order above 1000 is allowed to cash on delivery'})
+             }
+        }
+
+        if (paymentMethod === 'Wallet') {
             const walletData = await Wallet.findOne({ userId: req.session.user_id });
             if (walletData.walletAmount < subTotal) {
                 return res.json({message: 'Your wallet does not have enough money' });
@@ -92,7 +98,7 @@ const placeOrder = async (req, res) => {
             expected_delivery: deliveryDate,
             status: status,
             statusLevel: statusLevel,
-            payment: shippingMethod,
+            payment: paymentMethod,
             couponDiscount: couponDiscount,
             offerDiscount: offerDiscount,
             products: productData
@@ -132,7 +138,7 @@ const placeOrder = async (req, res) => {
             }
             }
 
-        if (shippingMethod === 'Razorpay') {
+        if (paymentMethod === 'Razorpay') {
             const options = {
                 amount: amount,
                 currency: 'INR',
@@ -193,6 +199,9 @@ const verifyPayment = async(req,res)=>{
 }
 
 
+
+
+
 const loadSuccessPage = async(req,res)=>{
     try {
         res.render('successPage')
@@ -201,6 +210,14 @@ const loadSuccessPage = async(req,res)=>{
     }
 }
 
+
+const loadFailedPage = async(req,res)=>{
+    try {
+        res.render('failedPage')
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 const loadOrderList = async(req,res)=>{
     try {
         var page = 1;
@@ -490,5 +507,6 @@ module.exports={
     returnProduct,
     returnApproval,
     verifyPayment,
-    filterSalesReport
+    filterSalesReport,
+    loadFailedPage
 }

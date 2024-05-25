@@ -29,6 +29,7 @@ adminRouter.get('/',isLogout,adminController.loadLogin);
 
 adminRouter.post('/',adminController.verifyLogin);
 adminRouter.get('/home',isLogin,adminController.loadHome);
+adminRouter.get('/orderChart',isLogin,adminController.orderChart);
 
 adminRouter.get('/logout',isLogin,adminController.loadSignout);
 

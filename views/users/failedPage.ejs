@@ -2,7 +2,7 @@
 <html lang="en">
 
 
-<!-- molla/cart.html  22 Nov 2019 09:55:06 GMT -->
+<!-- molla/404.html  22 Nov 2019 10:04:04 GMT -->
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -105,6 +105,7 @@
 
                                     
                                 </li>
+                                
                             </ul><!-- End .menu -->
                         </nav><!-- End .main-nav -->
                     </div><!-- End .header-left -->
@@ -120,23 +121,11 @@
                             </form>
                         </div><!-- End .header-search -->
                         <div class="dropdown cart-dropdown">
-                            <a href="/wishlist" class="dropdown-toggle" role="button">
-                                <i class="icon-heart-o"></i>
-                                <% if(cartData && wishlistData && wishlistData.products.length>0){ %>
-                                    <span class="cart-count"><%= wishlistData.products.length %></span>
-                                <% }else{%>
-                                    
-                                    <%} %>
-                            </a>
+                           
+                           
                         </div><!-- End .cart-dropdown -->
                         <div class="dropdown cart-dropdown">
-                            <a href="/cart" class="dropdown-toggle" role="button" >
-                                <i class="icon-shopping-cart"></i>
-                                <% if(cartData && cartData.products.length>0){%>
-                                    <span class="cart-count"><%= cartData.products.length %></span>
-                                <%}else{%>
-                                    <%} %>
-                            </a>
+                            
                         </div><!-- End .cart-dropdown -->
                     </div><!-- End .header-right -->
                 </div><!-- End .container -->
@@ -144,147 +133,32 @@
         </header><!-- End .header -->
 
         <main class="main">
-        	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
-        		<div class="container">
-        			<h1 class="page-title">Shopping Cart<span>Shop</span></h1>
-        		</div><!-- End .container -->
-        	</div><!-- End .page-header -->
-            <nav aria-label="breadcrumb" class="breadcrumb-nav">
+            <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
                 <div class="container">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
                         <li class="breadcrumb-item"><a href="/products">Products</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Shopping Cart</li>
+                        <li class="breadcrumb-item"><a href="/cart">Cart</a></li>
+                        <li class="breadcrumb-item"><a href="/CheckOut">Checkout</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Failed</li>
                     </ol>
                 </div><!-- End .container -->
             </nav><!-- End .breadcrumb-nav -->
 
-            <div class="page-content">
-            	<div class="cart">
-	                <div class="container">
-                        
-                        <%  if(cartData && cartData.products.length>0){ %>
-	                	<div class="row">
-	                		<div class="col-lg-9">
-	                			<table class="table table-cart table-mobile">
-									<thead>
-										<tr>
-											<th>Product</th>
-											<th>Price</th>
-											<th>Quantity</th>
-											<th>Total</th>
-											<th></th>
-										</tr>
-									</thead>
-                                 
-									<tbody>
-                                        
-                                            <% cartData.products.forEach((value,index)=>{ %>
-                                            <tr id="cartDelete<%= index %>">
-                                                <input type="hidden" name="productId" value="<%= value.productId %>">
-                                                <td class="product-col">
-                                                    <div class="product">
-                                                        <figure class="product-media">
-                                                            <a href="#">
-                                                                <img src="<%= value.productId.image[0]%>" alt="Product image">
-                                                            </a>
-                                                        </figure>
-    
-                                                        <h3 class="product-title">
-                                                            <a href="#"><%= value.productId.name %></a>
-                                                        </h3><!-- End .product-title -->
-                                                    </div><!-- End .product -->
-                                                </td>
-                                                <td  class="price-col">Rs.<%= value.productPrice.toFixed(2) %></td>
-                                                <td class="quantity-col">
-                                                    <div class="cart-product-quantity">
-                                                        <input type="number"  class="form-control" onchange="addToCart(this,'<%= value.productId._id %>')" value="<%= value.quantity %>"  min="1" max="<%= value.productId.stock %>" step="1" data-decimals="0" required>
-                                                    </div><!-- End .cart-product-quantity -->
-                                                </td>
-                                                <td class="total-col" id="totalPrice<%= value.productId._id %>">Rs.<%= value.totalPrice.toFixed(2) %></td>
-                                                <td class="remove-col"><button  class="btn-remove" onclick="deleteCartItem('<%= index %>','<%= value.productId._id %>')"><i class="icon-close"  ></i></button></td>
-                                            </tr>
-                                            <% }) %>
-									</tbody>
-								</table><!-- End .table table-wishlist  -->
-                     
-	                		
-                            
-                        
-	                		</div><!-- End .col-lg-9 -->
-	                		<aside class="col-lg-3">
-    <div class="summary summary-cart">
-        <h3 class="summary-title">Cart Total</h3><!-- End .summary-title -->
-
-        <table class="table table-summary">
-            <tbody>
-                <tr class="summary-subtotal">
-                    <td>Subtotal:</td>
-                    <td id="subTotal">Rs.<%= subTotal.toFixed(2) %></td>
-                </tr><!-- End .summary-subtotal -->
-                
-                <tr class="summary-shipping">
-                    <td>Shipping:</td>
-                    <td>&nbsp;</td>
-                </tr>
-
-                <tr class="summary-shipping-row">
-                    <td>
-                        <div class="custom-control custom-radio">
-                            <input type="radio" id="free-shipping" name="deliveryPayment" class="custom-control-input" value="0" checked>
-                            <label class="custom-control-label" for="free-shipping">Free Shipping</label>
-                        </div><!-- End .custom-control -->
-                    </td>
-                    <td>Rs.0.00</td>
-                </tr><!-- End .summary-shipping-row -->
-                
-                <tr class="summary-shipping-row">
-                    <td>
-                        <div class="custom-control custom-radio">
-                            <input type="radio" id="standard-shipping" name="deliveryPayment" class="custom-control-input" value="10">
-                            <label class="custom-control-label" for="standard-shipping">Standard:</label>
-                        </div><!-- End .custom-control -->
-                    </td>
-                    <td>Rs.10.00</td>
-                </tr><!-- End .summary-shipping-row -->
-                
-                <tr class="summary-shipping-row">
-                    <td>
-                        <div class="custom-control custom-radio">
-                            <input type="radio" id="express-shipping" name="deliveryPayment" class="custom-control-input" value="20">
-                            <label class="custom-control-label" for="express-shipping">Express:</label>
-                        </div><!-- End .custom-control -->
-                    </td>
-                    <td>Rs.20.00</td>
-                </tr><!-- End .summary-shipping-row -->
-
-                <tr class="summary-total">
-                    <td>Total:</td>
-                    <td id="Total">Rs.<%= subTotal.toFixed(2)%></td>
-                </tr><!-- End .summary-total -->
-                
-            </tbody>
-        </table><!-- End .table table-summary -->
-
-        <button onclick="checkout('<%= subTotal.toFixed(2) %>')" class="btn btn-outline-primary-2 btn-order btn-block">PROCEED TO CHECKOUT</button>
-    </div><!-- End .summary -->
-
-    <a href="/products" class="btn btn-outline-dark-2 btn-block mb-3"><span>CONTINUE SHOPPING</span><i class="icon-refresh"></i></a>
-</aside><!-- End .col-lg-3 -->
-	                	</div><!-- End .row -->
-                        <% }else{%>
-                            <div class="d-flex justify-content-center align-items-center vh-50">
-                                <h3 class="summary-title">Your cart is empty</h3>
-                            </div>
-
-                            <% } %>
-	                </div><!-- End .container -->
-                </div><!-- End .cart -->
-            </div><!-- End .page-content -->
+        	<div class="error-content text-center" style="background-image: url(assets/images/backgrounds/error-bg.jpg)">
+            	<div class="container">
+            		<h1 class="error-title">Payment Failed</h1><!-- End .error-title -->
+            		<p>Hey,seems like there was some trouble.We are there with you.Just hold back.</p>
+            		<a href="/CheckOut" class="btn btn-outline-primary-2 btn-minwidth-lg">
+            			<span>Try Again</span>
+            			<i class="icon-long-arrow-right"></i>
+            		</a>
+            	</div><!-- End .container -->
+        	</div><!-- End .error-content text-center -->
         </main><!-- End .main -->
 
         <footer class="footer">
-        	<div class="footer-middle">
+        	<div class="footer-middle border-0">
 	            <div class="container">
 	            	<div class="row">
 	            		<div class="col-sm-6 col-lg-3">
@@ -337,8 +211,8 @@
 
 	            				<ul class="widget-list">
 	            					<li><a href="#">Sign In</a></li>
-	            					<li><a href="/cart">View Cart</a></li>
-	            					<li><a href="/wishlist">My Wishlist</a></li>
+	            					<li><a href="cart.html">View Cart</a></li>
+	            					<li><a href="#">My Wishlist</a></li>
 	            					<li><a href="#">Track My Order</a></li>
 	            					<li><a href="#">Help</a></li>
 	            				</ul><!-- End .widget-list -->
@@ -653,98 +527,10 @@
     <script src="assets/js/jquery.waypoints.min.js"></script>
     <script src="assets/js/superfish.min.js"></script>
     <script src="assets/js/owl.carousel.min.js"></script>
-    <script src="assets/js/bootstrap-input-spinner.js"></script>
     <!-- Main JS File -->
     <script src="assets/js/main.js"></script>
-    
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-
-
-<script>
-  async function addToCart (tag,productId){
-    const productQuantity = tag.value
-        axios.post('/cartUpdate', { productQuantity,productId })
-            .then(function(response){
-                console.log(response.data);
-                const {totalPrice,subTotal} = response.data
-                            console.log(subTotal);
-                            document.getElementById(`totalPrice${productId}`).innerHTML = `Rs.${totalPrice.toFixed(2)}`
-                            document.getElementById('subTotal').innerHTML = `Rs.${subTotal.toFixed(2)}`
-                            document.getElementById('Total').innerHTML = `Rs.${subTotal.toFixed(2)}`
-
-                            window.location='/cart'
-                           
-            }).catch(function(error){
-                console.error('Error:', error);
-        });
-    }
-</script>
-<script>
-    function checkout(subTotal) {
-        const selectedShipping = document.querySelector('input[name="deliveryPayment"]:checked').value;
-        console.log('sssssssssss',selectedShipping);
-        const total = parseFloat(subTotal) + parseFloat(selectedShipping);
-        console.log(total);
-        window.location = `/CheckOut?total=${total.toFixed(2)}&selectedShipping=${selectedShipping}`;
-    }
-</script>
-
-<script>
-    async function deleteCartItem(index, productId) {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, remove it!',
-            cancelButtonText: 'No, keep it'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const element = document.getElementById(`cartDelete${index}`);
-                element.remove();
-                axios.post('/deleteCartItem', { productId: productId })
-                    .then(function(response) {
-                        console.log(response.data);
-                        if (response.data.success) {
-                            Swal.fire({
-                                position: "center",
-                                title: "Removed!",
-                                text: "Item has been removed from the cart.",
-                                icon: "success",
-                                showConfirmButton: false,
-                                timer: 1500
-                            }).then(() => {
-                                window.location.reload();
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Failed!",
-                                text: response.data.message,
-                                confirmButtonColor: "#3085d6"
-                            });
-                        }
-                    }).catch(function(error) {
-                        console.error('Error:', error);
-                        Swal.fire({
-                            icon: "error",
-                            title: "Error!",
-                            text: "An error occurred. Please try again later.",
-                            confirmButtonColor: "#3085d6"
-                        });
-                    });
-            }
-        });
-    }
-</script>
-
-
-
 </body>
 
 
-<!-- molla/cart.html  22 Nov 2019 09:55:06 GMT -->
+<!-- molla/404.html  22 Nov 2019 10:04:04 GMT -->
 </html>

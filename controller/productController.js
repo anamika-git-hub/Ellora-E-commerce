@@ -153,6 +153,10 @@ const editProductLoad = async(req,res)=>{
 const updateProducts = async (req,res)=>{
     try {
         const productData = await products.findOne({_id:req.body.id});
+            const productId = req.body.id
+        if (!mongoose.Types.ObjectId.isValid(productId)) {
+            console.log('Invalid product ID')
+        }
         console.log('rerjelkj',productData);
         const { error } = joiProductSchema.validate(req.body, {
             abortEarly: false
@@ -209,48 +213,24 @@ const updateProducts = async (req,res)=>{
 
 const productPage = async(req,res)=>{
    try {
+    const userId = req.session.user_id
     const queryObj = {...req.query};
     const page = req.query.page ? parseInt(req.query.page) : 1;
     const limit = 12;
     let productQuery =   { is_listed: true }
 
-    // if(queryObj.category){
-    //     const categories = queryObj.category.split(',')
-    //     console.log('cccccccccccccc',categories);
-    //     productQuery = {
-    //         ...productQuery,"categories.name":categories
-    //     }
-    // }
-    // if (queryObj.minPrice && queryObj.maxPrice && queryObj.categories) {
-    //     const categories = queryObj.categories.split(',');
-    //     productQuery = {
-    //         ...productQuery,
-    //         price: {'$gte': parseFloat(queryObj.minPrice), '$lte': parseFloat(queryObj.maxPrice)},
-    //         "categories.name": {$in: categories}
-    //     };
-    
-    // } 
-    // else if (queryObj.minPrice && queryObj.maxPrice) {
-    //     productQuery = {
-    //         ...productQuery,
-    //         price: { '$gte': parseFloat(queryObj.minPrice), '$lte': parseFloat(queryObj.maxPrice)}
-    //     }
-    // }
+   
 
-    //  apply search
+    // ------------------ apply search-------------------------//
 
     if (queryObj.search && queryObj.search.trim() !== '') {
         const searchPattern = new RegExp(queryObj.search.trim(), 'i').source;
-        console.log('searchPattern:', searchPattern); 
     
         productQuery = {...productQuery,
                  $or: [{ name: { $regex: searchPattern } }, { description: { $regex: searchPattern } }] ,
         };
     }
-    console.log('productQuery:', productQuery);
-
-
-// apply sort
+    // ---------------------apply sort--------------------------//
 
     const sortOptions = {
         Latest: {_id:-1},
@@ -265,7 +245,7 @@ const productPage = async(req,res)=>{
     let productData = await products.find(productQuery).populate({ path: 'categories', model: 'categories' }).populate('offer').sort(sort);
 
     
-// Apply pagination
+    // -----------------------Apply pagination--------------------//
 productData = productData.slice((page - 1) * limit, page * limit);
     const count = await products.countDocuments(productQuery);
     const cartData = await Cart.findOne({userId:req.session.user_id}).populate('userId').populate({path:'products.productId'});
@@ -292,7 +272,7 @@ productData = productData.slice((page - 1) * limit, page * limit);
        }
     
 
-    res.render('products',{products:productData,cartData,wishlistData,categoryData,totalPages:Math.ceil(count/limit),currentPage:page});
+    res.render('products',{products:productData,cartData,wishlistData,categoryData,totalPages:Math.ceil(count/limit),currentPage:page,userId});
     
    } catch (error) {
     console.log(error)
@@ -300,7 +280,7 @@ productData = productData.slice((page - 1) * limit, page * limit);
 }
 
 
-// filter products
+// ---------------------------- filter products---------------------------//
 const filterProduct = async (req, res) => {
     try {
 
@@ -372,10 +352,11 @@ const filterProduct = async (req, res) => {
 const productDetails = async(req,res)=>{
     try {
         const {id} = req.query
+        const userId = req.session.user_id;
         const productData = await products.findById({_id:id});
         const wishlistData = await Wishlist.findOne({userId:req.session.user_id}).populate('userId').populate('products.productId');
         const cartData = await Cart.findOne({userId:req.session.user_id}).populate('userId').populate({path:'products.productId'});
-        res.render('productDetail',{products:productData,cartData,wishlistData})
+        res.render('productDetail',{products:productData,cartData,wishlistData,userId})
     } catch (error) {
        console.log(error.message) 
     }

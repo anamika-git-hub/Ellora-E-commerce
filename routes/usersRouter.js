@@ -34,8 +34,8 @@ userRouter.post('/login',isLogout,userController.verifyLogin);
 userRouter.get('/google',isLogout,userController.googleAuthentication);
 userRouter.get('/logout',isLogin,userController.loadLogout);
 
-userRouter.get('/contact',isLogin,userController.loadContact);
-userRouter.get('/about',isLogin,userController.loadAbout);
+userRouter.get('/contact',userController.loadContact);
+userRouter.get('/about',userController.loadAbout);
 
 userRouter.get('/profile',isLogin,userController.loadProfile);
 userRouter.post('/profile',isLogin,userController.editProfile);
@@ -46,9 +46,8 @@ userRouter.post('/deleteAddress',isLogin,userController.deleteAddress);
 
 userRouter.get('/products',productController.productPage);
 userRouter.get('/filterProduct',isLogin,productController.filterProduct);
-userRouter.get('/productDetail',isLogin,productController.productDetails);
+userRouter.get('/productDetail',productController.productDetails);
 
-// userRouter.post('/sort',productController.sortProduct);
 
 userRouter.get('/wishlist',isLogin,wishlistController.loadWishlist);
 userRouter.post('/wishlist',isLogin,wishlistController.addtoWishlist);
@@ -56,7 +55,7 @@ userRouter.post('/deleteWishlistItem',isLogin,wishlistController.deleteWishlistI
 
 
 userRouter.get('/cart',isLogin,cartController.loadCart);
-userRouter.post('/cart',isLogin,cartController.addtoCart);
+userRouter.post('/addcart',isLogin,cartController.addtoCart);
 userRouter.post('/cartUpdate',isLogin,cartController.updatequantity);
 userRouter.post('/deleteCartItem',isLogin,cartController.deleteCartItem);
 userRouter.post('/applyCoupon',isLogin,couponController.applyCoupon);
@@ -65,6 +64,7 @@ userRouter.get('/CheckOut',isLogin,cartController.loadCheckOut);
 userRouter.post('/placeOrder',isLogin,orderController.placeOrder);
 userRouter.post('/verifyPayment',isLogin,orderController.verifyPayment);
 userRouter.get('/successPage',isLogin,orderController.loadSuccessPage);
+userRouter.get('/failedPage',isLogin,orderController.loadFailedPage);
 userRouter.get('/cancelOrder',isLogin,orderController.cancelOrder);
 userRouter.post('/returnProduct',isLogin,orderController.returnProduct);
 

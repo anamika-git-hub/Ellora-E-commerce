@@ -1,6 +1,7 @@
 const User=require('../models/userModel');
 const bcrypt=require('bcrypt')
 const randomstring =require('randomstring');
+const Order = require('../models/orderModel');
 const {joiUserSchema} = require('../models/ValidationSchema');
 
 
@@ -60,6 +61,18 @@ const loadHome=async(req,res)=>{
         res.render('adminHome');
     } catch (error) {
         console.log(error.message)
+    }
+}
+
+const orderChart = async(req,res)=>{
+    try {
+        
+        const  orderData = await Order.find().populate('products.productId').populate('userId');
+        const DeliveredOrders = orderData.filter(order => 
+            order.products.every(product => product.status === 'Delivered')
+          );
+    } catch (error) {
+        console.log(error.message);
     }
 }
 
@@ -231,5 +244,6 @@ module.exports ={
     addUser,
     editUserLoad,
     updateUser,
-    loadSignout
+    loadSignout,
+    orderChart
 }

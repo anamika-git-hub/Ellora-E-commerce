@@ -141,12 +141,17 @@
                                 <li>
                                     <a href="/contact">Contact</a>
                                 </li>
-                                <li>
-                                    <a href="/profile">Profile</a>
-                                </li>
-                                <li>
-                                    <a href="/login">Login</a>
-                                </li>
+                                <% if(userId){%>
+                                    <li>
+                                        <a href="/profile">Profile</a>
+                                    </li>
+                                        <%}else{%>
+                                            <li>
+                                                <a href="/login">Login</a>
+                
+                                            </li>
+                                            <%} %>
+                        
                             </ul><!-- End .menu -->
                         </nav><!-- End .main-nav -->
                     </div><!-- End .header-left -->
@@ -164,7 +169,7 @@
                         </div><!-- End .header-search -->
                         
                         <div class="dropdown cart-dropdown">
-                            <a href="/wishlist" class="dropdown-toggle" role="button">
+                            <a href="/wishlist" id="wishlist-link" class="dropdown-toggle" role="button">
                                 <i class="icon-heart-o"></i>
                                 <% if(wishlistData && wishlistData.products.length>0){ %>
                                     <span class="cart-count"><%= wishlistData.products.length %></span>
@@ -173,7 +178,7 @@
                         </div><!-- End .cart-dropdown -->
 
                         <div class="dropdown cart-dropdown">
-                            <a href="/cart" class="dropdown-toggle" role="button" >
+                            <a href="/cart" id="cart-link" class="dropdown-toggle" role="button" >
                                 <i class="icon-shopping-cart"></i>
                                 <% if(cartData && cartData.products.length>0){%>
                                     <span class="cart-count"><%= cartData.products.length %></span>
@@ -762,132 +767,259 @@
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script>
-  async function addtoCart (productId){
-    productQuantity = 1;
-        axios.post('/cart', { productQuantity,productId })
-            .then(function(response){
-                console.log(response.data);
-                if (response.data.login) {
-                    Swal.fire({
-                        icon: "warning",
-                        title: "Please Login",
-                        confirmButtonColor: "#c96",
-                        confirmButtonText: "Login",
-                        showCancelButton: true,
-                        cancelButtonColor: "#d33",
-                        text: response.data.message,
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = "/login";
-                        }
-                    });
-                } else if (response.data.success == true) {
-                    Swal.fire({
-                        position: "center",
-                        title: "Success!",
-                        text: "Item added to Cart",
-                        icon: "success",
-                        showConfirmButton: true,
-                        confirmButtonColor: "#c96",
-                        confirmButtonText: "View cart",
-                        showCancelButton: true,
-                        cancelButtonColor: "#fff",
-                        cancelButtonText: "Continue Shopping",
-                        customClass: {
-                            cancelButton: 'cancel-button-class',
-                            confirmButton:'confirm-button-class'
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = "/cart";
-                        }
-                    });
-                } else if(response.data.success == false){
-                    Swal.fire({
-                        position: "center",
-                        title: "Failed!",
-                        text: "This item already in the cart",
-                        icon: "info",
-                        showConfirmButton: true,
-                        confirmButtonColor: "#c96",
-                        confirmButtonText: "View cart",
-                        showCancelButton: true,
-                        cancelButtonColor: "#fff",
-                        cancelButtonText: "Continue Shopping",
-                        customClass: {
-                            cancelButton: 'cancel-button-class',
-                            confirmButton:'confirm-button-class'
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = "/cart";
-                        }
-                    });
+    $(document).ready(function() {
+        $('#wishlist-link').on('click', function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                url: '/wishlist',
+                method: 'GET',
+                success: function(data) {
+                    window.location.href = '/wishlist';
+                },
+                error: function(xhr) {
+                    if (xhr.status === 401 && xhr.responseJSON && xhr.responseJSON.login) {
+                        Swal.fire({
+                            icon: "warning",
+                            title: "Please Login",
+                            confirmButtonColor: "#c96",
+                            confirmButtonText: "Login",
+                            showCancelButton: true,
+                            cancelButtonColor: "#d33",
+                            text: xhr.responseJSON.message,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = "/login";
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "An Error Occurred",
+                            text: "Please try again later.",
+                            confirmButtonColor: "#c96",
+                        });
+                    }
                 }
-            }).catch(function(error){
-                console.error('Error:', error);
+            });
         });
-    }
+    });
 </script>
-<script>
-    async function addtoWishlist (productId){
-          axios.post('/wishlist', {productId})
-              .then(function(response){
-                  console.log(response.data);
-                  if (response.data.login) {
-                      Swal.fire({
-                          icon: "warning",
-                          title: "Please Login",
-                          confirmButtonColor: "#c96",
-                          confirmButtonText: "Login",
-                          showCancelButton: true,
-                          cancelButtonColor: "#d33",
-                          text: response.data.message,
-                      }).then((result) => {
-                          if (result.isConfirmed) {
-                              window.location.href = "/login";
-                          }
-                      });
-                  } else if (response.data.success == true) {
-                    Swal.fire({
-                        position: "center",
-                        title: "Success!",
-                        text: "Item added to wishlist",
-                        icon: "success",
-                        showConfirmButton: true,
-                        confirmButtonColor: "#c96",
-                        confirmButtonText: "View Wishlist",
-                        showCancelButton: true,
-                        cancelButtonColor: "#fff",
-                        cancelButtonText: "Continue Shopping",
-                        customClass: {
-                            cancelButton: 'cancel-button-class',
-                            confirmButton:'confirm-button-class'
-                        }
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            window.location.href = "/wishlist";
-                        }
-                    });
-                  }
-              }).catch(function(error){
-                  console.error('Error:', error);
-          });
-      }
-  </script>
 
 <script>
-    // Get all checkbox inputs
-    const checkboxes = document.querySelectorAll('.category-checkbox');
-    
-    // Get the hidden input element
+    $(document).ready(function() {
+        $('#cart-link').on('click', function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                url: '/cart',
+                method: 'GET',
+                success: function(data) {
+                    window.location.href = '/cart';
+                },
+                error: function(xhr) {
+                    if (xhr.status === 401 && xhr.responseJSON && xhr.responseJSON.login) {
+                        Swal.fire({
+                            icon: "warning",
+                            title: "Please Login",
+                            confirmButtonColor: "#c96",
+                            confirmButtonText: "Login",
+                            showCancelButton: true,
+                            cancelButtonColor: "#d33",
+                            text: xhr.responseJSON.message,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = "/login";
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "An Error Occurred",
+                            text: "Please try again later.",
+                            confirmButtonColor: "#c96",
+                        });
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+    async function addtoCart(productId) {
+      const productQuantity = 1;
+      try {
+        const response = await axios.post('/addCart', { productQuantity, productId });
+        console.log(response.data);
+  
+        if (response.data.login) {
+          Swal.fire({
+            icon: "warning",
+            title: "Please Login",
+            confirmButtonColor: "#c96",
+            confirmButtonText: "Login",
+            showCancelButton: true,
+            cancelButtonColor: "#d33",
+            text: response.data.message,
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = "/login";
+            }
+          });
+        } else if (response.data.success === true) {
+          Swal.fire({
+            position: "center",
+            title: "Success!",
+            text: "Item added to Cart",
+            icon: "success",
+            showConfirmButton: true,
+            confirmButtonColor: "#c96",
+            confirmButtonText: "View cart",
+            showCancelButton: true,
+            cancelButtonColor: "#fff",
+            cancelButtonText: "Continue Shopping",
+            customClass: {
+              cancelButton: 'cancel-button-class',
+              confirmButton: 'confirm-button-class'
+            }
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = "/cart";
+            }
+          });
+        } else if (response.data.success === false) {
+          Swal.fire({
+            position: "center",
+            title: "Failed!",
+            text: "This item is already in the cart",
+            icon: "info",
+            showConfirmButton: true,
+            confirmButtonColor: "#c96",
+            confirmButtonText: "View cart",
+            showCancelButton: true,
+            cancelButtonColor: "#fff",
+            cancelButtonText: "Continue Shopping",
+            customClass: {
+              cancelButton: 'cancel-button-class',
+              confirmButton: 'confirm-button-class'
+            }
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = "/cart";
+            }
+          });
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        if (error.response && error.response.status === 401 && error.response.data.login) {
+          Swal.fire({
+            icon: "warning",
+            title: "Please Login",
+            confirmButtonColor: "#c96",
+            confirmButtonText: "Login",
+            showCancelButton: true,
+            cancelButtonColor: "#d33",
+            text: error.response.data.message,
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = "/login";
+            }
+          });
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "An Error Occurred",
+            text: "Please try again later.",
+            confirmButtonColor: "#c96",
+          });
+        }
+      }
+    }
+  </script>
+  
+
+<script>
+  async function addtoWishlist(productId) {
+    try {
+      const response = await axios.post('/wishlist', { productId });
+      console.log(response.data);
+
+      if (response.data.login) {
+        Swal.fire({
+          icon: "warning",
+          title: "Please Login",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Login",
+          showCancelButton: true,
+          cancelButtonColor: "#d33",
+          text: response.data.message,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = "/login";
+          }
+        });
+      } else if (response.data.success === true) {
+        Swal.fire({
+          position: "center",
+          title: "Success!",
+          text: "Item added to wishlist",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1500
+        });
+      } else if (response.data.success === false) {
+        Swal.fire({
+          position: "center",
+          title: "Failed!",
+          text: "This item is already in the wishlist",
+          icon: "info",
+          showConfirmButton: true,
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "OK"
+        });
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      if (error.response && error.response.status === 401 && error.response.data.login) {
+        Swal.fire({
+          icon: "warning",
+          title: "Please Login",
+          confirmButtonColor: "#3085d6",
+          confirmButtonText: "Login",
+          showCancelButton: true,
+          cancelButtonColor: "#d33",
+          text: error.response.data.message,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = "/login";
+          }
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "An Error Occurred",
+          text: "Please try again later.",
+          confirmButtonColor: "#3085d6",
+        });
+      }
+    }
+  }
+</script>
+
+
+<script>
     const categoryInput = document.getElementById('categoryInput');
 
-    // Function to handle checkbox change event
     function handleCheckboxChange(event) {
-        // Prevent default form submission behavior
         event.preventDefault();
 
         let selectedCategories = [];
@@ -897,10 +1029,7 @@
             }
         });
 
-        // Set the value of the hidden input
         categoryInput.value = selectedCategories.join(',');
-        
-        // Submit form data via AJAX
         const formData = new FormData(document.getElementById('categoryForm'));
         const xhr = new XMLHttpRequest();
         console.log('ssssd',xhr);
