@@ -64,17 +64,30 @@ const loadHome=async(req,res)=>{
     }
 }
 
-const orderChart = async(req,res)=>{
+const orderChart = async (req, res) => {
     try {
+        let array = Array.from({ length: 12 }).fill(0);
+        const currentYear = new Date().getFullYear();
+        const orderData = await Order.find().populate('products.productId').populate('userId');
+        console.log('orderData:', orderData);
+        orderData.forEach(order => {
+            order.products.forEach(product => {
+                if (product.status === 'Delivered') {
+                    const month = new Date(order.date).getMonth();
+                    array[month]++;
+                }
+            });
+        });
         
-        const  orderData = await Order.find().populate('products.productId').populate('userId');
-        const DeliveredOrders = orderData.filter(order => 
-            order.products.every(product => product.status === 'Delivered')
-          );
+        console.log('array:', array);
+        res.send({ array });
     } catch (error) {
         console.log(error.message);
+        res.status(500).send({ error: error.message });
     }
-}
+};
+
+
 
 const loadUserList=async(req,res)=>{
     try {

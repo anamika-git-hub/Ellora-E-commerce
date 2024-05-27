@@ -493,6 +493,28 @@ const cancelStatusChange = async(req,res)=>{
     }
 }
 
+const loadOrderInvoice = async(req,res)=>{
+    try {
+        const {productId} = req.query
+        console.log(productId);
+        
+        const orderData = await Order.find({ userId:req.session.user_id }).sort({ '_id': -1 }).populate('products.productId').populate('userId');
+        let orderedProduct = null;
+
+        orderData.forEach(order => {
+            order.products.forEach(product => {
+                if (product.productId._id.toString() === productId) {
+                    orderedProduct = { ...product._doc, orderDate: order.date, payment: order.payment, deliveryAddress: order.delivery_address, orderId: order._id };
+                }
+            });
+        });
+
+        res.render('orderInvoice',{orderedProduct});
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 
 
 module.exports={
@@ -508,5 +530,6 @@ module.exports={
     returnApproval,
     verifyPayment,
     filterSalesReport,
-    loadFailedPage
+    loadFailedPage,
+    loadOrderInvoice
 }

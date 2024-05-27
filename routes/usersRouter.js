@@ -64,6 +64,7 @@ userRouter.get('/CheckOut',isLogin,cartController.loadCheckOut);
 userRouter.post('/placeOrder',isLogin,orderController.placeOrder);
 userRouter.post('/verifyPayment',isLogin,orderController.verifyPayment);
 userRouter.get('/successPage',isLogin,orderController.loadSuccessPage);
+userRouter.get('/orderInvoice',isLogin,orderController.loadOrderInvoice);
 userRouter.get('/failedPage',isLogin,orderController.loadFailedPage);
 userRouter.get('/cancelOrder',isLogin,orderController.cancelOrder);
 userRouter.post('/returnProduct',isLogin,orderController.returnProduct);

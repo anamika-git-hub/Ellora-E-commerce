@@ -273,40 +273,52 @@ const loadAbout = async(req,res)=>{
     }
 }
 
-const loadProfile = async(req,res)=>{
+const loadProfile = async (req, res) => {
     try {
-        var page = 1;
-        if(req.query.page){
+        let page = 1;
+        if (req.query.page) {
             page = req.query.page;
         }
         const limit = 5;
         const userId = req.session.user_id;
-        const userData = await User.findById(userId)
-        const cartData = await Cart.findOne({userId:req.session.user_id}).populate('userId').populate({path:'products.productId'});
-        const wishlistData = await Wishlist.findOne({userId:userId}).populate('userId').populate('products.productId');
-        const walletData = await Wallet.findOne()
-        const orderData = await Order.find({userId:userId}).sort({'_id':-1}).populate('products.productId').populate('userId')
-        .limit(limit * 1)
-        .skip((page-1)* limit)
 
+        // Fetch user data, cart data, wishlist data, and wallet data
+        const userData = await User.findById(userId);
+        const cartData = await Cart.findOne({ userId: req.session.user_id }).populate('userId').populate({ path: 'products.productId' });
+        const wishlistData = await Wishlist.findOne({ userId: userId }).populate('userId').populate('products.productId');
+        const walletData = await Wallet.findOne();
         
+        const orderData = await Order.find({ userId: userId }).sort({ '_id': -1 }).populate('products.productId').populate('userId');
 
-        
-        const couponData = await Coupon.find()
-        
-         const count = await Order.find({
-      }).countDocuments();
-       if(orderData){
-        res.render('profile',{userData,cartData,wishlistData,couponData,userId,walletData,orderData,totalPages:Math.ceil(count/limit),currentPage:page});
-       }else{
-        res.render('profile',{userData,cartData,wishlistData,couponData,userId});
-       }
-           
+        let allProducts = [];
+        orderData.forEach(order => {
+            order.products.forEach(product => {
+                allProducts.push({ ...product._doc, orderDate: order.date, payment: order.payment, deliveryAddress: order.delivery_address, orderId: order._id });
+            });
+        });
+        const totalProducts = allProducts.length;
+        const totalPages = Math.ceil(totalProducts / limit);
+        const paginatedProducts = allProducts.slice((page - 1) * limit, page * limit);
+
+        const couponData = await Coupon.find();
+
+        res.render('profile', {
+            userData,
+            cartData,
+            wishlistData,
+            couponData,
+            userId,
+            walletData,
+            products: paginatedProducts,
+            totalPages,
+            currentPage: page
+        });
 
     } catch (error) {
         console.log(error.message);
     }
-}
+};
+
 
 
 const editProfile = async(req,res)=>{
