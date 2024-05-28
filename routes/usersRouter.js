@@ -38,6 +38,9 @@ userRouter.get('/contact',userController.loadContact);
 userRouter.get('/about',userController.loadAbout);
 
 userRouter.get('/profile',isLogin,userController.loadProfile);
+userRouter.get('/walletHistory',isLogin,userController.showWalletHistory);
+userRouter.get('/orders',isLogin,userController.showOrderList);
+userRouter.get('/orderHistory',isLogin,orderController.loadOrderHistory);
 userRouter.post('/profile',isLogin,userController.editProfile);
 userRouter.post('/profile',isLogin,userController.resetPasswithOld);
 userRouter.post('/addAddress',isLogin,userController.addAddress);
@@ -62,6 +65,7 @@ userRouter.post('/applyCoupon',isLogin,couponController.applyCoupon);
 
 userRouter.get('/CheckOut',isLogin,cartController.loadCheckOut);
 userRouter.post('/placeOrder',isLogin,orderController.placeOrder);
+userRouter.patch('/retryRazorpay',isLogin,orderController.retryRazorpay);
 userRouter.post('/verifyPayment',isLogin,orderController.verifyPayment);
 userRouter.get('/successPage',isLogin,orderController.loadSuccessPage);
 userRouter.get('/orderInvoice',isLogin,orderController.loadOrderInvoice);

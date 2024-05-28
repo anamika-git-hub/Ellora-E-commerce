@@ -902,6 +902,7 @@
             .then(function (res) {
                 if (res.data.success) {
                     if (paymentMethod === 'Razorpay') {
+                        let orderId = res.data.razorpayId;
                         var options = {
                             "key": "" + res.data.key_id + "",
                             "amount": "" + res.data.amount + "",
@@ -918,7 +919,7 @@
                         var razorpayObject = new Razorpay(options);
                         razorpayObject.on('payment.failed', function (response) {
                             alert("Payment Failed");
-                            window.location = '/failedPage';
+                            window.location = `/failedPage?orderId=${orderId}`;
                         });
                         razorpayObject.open();
                     } else if (res.data.deliverySuccess == true) {

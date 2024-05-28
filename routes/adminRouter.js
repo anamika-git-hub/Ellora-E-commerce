@@ -53,6 +53,7 @@ adminRouter.post('/addProducts',imageUpload,productController.addProducts);
 adminRouter.get('/listProduct',isLogin,productController.listProduct);
 adminRouter.get('/editproducts',isLogin,productController.editProductLoad);
 adminRouter.post('/editproducts',isLogin,productController.updateProducts);
+adminRouter.get('/bestSellingProduct',isLogin,productController.loadBestSellingProducts);
 
 adminRouter.get('/couponList',isLogin,couponController.loadCouponList);
 adminRouter.get('/addCoupon',isLogin,couponController.loadAddCoupon);

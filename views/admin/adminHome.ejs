@@ -264,116 +264,70 @@
                             <div class="col-lg-5">
                                 <div class="card mb-4">
                                     <article class="card-body">
-                                        <h5 class="card-title">New Members</h5>
+                                        <h5 class="card-title">Top 10 Users</h5>
                                         <div class="new-member-list">
-                                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                                <div class="d-flex align-items-center">
-                                                    <img src="assets/imgs/people/avatar-4.png" alt="" class="avatar" />
+                                            <% for (let i = 0; i < topUsers.length; i++) { %>
+                                                <div class="d-flex align-items-center justify-content-between mb-4">
+                                                    <div class="d-flex align-items-center">
+                                                        <!-- User Avatar -->
+                                                        <img src="assets/imgs/people/avatar-<%= i + 1 %>.png" alt="" class="avatar" />
+                                                        <div>
+                                                            <!-- User Name -->
+                                                            <h6><%= users[i].name %></h6>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Total Amount Ordered by User -->
                                                     <div>
-                                                        <h6>Patric Adams</h6>
-                                                        <p class="text-muted font-xs">Sanfrancisco</p>
+                                                        <p> <%= topUsers[i].totalProductsOrdered %></p>
+                                                    </div>
+                                                    <div>
+                                                        <p>Rs.<%= topUsers[i].totalAmountPurchased %></p>
                                                     </div>
                                                 </div>
-                                                <a href="#" class="btn btn-xs"><i class="material-icons md-add"></i> Add</a>
-                                            </div>
-                                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                                <div class="d-flex align-items-center">
-                                                    <img src="assets/imgs/people/avatar-2.png" alt="" class="avatar" />
-                                                    <div>
-                                                        <h6>Dilan Specter</h6>
-                                                        <p class="text-muted font-xs">Sanfrancisco</p>
-                                                    </div>
-                                                </div>
-                                                <a href="#" class="btn btn-xs"><i class="material-icons md-add"></i> Add</a>
-                                            </div>
-                                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                                <div class="d-flex align-items-center">
-                                                    <img src="assets/imgs/people/avatar-3.png" alt="" class="avatar" />
-                                                    <div>
-                                                        <h6>Tomas Baker</h6>
-                                                        <p class="text-muted font-xs">Sanfrancisco</p>
-                                                    </div>
-                                                </div>
-                                                <a href="#" class="btn btn-xs"><i class="material-icons md-add"></i> Add</a>
-                                            </div>
+                                            <% } %>
                                         </div>
                                     </article>
                                 </div>
                             </div>
+                            
                             <div class="col-lg-7">
                                 <div class="card mb-4">
                                     <article class="card-body">
-                                        <h5 class="card-title">Recent activities</h5>
-                                        <ul class="verti-timeline list-unstyled font-sm">
-                                            <li class="event-list">
-                                                <div class="event-timeline-dot">
-                                                    <i class="material-icons md-play_circle_outline font-xxl"></i>
-                                                </div>
+                                        <h5 class="card-title">Top 10 Best Selling Products</h5>
+                                        <ul class="list-unstyled font-sm">
+                                            <% for (let i = 0; i < bestSellingProducts.length; i++) { %>
+                                            <li class="event-list mt-3">
                                                 <div class="media">
+                                                    <!-- Product position -->
                                                     <div class="me-3">
-                                                        <h6><span>Today</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
+                                                        <div><%= i + 1 %></div>
                                                     </div>
-                                                    <div class="media-body">
-                                                        <div>Lorem ipsum dolor sit amet consectetur</div>
+                                                    <!-- Product image -->
+                                                    <div class="me-3">
+                                                        <img src="<%= products[i].image[0] %>" alt="Product Image" class="img-fluid" style="max-width: 25px;">
+                                                    </div>
+                                                    <div class="me-3" style="width: 150px;">
+                                                        <!-- Product name -->
+                                                        <h6><%= products[i].name %></h6>
+                                                    </div>
+                                                    <div class="me-3">
+                                                        <!-- Product quantity -->
+                                                        <div><%= bestSellingProducts[i].totalQuantity %></div>
+                                                    </div>
+                                                    <div class="me-3">
+                                                        <!-- Product total amount -->
+                                                        <div>Rs.<%= (products[i].price * bestSellingProducts[i].totalQuantity).toFixed(2) %> </div>
                                                     </div>
                                                 </div>
                                             </li>
-                                            <li class="event-list active">
-                                                <div class="event-timeline-dot">
-                                                    <i class="material-icons md-play_circle_outline font-xxl animation-fade-right"></i>
-                                                </div>
-                                                <div class="media">
-                                                    <div class="me-3">
-                                                        <h6><span>17 May</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <div>Debitis nesciunt voluptatum dicta reprehenderit</div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="event-list">
-                                                <div class="event-timeline-dot">
-                                                    <i class="material-icons md-play_circle_outline font-xxl"></i>
-                                                </div>
-                                                <div class="media">
-                                                    <div class="me-3">
-                                                        <h6><span>13 May</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <div>Accusamus voluptatibus voluptas.</div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="event-list">
-                                                <div class="event-timeline-dot">
-                                                    <i class="material-icons md-play_circle_outline font-xxl"></i>
-                                                </div>
-                                                <div class="media">
-                                                    <div class="me-3">
-                                                        <h6><span>05 April</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <div>At vero eos et accusamus et iusto odio dignissi</div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li class="event-list">
-                                                <div class="event-timeline-dot">
-                                                    <i class="material-icons md-play_circle_outline font-xxl"></i>
-                                                </div>
-                                                <div class="media">
-                                                    <div class="me-3">
-                                                        <h6><span>26 Mar</span> <i class="material-icons md-trending_flat text-brand ml-15 d-inline-block"></i></h6>
-                                                    </div>
-                                                    <div class="media-body">
-                                                        <div>Responded to need “Volunteer Activities</div>
-                                                    </div>
-                                                </div>
-                                            </li>
+                                            <% } %>
                                         </ul>
+                                        
+                                        
                                     </article>
                                 </div>
                             </div>
+                            
                         </div>
                     </div>
                     <div class="col-xl-4 col-lg-12">
@@ -385,30 +339,19 @@
                         </div>
                         <div class="card mb-4">
                             <article class="card-body">
-                                <h5 class="card-title">Marketing Chanel</h5>
-                                <span class="text-muted font-xs">Facebook</span>
-                                <div class="progress mb-3">
-                                    <div class="progress-bar" role="progressbar" style="width: 15%">15%</div>
-                                </div>
-                                <span class="text-muted font-xs">Instagram</span>
-                                <div class="progress mb-3">
-                                    <div class="progress-bar" role="progressbar" style="width: 65%">65%</div>
-                                </div>
-                                <span class="text-muted font-xs">Google</span>
-                                <div class="progress mb-3">
-                                    <div class="progress-bar" role="progressbar" style="width: 51%">51%</div>
-                                </div>
-                                <span class="text-muted font-xs">Twitter</span>
-                                <div class="progress mb-3">
-                                    <div class="progress-bar" role="progressbar" style="width: 80%">80%</div>
-                                </div>
-                                <span class="text-muted font-xs">Other</span>
-                                <div class="progress mb-3">
-                                    <div class="progress-bar" role="progressbar" style="width: 80%">80%</div>
-                                </div>
+                                <h5 class="card-title">Revenue Based on Categories</h5>
+                                <!-- Loop through top selling categories and their percentages -->
+                                <% for (let i = 0; i < bestSellingCategories.length; i++) { %>
+                                    <span class="text-muted font-xs"><%= bestSellingCategories[i].categoryName %></span>
+                                    <div class="progress mb-3">
+                                        <!-- Use the percentage from your backend data -->
+                                        <div class="progress-bar" role="progressbar"  aria-valuemin='0' aria-valuemax='100'style="width:<%= (bestSellingCategories[i].percentage.toFixed(2)) %>%;"><%= bestSellingCategories[i].percentage.toFixed(2) %>%</div>
+                                    </div>
+                                <% } %>
                             </article>
                         </div>
                     </div>
+                    
                 </div>
                 <div class="card mb-4">
                     <header class="card-header">

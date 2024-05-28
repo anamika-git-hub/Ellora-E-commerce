@@ -3,6 +3,7 @@ const bcrypt=require('bcrypt')
 const randomstring =require('randomstring');
 const Order = require('../models/orderModel');
 const {joiUserSchema} = require('../models/ValidationSchema');
+const Product = require('../models/productsModel');
 
 
 const securePassword=async(password)=>{
@@ -56,20 +57,94 @@ const verifyLogin=async(req,res)=>{
     }
 }
 
-const loadHome=async(req,res)=>{
-    try {
-        res.render('adminHome');
+const loadHome = async (req, res) => {
+    try { 
+
+        //--------------top Users------------//
+
+        const userData = await User.find()
+        const topUsers = await Order.aggregate([
+        { $unwind: "$products" }, 
+        { 
+            $group: { 
+                _id: "$userId", 
+                totalProductsOrdered: { $sum: "$products.quantity" } 
+            } 
+        },
+        { $sort: { totalProductsOrdered: -1 } }, 
+        { $limit: 10 }
+    ]);
+    const userIds = topUsers.map(user => user._id);
+    const users = await User.find({_id:{$in:userIds}})
+    console.log(topUsers);
+    console.log('uuuuuuuuuu',users);
+        //------------------top products -------------------//
+        const bestSellingProducts = await Order.aggregate([
+            { $unwind: "$products" },
+            {
+                $group: {
+                    _id: "$products.productId",
+                    totalQuantity: { $sum: "$products.quantity" }
+                }
+            },
+            { $sort: { totalQuantity: -1 } },
+            { $limit: 10 }
+        ]);
+        const productIds = bestSellingProducts.map(product => product._id);
+        const products = await Product.find({ _id: { $in: productIds } });
+
+        for (const user of topUsers) {
+            user.totalAmountPurchased = 0;
+            for (const product of products) {
+                const quantity = bestSellingProducts.find(p => p._id.equals(product._id))?.totalQuantity || 0;
+                user.totalAmountPurchased += quantity * product.price;
+            }
+        }
+
+  //-------------------- top categories ---------------//
+  const categoryQuantities = await Order.aggregate([
+    { $unwind: "$products" },
+    {
+        $lookup: {
+            from: "products",
+            localField: "products.productId",
+            foreignField: "_id",
+            as: "product"
+        }
+    },
+    { $unwind: "$product" },
+    { $lookup: { from: "categories", localField: "product.categories", foreignField: "_id", as: "category" } },
+    { $unwind: "$category" },
+    {
+        $group: {
+            _id: "$category._id",
+            categoryName: { $first: "$category.name" },
+            totalQuantity: { $sum: "$products.quantity" }
+        }
+    }
+]);
+
+const totalQuantityAllCategories = categoryQuantities.reduce((total, category) => total + category.totalQuantity, 0);
+
+const bestSellingCategories = categoryQuantities.map(category => ({
+    _id: category._id,
+    categoryName: category.categoryName,
+    totalQuantity: category.totalQuantity,
+    percentage: (category.totalQuantity / totalQuantityAllCategories) * 100
+})).sort((a, b) => b.percentage - a.percentage).slice(0, 10);
+console.log('bbbbbbbbbbbbbbbb',bestSellingCategories);
+
+        res.render('adminHome', { bestSellingProducts, products ,topUsers ,users,bestSellingCategories});
     } catch (error) {
-        console.log(error.message)
+        console.log(error.message);
     }
 }
+
 
 const orderChart = async (req, res) => {
     try {
         let array = Array.from({ length: 12 }).fill(0);
-        const currentYear = new Date().getFullYear();
         const orderData = await Order.find().populate('products.productId').populate('userId');
-        console.log('orderData:', orderData);
         orderData.forEach(order => {
             order.products.forEach(product => {
                 if (product.status === 'Delivered') {
@@ -79,7 +154,6 @@ const orderChart = async (req, res) => {
             });
         });
         
-        console.log('array:', array);
         res.send({ array });
     } catch (error) {
         console.log(error.message);

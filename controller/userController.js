@@ -277,40 +277,39 @@ const loadProfile = async (req, res) => {
     try {
         let page = 1;
         if (req.query.page) {
-            page = req.query.page;
+            page = parseInt(req.query.page);
         }
-        const limit = 5;
+        const limit = 4;
         const userId = req.session.user_id;
 
         // Fetch user data, cart data, wishlist data, and wallet data
         const userData = await User.findById(userId);
         const cartData = await Cart.findOne({ userId: req.session.user_id }).populate('userId').populate({ path: 'products.productId' });
         const wishlistData = await Wishlist.findOne({ userId: userId }).populate('userId').populate('products.productId');
-        const walletData = await Wallet.findOne();
-        
-        const orderData = await Order.find({ userId: userId }).sort({ '_id': -1 }).populate('products.productId').populate('userId');
+        const walletData = await Wallet.findOne({ userId: req.session.user_id });
 
-        let allProducts = [];
-        orderData.forEach(order => {
-            order.products.forEach(product => {
-                allProducts.push({ ...product._doc, orderDate: order.date, payment: order.payment, deliveryAddress: order.delivery_address, orderId: order._id });
-            });
-        });
-        const totalProducts = allProducts.length;
-        const totalPages = Math.ceil(totalProducts / limit);
-        const paginatedProducts = allProducts.slice((page - 1) * limit, page * limit);
+        const orderData = await Order.find({ userId: userId }).sort({ '_id': -1 }).populate('products.productId').populate('userId');
+        
+        const totalOrders = orderData.length;
+        const totalPages = Math.ceil(totalOrders / limit);
+        const paginatedOrders = orderData.slice((page - 1) * limit, page * limit);
+
+        const walletHistory = walletData.walletHistory;
+        const walletTotalPages = Math.ceil(walletHistory.length / limit);
+        const paginatedWalletHistory = walletHistory.slice((page - 1) * limit, page * limit);
 
         const couponData = await Coupon.find();
 
         res.render('profile', {
+            paginatedOrders,
             userData,
             cartData,
             wishlistData,
             couponData,
             userId,
-            walletData,
-            products: paginatedProducts,
+            walletData: { ...walletData._doc, walletHistory: paginatedWalletHistory },
             totalPages,
+            walletTotalPages,
             currentPage: page
         });
 
@@ -318,6 +317,69 @@ const loadProfile = async (req, res) => {
         console.log(error.message);
     }
 };
+
+
+
+const showOrderList = async(req,res)=>{
+    try {
+        
+        let page = 1;
+        if (req.query.page) {
+            page = parseInt(req.query.page);
+            console.log('ppppppppppp',page);
+        }
+        
+        const limit = 5;
+        const userId = req.session.user_id;
+
+        const userData = await User.findById(userId);
+        const orderData = await Order.find({ userId: userId }).sort({ '_id': -1 }).populate('products.productId').populate('userId');
+        let allProducts = [];
+        orderData.forEach(order => {
+            order.products.forEach(product => {
+                allProducts.push({ ...product._doc, orderDate: order.date, payment: order.payment, deliveryAddress: order.delivery_address, orderId: order._id });
+            });
+        });
+
+        const totalProducts = allProducts.length;
+        const totalPages = Math.ceil(totalProducts / limit);
+        const paginatedProducts = allProducts.slice((page - 1) * limit, page * limit);
+        res.json({
+            userData,
+            products: paginatedProducts,
+            totalPages,
+            currentPage: page
+        });
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ error: error.message });
+    }
+}
+
+ const showWalletHistory = async(req,res)=>{
+    try {
+        let page = 1;
+        if (req.query.page) {
+            page = parseInt(req.query.page);
+        }
+        const limit = 5;
+        const userId = req.session.user_id;
+    
+        const walletData = await Wallet.findOne({ userId: req.session.user_id });
+        const walletHistory = walletData.walletHistory;
+        const walletTotalPages = Math.ceil(walletHistory.length / limit);
+        const paginatedWalletHistory = walletHistory.slice((page - 1) * limit, page * limit);
+    
+        res.json({
+            walletHistory: paginatedWalletHistory,
+            walletTotalPages,
+            currentPage: page
+        });
+    
+    } catch (error) {
+        console.log(error.message);
+    }
+ }
 
 
 
@@ -498,5 +560,7 @@ module.exports={
     resetPasswithOld,
     addAddress,
     editAddress,
-    deleteAddress
+    deleteAddress,
+    showWalletHistory,
+    showOrderList
 }

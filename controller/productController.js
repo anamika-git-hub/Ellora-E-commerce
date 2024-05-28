@@ -8,6 +8,7 @@ const {joiProductSchema} = require('../models/ValidationSchema')
 const uuid = require('uuid');
 const cloudinary = require("../utils/cloudinary");
 const Offer = require('../models/offerModel');
+const Order = require('../models/orderModel')
 const mongoose = require('mongoose')
 
 
@@ -363,7 +364,33 @@ const productDetails = async(req,res)=>{
         
 }
 
+const loadBestSellingProducts = async(req,res)=>{
+    try {
+Order.aggregate([
+    { $unwind: "$products" },
+    {
+        $group: {
+            _id: "$products.productId",
+            totalQuantity: { $sum: "$products.quantity" }
+        }
+    },
+    { $sort: { totalQuantity: -1 } },
+    { $limit: 10 }
+])
+.then(results => {
+    console.log("Top 10 most ordered products:");
+    results.forEach(product => {
+        console.log(`Product ID: ${product._id}, Total Quantity: ${product.totalQuantity}`);
+    });
+})
+.catch(error => {
+    console.error("Error:", error);
+});
 
+    } catch (error) {
+        console.log(error.message);
+    }
+}
 
 module.exports={
     loadProductList,
@@ -374,5 +401,6 @@ module.exports={
     updateProducts,
     productPage,
     productDetails,
-    filterProduct
+    filterProduct,
+    loadBestSellingProducts
 }

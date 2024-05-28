@@ -27,82 +27,18 @@
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <!-- Main CSS File -->
     <link rel="stylesheet" href="assets/css/style.css">
-    <style>
-        .product-media img {
-            width: 50px; /* Adjusted the width to 50px */
-            height: auto; /* Maintain the aspect ratio */
-        }
-        .order {
-            margin-bottom: 20px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .order-products {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        .product {
-            display: flex;
-            align-items: center;
-        }
-        .product-title {
-            margin-left: 15px;
-            font-size: 14px; /* Adjusted the font size */
-            text-align: left;
-        }
-        .order-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 15px;
-        }
-        .order {
-    padding: 15px;
-    border: 1px solid #ddd;
-    margin-bottom: 20px;
-}
-
-.order-products .product {
-    margin-bottom: 10px;
-}
-
-.product-media {
-    margin-bottom: 10px;
-}
-
-.order-details {
-    padding: 15px;
-}
-
-.order-details .order-date,
-.order-details .order-status,
-.order-details .order-payment-method,
-.order-details .order-total {
-    margin-bottom: 10px;
-}
-
-.order-view-details {
-    margin-top: 20px;
-}
-
-.product-image {
-    width: 100px;
-    height: auto;
-}
-
-    </style>
 </head>
 
 <body>
     <style>
+        .order-details {
+    display: none;
+}
+
+#orderList, #paginationId {
+    display: block;
+}
+
         .wrapper {
             display: flex;
             align-items: center;
@@ -328,79 +264,29 @@
                                     <!---------------------------------------- Orders------------------------------------------------ -->
                                     
                                     <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
-        <% if(paginatedOrders && paginatedOrders.length > 0) { %>
-            <% paginatedOrders.forEach((order) => { %>
-                <div class="order">
-                    <div class="row">
-                        <!-- Left Column -->
-                        <div class="col-md-4">
-                            <div class="order-products">
-                                <% order.products.forEach((product) => { %>
-                                    <div class="product">
-                                        <figure class="product-media">
-                                            <a href="#">
-                                                <img src="<%= product.productId.image[0] %>" alt="Product image" class="product-image">
-                                            </a>
-                                        </figure>
-                                        <h3 class="product-title">
-                                            <a href="#"><%= product.productId.name %></a>
-                                        </h3>
+                                        <table id="orderList" class="table table-cart table-mobile">
+                                            <thead>
+                                                <tr>
+                                                    <th>Product</th>
+                                                    <th>Price</th>
+                                                    <th>Quantity</th>
+                                                    <th>Total</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="orderListBody">
+                                                <!-- Order rows will be dynamically inserted here -->
+                                            </tbody>
+                                        </table>
+                                        <div id="paginationId" class="pagination-area mt-30 mb-50">
+                                            <nav aria-label="Page navigation example">
+                                                <ul class="pagination justify-content-center" id="orderPagination">
+                                                    <!-- Pagination links will be dynamically inserted here -->
+                                                </ul>
+                                            </nav>
+                                        </div>
                                     </div>
-                                <% }) %>
-                            </div>
-                        </div>
-                        <!-- Right Column -->
-                        <div class="col-md-4">
-                            <div class="order-details">
-                                <div class="order-date">
-                                    <strong>Order Date:</strong> <%= order.date.toDateString() %>
-                                </div>
-                                <div class="order-status">
-                                    <strong>Order Status:</strong> <%= order.status %>
-                                </div>
-                            
-                    
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="order-details">
-                               
-                                <div class="order-payment-method">
-                                    <strong>Payment Method:</strong> <%= order.payment %>
-                                </div>
-                                <div class="order-total">
-                                    <strong>Total Amount:</strong> Rs.<%= order.total_amount %>
-                                </div>
-                                <div class="order-view-details">
-                                    <a href="#" onclick="showDetails('<%= order._id %>')" class="btn btn-outline-primary-2">View Details</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <hr>
-            <% }) %>
-        <% } else { %>
-            <p>No orders have been made yet.</p>
-            <a href="/products" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
-        <% } %>
-
-        <div id="paginationId" class="pagination-area mt-30 mb-50">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-center">
-                    <% for(let j = 1; j <= totalPages; j++) { %>
-                        <li class="page-item <%= j === currentPage ? 'active' : '' %>">
-                            <a class="page-link" href="?page=<%= j %>"><%= j %></a>
-                        </li>
-                    <% } %>
-                    <li class="page-item">
-                        <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    </div>
+                                    
 
                                     
 								    <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
@@ -601,13 +487,13 @@
                                        
                                             
                                             
-                                         <div id="walletHistory" style="display: none;">
+                                        <div id="walletHistory" style="display: none;">
                                             <div class="col-lg-12 text-right">
                                                 <a onclick="toaccountDetails()" href="#tab-account" id="">back</a>
-                                                </div>
+                                            </div>
                                             <div class="table-responsive">
                                                 <table id="tableId" class="table table-hover">
-                                                    <thead >
+                                                    <thead>
                                                         <tr>
                                                             <th scope="col">Description</th>
                                                             <th scope="col">Amount</th>
@@ -615,35 +501,20 @@
                                                             <th scope="col">Status</th>
                                                         </tr>
                                                     </thead>
-                                                    <% if(walletData ){%>
-                                                       
-                                                    <% walletData.walletHistory.forEach(wallet=>{%>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td><%= wallet.description %></td>
-                                                            <td><%= wallet.amount %></td>
-                                                            <td><%= wallet.date.toLocaleDateString() %></td>
-                                                            <td><%= wallet.status %></td>
-                                                        </tr>
+                                                    <tbody id="walletHistoryBody">
+                                                        <!-- Wallet history rows will be dynamically inserted here -->
                                                     </tbody>
-                                                    <%}) %>
-                                                    <%} %>
-
                                                 </table>
                                                 <div id="paginationId" class="pagination-area mt-30 mb-50">
-                                                    <nav aria-label="Page navigation example ">
-                                                        <ul class="pagination justify-content-center">
-                                                            <% for(let j=1; j<=totalPages; j++){ %>
-                                                            <li class="page-item <%= j === currentPage ? "active":" "%>"><a class="page-link" href="?page=<%= j%>"><%= j%></a></li>
-                                                            <% } %>
-                                                            <li class="page-item">
-                                                                <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                                                            </li>
+                                                    <nav aria-label="Page navigation example">
+                                                        <ul class="pagination justify-content-center" id="walletPagination">
+                                                            <!-- Pagination links will be dynamically inserted here -->
                                                         </ul>
                                                     </nav>
-                                                </div> 
+                                                </div>
                                             </div>
-                                         </div>
+                                        </div>
+                                        
                                        
                                         
                                         <div id="editDetails" style="display: none;">
@@ -1160,10 +1031,56 @@
     }
 </script>
 
+
 <script>
-    function showWalletHistory(){
+    function showWalletHistory(page = 1) {
         $('#accountDetails').hide();
         $('#walletHistory').show();
+        fetchWalletHistory(page);
+    }
+
+    function fetchWalletHistory(page) {
+        $.ajax({
+            url: `/walletHistory?page=${page}`,
+            method: 'GET',
+            success: function (response) {
+                const walletHistoryBody = $('#walletHistoryBody');
+                const walletPagination = $('#walletPagination');
+                walletHistoryBody.empty();
+                walletPagination.empty();
+
+                response.walletHistory.forEach(wallet => {
+                    walletHistoryBody.append(`
+                        <tr>
+                            <td>${wallet.description}</td>
+                            <td>${wallet.amount.toFixed(2)}</td>
+                            <td>${new Date(wallet.date).toLocaleDateString()}</td>
+                            <td>${wallet.status}</td>
+                        </tr>
+                    `);
+                });
+
+                for (let j = 1; j <= response.walletTotalPages; j++) {
+                    walletPagination.append(`
+                        <li class="page-item ${j === response.currentPage ? 'active' : ''}">
+                            <a class="page-link" href="#" onclick="fetchWalletHistory(${j})">${j}</a>
+                        </li>
+                    `);
+                }
+                walletPagination.append(`
+                    <li class="page-item">
+                        <a class="page-link" href="#" onclick="fetchWalletHistory(${Math.min(response.currentPage + 1, response.walletTotalPages)})">
+                            <i class="material-icons md-chevron_right"></i>
+                        </a>
+                    </li>
+                `);
+            }
+        });
+    }
+
+    function toaccountDetails() {
+        $('#walletHistory').hide();
+        $('#accountDetails').show();
     }
 </script>
 
@@ -1174,9 +1091,155 @@
     }
 </script>
 <script>
-    function showDetails(orderId) {
-        window.location = `/orderHistory?orderId=${orderId}`;
+    function fetchOrders(page = 1) {
+        $.ajax({
+            url: `/orders?page=${page}`,
+            method: 'GET',
+            success: function (response) {
+                let orderListBody = $('#orderListBody');
+                let orderPagination = $('#orderPagination');
+                orderListBody.empty();
+                orderPagination.empty();
+                let userData = response.userData;
+                
+                response.products.forEach(product => {
+                    console.log('rrrrrrrrrrr',product.productId._id);
+                    orderListBody.append(`
+                        <tr>
+                            <td class="product-col">
+                                <div class="product">
+                                    <figure class="product-media">
+                                        <a href="#" class="to-order-details" data-id="${product.productId._id}" aria-controls="orderDetails" aria-selected="false">
+                                            <img src="${product.productId.image[0]}" alt="Product image">
+                                        </a>
+                                    </figure>
+                                    <h3 class="product-title">
+                                        <a href="#">${product.productId.name}</a>
+                                    </h3>
+                                </div>
+                            </td>
+                            <td class="price-col">${product.productPrice.toFixed(2)}</td>
+                            <td class="price-col">${product.quantity}</td>
+                            <td class="price-col">${product.totalPrice.toFixed(2)}</td>
+                            <td class="action-col">
+                                ${product.status === 'cancelled' ? `
+                                    <button type="submit" class="btn btn-outline-primary-2 disabled">
+                                        <span>Cancelled</span>
+                                    </button>
+                                ` : product.status === 'Delivered' ? `
+                                    <button type="submit" class="btn btn-outline-primary-2 return-product" data-product-id="${product.productId._id}" data-order-id="${product.orderId}">
+                                        <span>Return</span>
+                                    </button>
+                                ` : product.status == 'Return Approved' ? `
+                                    <button type="submit" class="btn btn-outline-primary-2 cancel-order" data-product-id="${product.productId._id}" data-order-id="${product.orderId}">
+                                        <span>Return Approved</span>
+                                    </button>
+                                ` : `
+                                    <button type="submit" class="btn btn-outline-primary-2 cancel-order" data-product-id="${product.productId._id}" data-order-id="${product.orderId}">
+                                        <span>Cancel</span>
+                                    </button>
+                                `}
+                            </td>
+                        </tr>
+                        <div class="row order-details" id="orderDetails${product.productId._id}" style="display: none;">
+                            <div class="col-lg-4">
+                                <div class="card card-dashboard">
+                                    <div class="card-body">
+                                        <h3 class="card-title">Customer</h3>
+                                        <p>${userData.name}<br>
+                                           ${userData.email}<br>
+                                           ${userData.mobile}<br>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="card card-dashboard">
+                                    <div class="card-body">
+                                        <h3 class="card-title">Order info</h3>
+                                        <p>Shipping: Fargo Express<br>
+                                           Pay method: ${product.payment}<br>
+                                           Status: ${product.status}<br>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="card card-dashboard">
+                                    <div class="card-body">
+                                        <h3 class="card-title">Deliver to</h3>
+                                        <p>${product.deliveryAddress.name}<br>
+                                           ${product.deliveryAddress.streetAddress}<br>
+                                           ${product.deliveryAddress.city}, ${product.deliveryAddress.pincode}<br>
+                                           ${product.deliveryAddress.state}<br>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-lg-4 col-xl-2">
+                                <div class="btn-wrap">
+                                    <a href="#" class="order-invoice" data-product-id="${product.productId._id}" class="btn btn-primary btn-round">View Invoice</a>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 text-right">
+                                <a href="#" class="to-order-list" data-id="${product.productId._id}" id="toOrderlists">back</a>
+                            </div>
+                        </div>
+                    `);
+                });
+
+                for (let j = 1; j <= response.totalPages; j++) {
+                    orderPagination.append(`
+                        <li class="page-item ${j === response.currentPage ? 'active' : ''}">
+                            <a class="page-link" href="#" onclick="fetchOrders(${j})">${j}</a>
+                        </li>
+                    `);
+                }
+                orderPagination.append(`
+                    <li class="page-item">
+                        <a class="page-link" href="#" onclick="fetchOrders(${Math.min(response.currentPage + 1, response.totalPages)})">
+                            <i class="material-icons md-chevron_right"></i>
+                        </a>
+                    </li>
+                `);
+            },
+            error: function (error) {
+                console.error("There was an error fetching the orders: ", error);
+            }
+        });
     }
+
+    // Event delegation for dynamically added elements
+    $(document).on('click', '.to-order-details', function() {
+        let id = $(this).data('id');
+        console.log('toOrder button clicked for product id:', id);  // Debugging line
+        let orderDetailsElement = $(`#orderDetails${id}`);
+        if (orderDetailsElement.length) {
+            console.log('Order details element found:', orderDetailsElement);  // Debugging line
+            $('#orderList, #paginationId').hide();
+            orderDetailsElement.show();
+        } else {
+            console.error('Order details element not found for id:', id);  // Debugging line
+        }
+    });
+
+    $(document).on('click', '.to-order-list', function() {
+        let id = $(this).data('id');
+        console.log('toOrderlist button clicked for product id:', id);  // Debugging line
+        let orderDetailsElement = $(`#orderDetails${id}`);
+        if (orderDetailsElement.length) {
+            console.log('Order details element found:', orderDetailsElement);  // Debugging line
+            orderDetailsElement.hide();
+            $('#orderList, #paginationId').show();
+        } else {
+            console.error('Order details element not found for id:', id);  // Debugging line
+        }
+    });
+
+    // Initial load of orders
+    $(document).ready(function() {
+        fetchOrders();
+    });
 </script>
 
 
@@ -1346,7 +1409,12 @@
     }
 </script>
 
-
+<script>
+    function orderInvoice(productId){
+        console.log('proeiruioew',productId);
+        window.location = `/orderInvoice?productId=${productId}`;
+    }
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const copyButtons = document.querySelectorAll('.copy-btn');
