@@ -149,8 +149,8 @@
                    <div class="text-center">
                    <h1>Payment Successful!</h1>
                    <p>Thank you for your payment.</p>
-                  <button> <a href="/products">Continue shop</a></button>
-                  <button><a href="/profile">Order Details</a></button>
+                  <button> <a href="#"  onclick="toOrderDetails('<%= orderId%>')">Order Details</a></button>
+                  <button><a href="/products">Continue shopping</a></button>
                 </div>
                 
              </div>
@@ -564,6 +564,11 @@
         });
     }
 </script>
+<script>
+    function toOrderDetails(orderId){
+      window.location = `/orderHistory?orderId=${orderId}`
+    }
+  </script>
 
 
 </body>

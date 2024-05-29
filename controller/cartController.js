@@ -3,6 +3,7 @@ const Cart = require('../models/cartModel');
 const Product = require('../models/productsModel');
 const Wishlist = require('../models/wishlistModel');
 const Offer = require('../models/offerModel');
+const Coupon = require('../models/couponModel')
     const loadCart = async (req, res) => {
         try {
             if (!req.session.user_id) {
@@ -122,6 +123,7 @@ const loadCheckOut = async(req,res)=>{
    try {
 
       const {total,selectedShipping} = req.query;
+
       let shippingMethod = '';
       if(selectedShipping== 0){
         shippingMethod = 'Free Shipping'
@@ -130,12 +132,14 @@ const loadCheckOut = async(req,res)=>{
       }else if (selectedShipping == 20){
         shippingMethod = 'Express';
       }
+
       const userId = req.session.user_id;
       const user = await User.findById(userId);
       const addresses = user.addresses;
 
       const cartData = await Cart.findOne({userId:userId}).populate({path:'products.productId'});
       const wishlistData = await Wishlist.findOne({userId:req.session.user_id}).populate('userId').populate('products.productId');
+
       if(cartData.products.length<=0){
         res.redirect('/cart'); 
       }else{
@@ -143,7 +147,14 @@ const loadCheckOut = async(req,res)=>{
         const discountAmount = req.flash('discountAmount')[0]|| 0;
         const totalAfterDiscount =  req.flash('totalAfterDiscount')[0] || subTotal;
         const errorMessages = req.flash('error');
-        res.render('checkout',{cartData,subTotal,addresses:addresses,totalAfterDiscount,wishlistData,discountAmount,errorMessages,shippingMethod});
+
+        const couponData = await Coupon.find({
+            minimumLimit: { $lte: total },
+            status: 'active',
+            is_listed: true
+         });
+
+        res.render('checkout',{cartData,subTotal,addresses:addresses,totalAfterDiscount,wishlistData,discountAmount,errorMessages,shippingMethod,couponData});
       }
      
    } catch (error) {

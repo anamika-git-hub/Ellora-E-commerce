@@ -61,6 +61,7 @@ userRouter.get('/cart',isLogin,cartController.loadCart);
 userRouter.post('/addcart',isLogin,cartController.addtoCart);
 userRouter.post('/cartUpdate',isLogin,cartController.updatequantity);
 userRouter.post('/deleteCartItem',isLogin,cartController.deleteCartItem);
+userRouter.get('/availableCoupons',isLogin,couponController.availableCoupons);
 userRouter.post('/applyCoupon',isLogin,couponController.applyCoupon);
 
 userRouter.get('/CheckOut',isLogin,cartController.loadCheckOut);

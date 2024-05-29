@@ -115,6 +115,22 @@ const applyCoupon = async(req,res)=>{
     }
 }
 
+const availableCoupons= async(req,res)=>{
+    try {
+       const {subTotal}= req.query;
+       const total = Number(subTotal)
+        const couponData = await Coupon.find({
+            minimumLimit: { $lte: total },
+            status: 'active',
+            is_listed: true
+         });
+        res.render('availableCoupons',{couponData})
+        
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 
 module.exports = {
     loadCouponList,
@@ -123,5 +139,6 @@ module.exports = {
     deleteCoupon,
     loadEditCoupon,
     editCoupon,
-    applyCoupon
+    applyCoupon,
+    availableCoupons
 }

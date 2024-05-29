@@ -23,7 +23,6 @@ const loadProductList=async(req,res)=>{
     const limit = 5;
     if (req.query.search && req.query.search.trim() !== '') {
         const searchPattern = new RegExp(req.query.search.trim(), 'i').source;
-        console.log('searchPattern:', searchPattern); 
     
         productQuery = {
                  $or: [{ name: { $regex: searchPattern } }, { description: { $regex: searchPattern } }] ,
@@ -153,12 +152,12 @@ const editProductLoad = async(req,res)=>{
 
 const updateProducts = async (req,res)=>{
     try {
-        const productData = await products.findOne({_id:req.body.id});
-            const productId = req.body.id
+        const productId = req.body.id
+        const productData = await products.findById(req.body.id);
+            
         if (!mongoose.Types.ObjectId.isValid(productId)) {
             console.log('Invalid product ID')
         }
-        console.log('rerjelkj',productData);
         const { error } = joiProductSchema.validate(req.body, {
             abortEarly: false
           });
@@ -169,11 +168,13 @@ const updateProducts = async (req,res)=>{
         }, {});
         req.flash('messages', errorMessages);
         req.flash('formData', req.body);
-        res.redirect('/admin/editproducts')
+        req.flash('id',productId)
+        res.redirect(`/admin/editproducts?id=${productId}`)
     }
+    
 
     const value = await joiProductSchema.validateAsync(req.body)
-    console.log('reeeee',req.body);
+
     const {name,description,price,categories,image,stock} = value
         const data = {
             name : name,
@@ -200,7 +201,7 @@ const updateProducts = async (req,res)=>{
         //     }
         // }
 
-        if(productData){
+        if(data){
             const pro = await products.findOneAndUpdate({_id:req.body.id},data);
           
         res.redirect('/admin/productList')
@@ -378,7 +379,6 @@ Order.aggregate([
     { $limit: 10 }
 ])
 .then(results => {
-    console.log("Top 10 most ordered products:");
     results.forEach(product => {
         console.log(`Product ID: ${product._id}, Total Quantity: ${product.totalQuantity}`);
     });

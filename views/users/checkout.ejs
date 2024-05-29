@@ -265,6 +265,7 @@
             <div class="page-content">
             	<div class="checkout">
 	                <div class="container">
+                        <a href="/availableCoupons?subTotal=<%= subTotal %>"><%= couponData.length %> available coupons</a>
             			<div class="checkout-discount">
                             <form action="/applyCoupon" method="post">
                                 <input type="text" name="couponCode" class="form-control" required id="checkout-discount-input">
@@ -389,10 +390,18 @@
                                                             <td>Subtotal:</td>
                                                             <td >Rs.<%= subTotal %></td>
                                                         </tr><!-- End .summary-subtotal -->
+                                                        <% if(subTotal<1000){%>
+                                                           
                                                         <tr>
                                                             <td>Shipping:</td>
                                                             <td><%= shippingMethod %> </td>
                                                         </tr>
+                                                        <%}else{%>
+                                                            <tr>
+                                                                <td>Delivery Charge:</td>
+                                                                <td>Rs.60</td>
+                                                            </tr>
+                                                            <%} %>
                                                         <tr>
                                                             <td>Offer Amount:</td>
                                                             <td>Rs.<%= discountAmount %></td>
@@ -923,7 +932,8 @@
                         });
                         razorpayObject.open();
                     } else if (res.data.deliverySuccess == true) {
-                        window.location = '/successPage';
+                        const orderId = res.data.orderId
+                        window.location = `/successPage?orderId=${orderId}`;
                     }
                 } else {
                     Swal.fire({

@@ -163,7 +163,7 @@ const placeOrder = async (req, res) => {
             });
 
         } else {
-            res.status(200).json({ success: true, deliverySuccess: true });
+            res.status(200).json({ success: true, deliverySuccess: true ,orderId:myOrders._id });
         }
     } catch (error) {
         console.log(error.message);
@@ -240,7 +240,8 @@ const verifyPayment = async(req,res)=>{
 
 const loadSuccessPage = async(req,res)=>{
     try {
-        res.render('successPage')
+        const {orderId}=req.query;
+        res.render('successPage',{orderId})
     } catch (error) {
         console.log(error.message);
     }
@@ -555,7 +556,6 @@ const loadOrderHistory = async (req, res) => {
         const orderData = await Order.findOne({ _id: orderId }).populate('products.productId').populate('userId');
 
         if (!orderData) {
-            // Handle case where orderData is null (e.g., orderId doesn't exist)
             return res.status(404).send('Order not found');
         }
 

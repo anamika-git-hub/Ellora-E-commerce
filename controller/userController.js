@@ -275,14 +275,19 @@ const loadAbout = async(req,res)=>{
 
 const loadProfile = async (req, res) => {
     try {
-        let page = 1;
-        if (req.query.page) {
-            page = parseInt(req.query.page);
+        let orderPage = 1;
+        let walletPage = 1;
+
+        if (req.query.orderPage) {
+            orderPage = parseInt(req.query.orderPage);
         }
+        if (req.query.walletPage) {
+            walletPage = parseInt(req.query.walletPage);
+        }
+
         const limit = 4;
         const userId = req.session.user_id;
 
-        // Fetch user data, cart data, wishlist data, and wallet data
         const userData = await User.findById(userId);
         const cartData = await Cart.findOne({ userId: req.session.user_id }).populate('userId').populate({ path: 'products.productId' });
         const wishlistData = await Wishlist.findOne({ userId: userId }).populate('userId').populate('products.productId');
@@ -291,12 +296,13 @@ const loadProfile = async (req, res) => {
         const orderData = await Order.find({ userId: userId }).sort({ '_id': -1 }).populate('products.productId').populate('userId');
         
         const totalOrders = orderData.length;
-        const totalPages = Math.ceil(totalOrders / limit);
-        const paginatedOrders = orderData.slice((page - 1) * limit, page * limit);
+        const totalOrderPages = Math.ceil(totalOrders / limit);
+        const paginatedOrders = orderData.slice((orderPage - 1) * limit, orderPage * limit);
 
         const walletHistory = walletData.walletHistory;
-        const walletTotalPages = Math.ceil(walletHistory.length / limit);
-        const paginatedWalletHistory = walletHistory.slice((page - 1) * limit, page * limit);
+        const totalWalletEntries = walletHistory.length;
+        const totalWalletPages = Math.ceil(totalWalletEntries / limit);
+        const paginatedWalletHistory = walletHistory.slice((walletPage - 1) * limit, walletPage * limit);
 
         const couponData = await Coupon.find();
 
@@ -307,16 +313,19 @@ const loadProfile = async (req, res) => {
             wishlistData,
             couponData,
             userId,
-            walletData: { ...walletData._doc, walletHistory: paginatedWalletHistory },
-            totalPages,
-            walletTotalPages,
-            currentPage: page
+            walletData,
+            paginatedWalletHistory,
+            totalOrderPages,
+            totalWalletPages,
+            currentOrderPage: orderPage,
+            currentWalletPage: walletPage
         });
 
     } catch (error) {
         console.log(error.message);
     }
 };
+
 
 
 
