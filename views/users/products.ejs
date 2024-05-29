@@ -1017,8 +1017,8 @@
 
 
 <script>
+    const checkboxes = document.querySelectorAll('.category-checkbox');
     const categoryInput = document.getElementById('categoryInput');
-
     function handleCheckboxChange(event) {
         event.preventDefault();
 
@@ -1030,7 +1030,9 @@
         });
 
         categoryInput.value = selectedCategories.join(',');
+
         const formData = new FormData(document.getElementById('categoryForm'));
+        console.log('fffffffffffff',formData);
         const xhr = new XMLHttpRequest();
         console.log('ssssd',xhr);
        

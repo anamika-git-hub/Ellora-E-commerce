@@ -364,8 +364,7 @@ const showOrderList = async(req,res)=>{
         res.status(500).json({ error: error.message });
     }
 }
-
- const showWalletHistory = async(req,res)=>{
+const showWalletHistory = async (req, res) => {
     try {
         let page = 1;
         if (req.query.page) {
@@ -373,22 +372,24 @@ const showOrderList = async(req,res)=>{
         }
         const limit = 5;
         const userId = req.session.user_id;
-    
+
         const walletData = await Wallet.findOne({ userId: req.session.user_id });
         const walletHistory = walletData.walletHistory;
         const walletTotalPages = Math.ceil(walletHistory.length / limit);
         const paginatedWalletHistory = walletHistory.slice((page - 1) * limit, page * limit);
-    
+
         res.json({
-            walletHistory: paginatedWalletHistory,
-            walletTotalPages,
-            currentPage: page
+            paginatedWalletHistory: paginatedWalletHistory,
+            totalWalletPages: walletTotalPages,
+            currentWalletPage: page
         });
-    
+
     } catch (error) {
         console.log(error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
- }
+}
+
 
 
 

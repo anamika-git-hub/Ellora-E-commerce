@@ -561,7 +561,7 @@
                                    
 								    </div><!-- .End .tab-pane -->
 
-                                    <!------------------------------------------------------- Account Details  ---------------------------------------->
+                                    <!-------------------------------------------------------Account Details---------------------------------------->
 
 								    <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
                                         <div id="accountDetails">
@@ -582,9 +582,7 @@
                                             <div class="card">
                                                 <div class="card-body">
                                                     <h5 class="card-title">Wallet Amount</h5>
-                                                    
-                                                      
-                                                    <h4><%= walletData.walletAmount.toFixed(2) %></h4> 
+                                                    <h4>Rs.<%= walletData.walletAmount.toFixed(2) %></h4> 
                                                    
                                                     <button onclick="showWalletHistory()" class="btn btn-outline-primary">Wallet History</button>
                                                 </div>
@@ -608,33 +606,14 @@
                                                             <th scope="col">Status</th>
                                                         </tr>
                                                     </thead>
-                                                    <% if(walletData && paginatedWalletHistory.length > 0) { %>
-                                                        <tbody>
-                                                            <% paginatedWalletHistory.forEach(wallet => { %>
-                                                                <tr>
-                                                                    <td><%= wallet.description %></td>
-                                                                    <td><%= wallet.amount %></td>
-                                                                    <td><%= wallet.date.toLocaleDateString() %></td>
-                                                                    <td><%= wallet.status %></td>
-                                                                </tr>
-                                                            <% }) %>
-                                                        </tbody>
-                                                    <% } else { %>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td colspan="4">No wallet history available</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    <% } %>
+                                                    <tbody id="walletHistoryBody">
+                                                        <!-- Wallet history rows will be dynamically inserted here -->
+                                                    </tbody>
                                                 </table>
                                                 <div id="paginationId" class="pagination-area mt-30 mb-50">
                                                     <nav aria-label="Page navigation example">
-                                                        <ul class="pagination justify-content-center">
-                                                            <% for(let j = 1; j <= totalWalletPages; j++) { %>
-                                                                <li class="page-item <%= j === currentWalletPage ? 'active' : '' %>">
-                                                                    <a class="page-link" href="?walletPage=<%= j %>"><%= j %></a>
-                                                                </li>
-                                                            <% } %>
+                                                        <ul class="pagination justify-content-center" id="walletPagination">
+                                                            <!-- Pagination links will be dynamically inserted here -->
                                                         </ul>
                                                     </nav>
                                                 </div>
@@ -1194,6 +1173,59 @@
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<script>
+    function showWalletHistory(page = 1) {
+        $('#accountDetails').hide();
+        $('#walletHistory').show();
+        fetchWalletHistory(page);
+    }
+
+    function fetchWalletHistory(page) {
+        $.ajax({
+            url: `/walletHistory?page=${page}`,
+            method: 'GET',
+            success: function (response) {
+                const walletHistoryBody = $('#walletHistoryBody');
+                const walletPagination = $('#walletPagination');
+                walletHistoryBody.empty();
+                walletPagination.empty();
+
+                response.paginatedWalletHistory.forEach(wallet => {
+                    walletHistoryBody.append(`
+                        <tr>
+                            <td>${wallet.description}</td>
+                            <td>${wallet.amount}</td>
+                            <td>${new Date(wallet.date).toLocaleDateString()}</td>
+                            <td>${wallet.status}</td>
+                        </tr>
+                    `);
+                });
+
+                for (let j = 1; j <= response.totalWalletPages; j++) {
+                    walletPagination.append(`
+                        <li class="page-item ${j === response.currentWalletPage ? 'active' : ''}">
+                            <a class="page-link" href="#" onclick="fetchWalletHistory(${j})">${j}</a>
+                        </li>
+                    `);
+                }
+                walletPagination.append(`
+                    <li class="page-item">
+                        <a class="page-link" href="#" onclick="fetchWalletHistory(${Math.min(response.currentWalletPage + 1, response.totalWalletPages)})">
+                            <i class="material-icons md-chevron_right"></i>
+                        </a>
+                    </li>
+                `);
+            }
+        });
+    }
+
+    function toaccountDetails() {
+        $('#walletHistory').hide();
+        $('#accountDetails').show();
+    }
+</script>
 
 <script>
     window.addEventListener('DOMContentLoaded', (event) => {
