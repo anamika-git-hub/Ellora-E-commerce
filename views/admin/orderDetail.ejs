@@ -285,7 +285,7 @@
                                                         <div class="info"><%= value.name %></div>
                                                     </a>
                                                 </td>
-                                                <td>$<%= value.productPrice %></td>
+                                                <td>Rs.<%= value.productPrice %></td>
                                                 <% if(value.status == 'Return Requested'){%>
                                                
                                                     <td><span onclick="returnApprove('<%= value.productId._id %>','<%= order._id%>','<%= value.totalPrice%>')" class="badge rounded-pill alert-warning"><%=value.status %></span></td>

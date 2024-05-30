@@ -33,7 +33,6 @@ userRouter.post('/resend',isLogout,userController.resendOtp);
 userRouter.post('/login',isLogout,userController.verifyLogin);
 userRouter.get('/google',isLogout,userController.googleAuthentication);
 userRouter.get('/logout',isLogin,userController.loadLogout);
-
 userRouter.get('/contact',userController.loadContact);
 userRouter.get('/about',userController.loadAbout);
 
@@ -73,6 +72,8 @@ userRouter.get('/orderInvoice',isLogin,orderController.loadOrderInvoice);
 userRouter.get('/failedPage',isLogin,orderController.loadFailedPage);
 userRouter.get('/cancelOrder',isLogin,orderController.cancelOrder);
 userRouter.post('/returnProduct',isLogin,orderController.returnProduct);
+
+userRouter.get('/404',isLogin,userController.ErrorPage);
 
 
 module.exports = userRouter;

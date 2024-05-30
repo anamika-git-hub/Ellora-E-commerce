@@ -119,10 +119,12 @@ const availableCoupons= async(req,res)=>{
     try {
        const {subTotal}= req.query;
        const total = Number(subTotal)
+
         const couponData = await Coupon.find({
             minimumLimit: { $lte: total },
             status: 'active',
-            is_listed: true
+            is_listed: true,
+            'usedUsers.userId': { $ne: req.session.user_id }
          });
         res.render('availableCoupons',{couponData})
         

@@ -263,7 +263,7 @@ const loadOrderList = async(req,res)=>{
         page = req.query.page;
     }
     const limit = 5;
-        const orderData = await Order.find().populate('products.productId').populate('userId')
+        const orderData = await Order.find().sort({ '_id': -1 }).populate('products.productId').populate('userId')
         .limit(limit * 1)
       .skip((page-1)* limit)
       .exec();
@@ -534,10 +534,10 @@ const cancelStatusChange = async(req,res)=>{
 const loadOrderInvoice = async (req, res) => {
     try {
         const { orderId } = req.query;
-        console.log(orderId);
 
         const orderData = await Order.findOne({ _id: orderId }).populate('products.productId').populate('userId');
-        console.log('orrrr', orderData);
+         console.log('orrrrrrrrrrrrr',orderData.products);
+         
 
         if (!orderData) {
             return res.status(404).send('Order not found');

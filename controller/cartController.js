@@ -132,7 +132,7 @@ const loadCheckOut = async(req,res)=>{
       }else if (selectedShipping == 20){
         shippingMethod = 'Express';
       }
-
+      
       const userId = req.session.user_id;
       const user = await User.findById(userId);
       const addresses = user.addresses;
@@ -151,7 +151,8 @@ const loadCheckOut = async(req,res)=>{
         const couponData = await Coupon.find({
             minimumLimit: { $lte: total },
             status: 'active',
-            is_listed: true
+            is_listed: true,
+            'usedUsers.userId': { $ne: req.session.user_id }
          });
 
         res.render('checkout',{cartData,subTotal,addresses:addresses,totalAfterDiscount,wishlistData,discountAmount,errorMessages,shippingMethod,couponData});

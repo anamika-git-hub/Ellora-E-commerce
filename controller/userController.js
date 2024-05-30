@@ -550,6 +550,14 @@ const deleteAddress = async(req,res)=>{
     }
 }
 
+const ErrorPage = async(req,res)=>{
+    try {
+        res.render('404')
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
 
 module.exports={
     loadLogin,
@@ -572,5 +580,6 @@ module.exports={
     editAddress,
     deleteAddress,
     showWalletHistory,
-    showOrderList
+    showOrderList,
+    ErrorPage
 }

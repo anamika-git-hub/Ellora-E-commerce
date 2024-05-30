@@ -227,7 +227,7 @@
                     <td>Shipping:</td>
                     <td>&nbsp;</td>
                 </tr>
-             <% if(subTotal<1000){%>
+             <% if(subTotal>1000){%>
               
                 <tr class="summary-shipping-row">
                     <td>
@@ -698,7 +698,7 @@
 <script>
     function checkout(subTotal) {
         let selectedShipping='';
-        if(subTotal<1000){
+        if(subTotal>1000){
          selectedShipping = document.querySelector('input[name="deliveryPayment"]:checked').value;
 
         }else{

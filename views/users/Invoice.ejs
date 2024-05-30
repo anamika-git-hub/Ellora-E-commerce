@@ -55,7 +55,7 @@
             <div class="card">
                 <div class="card-body" id="downloadPdf">
                   <div class="container mb-5 mt-3">
-                        <% orderData.products.forEach((product,index)=>{%>
+                       
                     <div class="row d-flex align-items-baseline">
                       <div class="col-xl-9">
                         <p style="color: #cc9966;font-size: 20px;">Invoice >> <strong>ID: <%=orderData._id.toString().toUpperCase().slice(-6) %></strong></p>
@@ -96,7 +96,7 @@
                           </ul>
                         </div>
                       </div>
-              
+                      
                       <div class="row my-2 mx-1 justify-content-center">
                         <table class="table table-striped table-borderless">
                           <thead style="background-color:#cc9966 ; " class="text-white">
@@ -107,6 +107,7 @@
                               <th scope="col" style="color: aliceblue;">Amount</th>
                             </tr>
                           </thead>
+                          <% orderData.products.forEach((product,index)=>{%>
                           <tbody>
                             <tr>
                               <td><%= product.productId.name %></td>
@@ -116,9 +117,10 @@
                             </tr>
                            
                           </tbody>
-              
+                          <%})%>
                         </table>
                       </div>
+                      
                       <div class="row">
                         <div class="col-xl-8">
                           <p class="ms-3">Add additional notes and payment information</p>
@@ -126,12 +128,13 @@
                         </div>
                         <div class="col-xl-3">
                           <ul class="list-unstyled">
-                            <li class="text-muted ms-3"><span class="text-black me-4">SubTotal:</span>Rs.<%= orderData.total_amount %></li>
+                            <li class="text-muted ms-3"><span class="text-black me-4">SubTotal : </span>Rs.<%= orderData.total_amount %></li>
                             <% const tax =  orderData.total_amount *15/100 %>
-                            <li class="text-muted ms-3 mt-2"><span class="text-black me-4">Tax(15%) :</span>Rs.<%=tax%></li>
+                            <li class="text-muted ms-3 mt-2"><span class="text-black me-4">Tax(15%) : </span>Rs.<%=tax%></li>
                           </ul>
-                          <p class="text-black float-start"><span class="text-black me-3"> Total Amount</span><span
-                              style="font-size: 25px;">Rs.1221</span></p>
+                          <p class="text-black float-start"><span class="text-black me-3"> Total Amount : </span><span
+                            <% const totalAmount = orderData.total_amount-tax %>
+                              style="font-size: 20px;">Rs.<%= totalAmount.toFixed(2) %></span></p>
                         </div>
                       </div>
                       <hr>
@@ -148,7 +151,7 @@
               
                     </div>
                  
-                                    <%})%>
+                                   
                   </div>
                 </div>
               </div>
