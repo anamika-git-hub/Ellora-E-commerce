@@ -83,7 +83,7 @@
                         </button>
 
                         <a href="index.html" class="logo">
-                            <img src="assets/images/logo.png" alt="Molla Logo" width="105" height="25">
+                            <img src="assets/images/demos/demo-6/Ellora-logo.png" alt="Molla Logo" width="105" height="25">
                         </a>
 
                         <nav class="main-nav">
@@ -304,7 +304,7 @@
 	            	<div class="row">
 	            		<div class="col-sm-6 col-lg-3">
 	            			<div class="widget widget-about">
-	            				<img src="assets/images/logo.png" class="footer-logo" alt="Footer Logo" width="105" height="25">
+	            				<img src="assets/images/demos/demo-6/Ellora-logo.png" class="footer-logo" alt="Footer Logo" width="105" height="25">
 	            				<p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. </p>
 
 	            				<div class="social-icons">
@@ -688,7 +688,7 @@
                             document.getElementById('subTotal').innerHTML = `Rs.${subTotal.toFixed(2)}`
                             document.getElementById('Total').innerHTML = `Rs.${subTotal.toFixed(2)}`
 
-                            window.location='/cart'
+                            // window.location='/cart'
                            
             }).catch(function(error){
                 console.error('Error:', error);
@@ -697,6 +697,7 @@
 </script>
 <script>
     function checkout(subTotal) {
+        console.log('sub:',subTotal)
         let selectedShipping='';
         if(subTotal>1000){
          selectedShipping = document.querySelector('input[name="deliveryPayment"]:checked').value;
@@ -706,6 +707,7 @@
         }
         const total = parseFloat(subTotal) + parseFloat(selectedShipping);
         console.log(total);
+        
         window.location = `/CheckOut?total=${total.toFixed(2)}&selectedShipping=${selectedShipping}`;
     }
 </script>

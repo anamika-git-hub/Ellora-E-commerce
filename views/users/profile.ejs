@@ -213,7 +213,7 @@
                         </button>
 
                         <a href="index.html" class="logo">
-                            <img src="assets/images/logo.png" alt="Molla Logo" width="105" height="25">
+                            <img src="assets/images/demos/demo-6/Ellora-logo.png" alt="Molla Logo" width="105" height="25">
                         </a>
 
                         <nav class="main-nav">
@@ -297,7 +297,7 @@
 								        <a class="nav-link active" id="tab-dashboard-link" data-toggle="tab" href="#tab-dashboard" role="tab" aria-controls="tab-dashboard" aria-selected="true">Dashboard</a>
 								    </li>
 								    <li class="nav-item">
-								        <a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="true">Orders</a>
+								        <a class="nav-link" onclick="fetchOrderList(page=1)" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="true">Orders</a>
 								    </li>
 								    <li class="nav-item">
 								        <a class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads" role="tab" aria-controls="tab-downloads" aria-selected="false">Downloads</a>
@@ -328,73 +328,112 @@
                                     <!---------------------------------------- Orders------------------------------------------------ -->
                                     
                                     <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
-                                        <% if(paginatedOrders && paginatedOrders.length > 0) { %>
-                                            <% paginatedOrders.forEach((order) => { %>
-                                                <div class="order">
-                                                    <div class="row">
-                                                        <!-- Left Column -->
-                                                        <div class="col-md-4">
-                                                            <div class="order-products">
-                                                                <% order.products.forEach((product) => { %>
-                                                                    <div class="product">
-                                                                        <figure class="product-media">
-                                                                            <a href="#">
-                                                                                <img src="<%= product.productId.image[0] %>" alt="Product image" class="product-image">
-                                                                            </a>
-                                                                        </figure>
-                                                                        <h3 class="product-title">
-                                                                            <a href="#"><%= product.productId.name %></a>
-                                                                        </h3>
+                                        <div id="orderListContainer">
+                                            <% if(orderData && orderData.length > 0) { %>
+                                                <% orderData.forEach((order) => { %>
+                                                    <div class="order">
+                                                        <div class="row">
+                                                            <!-- Left Column -->
+                                                            <div class="col-md-4">
+                                                                <div class="order-products">
+                                                                    <% order.products.forEach((product) => { %>
+                                                                        <div class="product">
+                                                                            <figure class="product-media">
+                                                                                <a href="#">
+                                                                                    <img src="<%= product.productId.image[0] %>" alt="Product image" class="product-image">
+                                                                                </a>
+                                                                            </figure>
+                                                                            <h3 class="product-title">
+                                                                                <a href="#"><%= product.productId.name %></a>
+                                                                            </h3>
+                                                                        </div>
+                                                                    <% }) %>
+                                                                </div>
+                                                            </div>
+                                                            <!-- Right Column -->
+                                                            <div class="col-md-4">
+                                                                <div class="order-details">
+                                                                    <div class="order-date">
+                                                                        <strong>Order Date:</strong> <%= order.date.toDateString() %>
                                                                     </div>
-                                                                <% }) %>
-                                                            </div>
-                                                        </div>
-                                                        <!-- Right Column -->
-                                                        <div class="col-md-4">
-                                                            <div class="order-details">
-                                                                <div class="order-date">
-                                                                    <strong>Order Date:</strong> <%= order.date.toDateString() %>
-                                                                </div>
-                                                                <div class="order-status">
-                                                                    <strong>Order Status:</strong> <%= order.status %>
+                                                                    <div class="order-status">
+                                                                        <strong>Order Status:</strong> <%= order.status %>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <div class="order-details">
-                                                                <div class="order-payment-method">
-                                                                    <strong>Payment Method:</strong> <%= order.payment %>
-                                                                </div>
-                                                                <div class="order-total">
-                                                                    <strong>Total Amount:</strong> Rs.<%= order.total_amount %>
-                                                                </div>
-                                                                <div class="order-view-details">
-                                                                    <a href="#" onclick="showDetails('<%= order._id %>')" class="btn btn-outline-primary-2">View Details</a>
+                                                            <div class="col-md-4">
+                                                                <div class="order-details">
+                                                                    <div class="order-payment-method">
+                                                                        <strong>Payment Method:</strong> <%= order.payment %>
+                                                                    </div>
+                                                                    <div class="order-total">
+                                                                        <strong>Total Amount:</strong> Rs.<%= order.total_amount %>
+                                                                    </div>
+                                                                    <div class="order-view-details">
+                                                                        <a href="#" onclick="showDetails('<%= order._id %>')" class="btn btn-outline-primary-2">View Details</a>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <hr>
-                                            <% }) %>
-                                        <% } else { %>
-                                            <p>No orders have been made yet.</p>
-                                            <a href="/products" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
-                                        <% } %>
-                                        
+                                                    <hr>
+                                                <% }) %>
+                                            <% } else { %>
+                                                <p>No orders have been made yet.</p>
+                                                <a href="/products" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
+                                            <% } %>
+                                        </div>
+                                    
                                         <div id="paginationId" class="pagination-area mt-30 mb-50">
                                             <nav aria-label="Page navigation example">
-                                                <ul class="pagination justify-content-center">
-                                                    <% for(let j = 1; j <= totalOrderPages; j++) { %>
+                                                <ul class="pagination justify-content-start" id="orderPagination">
+                                                    <% if (currentOrderPage > 1) { %>
+                                                        <li class="page-item">
+                                                            <a class="page-link page-link-prev" href="#" onclick="fetchOrderList('<%= currentOrderPage - 1 %>')" aria-label="Previous">
+                                                                <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span>Prev
+                                                            </a>
+                                                        </li>
+                                                    <% } else { %>
+                                                        <li class="page-item disabled">
+                                                            <a class="page-link page-link-prev" href="#" aria-label="Previous" tabindex="-1" aria-disabled="true">
+                                                                <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span>Prev
+                                                            </a>
+                                                        </li>
+                                                    <% } %>
+                                    
+                                                    <% if (currentOrderPage > 3) { %>
+                                                        <li class="page-item"><a class="page-link" href="#" onclick="fetchOrderList(1)">01</a></li>
+                                                        <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                                                    <% } %>
+                                    
+                                                    <% for (let j = Math.max(1, currentOrderPage - 2); j <= Math.min(totalOrderPages, currentOrderPage + 2); j++) { %>
                                                         <li class="page-item <%= j === currentOrderPage ? 'active' : '' %>">
-                                                            <a class="page-link" href="?orderPage=<%= j %>"><%= j %></a>
+                                                            <a class="page-link" href="#" onclick="fetchOrderList('<%= j %>')"><%= j < 10 ? '0' + j : j %></a>
+                                                        </li>
+                                                    <% } %>
+                                    
+                                                    <% if (currentOrderPage < totalOrderPages - 2) { %>
+                                                        <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                                                        <li class="page-item"><a class="page-link" href="#" onclick="fetchOrderList('<%= totalOrderPages %>')"><%= totalOrderPages < 10 ? '0' + totalOrderPages : totalOrderPages %></a></li>
+                                                    <% } %>
+                                    
+                                                    <% if (currentOrderPage < totalOrderPages) { %>
+                                                        <li class="page-item">
+                                                            <a class="page-link page-link-next" href="#" onclick="fetchOrderList('<%= currentOrderPage + 1 %>')" aria-label="Next">
+                                                                Next<span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
+                                                            </a>
+                                                        </li>
+                                                    <% } else { %>
+                                                        <li class="page-item disabled">
+                                                            <a class="page-link page-link-next" href="#" aria-label="Next" tabindex="-1" aria-disabled="true">
+                                                                Next<span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
+                                                            </a>
                                                         </li>
                                                     <% } %>
                                                 </ul>
                                             </nav>
                                         </div>
-                                        
-                                      </div>
+                                    </div>
                                     
 								    <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
 								    	<p>No downloads available yet.</p>
@@ -715,7 +754,7 @@
 	            	<div class="row">
 	            		<div class="col-sm-6 col-lg-3">
 	            			<div class="widget widget-about">
-	            				<img src="assets/images/logo.png" class="footer-logo" alt="Footer Logo" width="105" height="25">
+	            				<img src="assets/images/demos/demo-6/Ellora-logo.png" class="footer-logo" alt="Footer Logo" width="105" height="25">
 	            				<p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. </p>
 
 	            				<div class="social-icons">
@@ -1174,57 +1213,234 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
 <script>
-    function showWalletHistory(page = 1) {
-        $('#accountDetails').hide();
-        $('#walletHistory').show();
-        fetchWalletHistory(page);
-    }
-
-    function fetchWalletHistory(page) {
+    function fetchOrderList(page) {
         $.ajax({
-            url: `/walletHistory?page=${page}`,
+            url: `/orders?page=${page}`,
             method: 'GET',
             success: function (response) {
-                const walletHistoryBody = $('#walletHistoryBody');
-                const walletPagination = $('#walletPagination');
-                walletHistoryBody.empty();
-                walletPagination.empty();
-
-                response.paginatedWalletHistory.forEach(wallet => {
-                    walletHistoryBody.append(`
-                        <tr>
-                            <td>${wallet.description}</td>
-                            <td>${wallet.amount}</td>
-                            <td>${new Date(wallet.date).toLocaleDateString()}</td>
-                            <td>${wallet.status}</td>
-                        </tr>
-                    `);
+                const orderListContainer = $('#orderListContainer');
+                orderListContainer.empty(); // Clear existing content
+    
+                response.orderData.forEach(order => {
+                    const productsHTML = order.products.map(product => `
+                        <div class="product">
+                            <figure class="product-media">
+                                <a href="#">
+                                    <img src="${product.productId.image[0]}" alt="Product image" class="product-image">
+                                </a>
+                            </figure>
+                            <h3 class="product-title">
+                                <a href="#">${product.productId.name}</a>
+                            </h3>
+                        </div>
+                    `).join('');
+    
+                    const orderHTML = `
+                        <div class="order">
+                            <div class="row">
+                                <!-- Left Column -->
+                                <div class="col-md-4">
+                                    <div class="order-products">
+                                        ${productsHTML}
+                                    </div>
+                                </div>
+                                <!-- Right Column -->
+                                <div class="col-md-4">
+                                    <div class="order-details">
+                                        <div class="order-date">
+                                            <strong>Order Date:</strong> ${new Date(order.date).toDateString()}
+                                        </div>
+                                        <div class="order-status">
+                                            <strong>Order Status:</strong> ${order.status}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="order-details">
+                                        <div class="order-payment-method">
+                                            <strong>Payment Method:</strong> ${order.payment}
+                                        </div>
+                                        <div class="order-total">
+                                            <strong>Total Amount:</strong> Rs.${order.total_amount}
+                                        </div>
+                                        <div class="order-view-details">
+                                            <a href="#" onclick="showDetails('${order._id}')" class="btn btn-outline-primary-2">View Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                    `;
+                    orderListContainer.append(orderHTML);
                 });
-
-                for (let j = 1; j <= response.totalWalletPages; j++) {
-                    walletPagination.append(`
-                        <li class="page-item ${j === response.currentWalletPage ? 'active' : ''}">
-                            <a class="page-link" href="#" onclick="fetchWalletHistory(${j})">${j}</a>
+    
+                // Update pagination HTML
+                const paginationArea = $('#orderPagination');
+                paginationArea.empty(); // Clear existing pagination
+    
+                // Construct pagination HTML and append to container
+                if (response.currentPage > 1) {
+                    paginationArea.append(`
+                        <li class="page-item">
+                            <a class="page-link page-link-prev" href="#" onclick="fetchOrderList(${response.currentPage - 1})" aria-label="Previous">
+                                <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span>Prev
+                            </a>
+                        </li>
+                    `);
+                } else {
+                    paginationArea.append(`
+                        <li class="page-item disabled">
+                            <a class="page-link page-link-prev" href="#" aria-label="Previous" tabindex="-1" aria-disabled="true">
+                                <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span>Prev
+                            </a>
                         </li>
                     `);
                 }
+    
+                if (response.currentPage > 3) {
+                    paginationArea.append(`
+                        <li class="page-item"><a class="page-link" href="#" onclick="fetchOrderList(1)">01</a></li>
+                        <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                    `);
+                }
+    
+                for (let j = Math.max(1, response.currentPage - 2); j <= Math.min(response.totalPages, response.currentPage + 2); j++) {
+                    paginationArea.append(`
+                        <li class="page-item ${j === response.currentPage ? 'active' : ''}">
+                            <a class="page-link" href="#" onclick="fetchOrderList(${j})">${j < 10 ? '0' + j : j}</a>
+                        </li>
+                    `);
+                }
+    
+                if (response.currentPage < response.totalPages - 2) {
+                    paginationArea.append(`
+                        <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                        <li class="page-item"><a class="page-link" href="#" onclick="fetchOrderList(${response.totalPages})">${response.totalPages < 10 ? '0' + response.totalPages : response.totalPages}</a></li>
+                    `);
+                }
+    
+                if (response.currentPage < response.totalPages) {
+                    paginationArea.append(`
+                        <li class="page-item">
+                            <a class="page-link page-link-next" href="#" onclick="fetchOrderList(${response.currentPage + 1})" aria-label="Next">
+                                Next<span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
+                            </a>
+                        </li>
+                    `);
+                } else {
+                    paginationArea.append(`
+                        <li class="page-item disabled">
+                            <a class="page-link page-link-next" href="#" aria-label="Next" tabindex="-1" aria-disabled="true">
+                                Next<span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
+                            </a>
+                        </li>
+                    `);
+                }
+            }
+        });
+    }
+    </script>
+
+
+
+
+
+<script>
+function showWalletHistory(page = 1) {
+    $('#accountDetails').hide();
+    $('#walletHistory').show();
+    fetchWalletHistory(page);
+}
+
+function fetchWalletHistory(page) {
+    $.ajax({
+        url: `/walletHistory?page=${page}`,
+        method: 'GET',
+        success: function (response) {
+            const walletHistoryBody = $('#walletHistoryBody');
+            const walletPagination = $('#walletPagination');
+            walletHistoryBody.empty();
+            walletPagination.empty();
+
+            response.paginatedWalletHistory.forEach(wallet => {
+                walletHistoryBody.append(`
+                    <tr>
+                        <td>${wallet.description}</td>
+                        <td>${wallet.amount}</td>
+                        <td>${new Date(wallet.date).toLocaleDateString()}</td>
+                        <td>${wallet.status}</td>
+                    </tr>
+                `);
+            });
+
+            // Pagination logic
+            if (response.currentWalletPage > 1) {
                 walletPagination.append(`
                     <li class="page-item">
-                        <a class="page-link" href="#" onclick="fetchWalletHistory(${Math.min(response.currentWalletPage + 1, response.totalWalletPages)})">
-                            <i class="material-icons md-chevron_right"></i>
+                        <a class="page-link page-link-prev" href="#" onclick="fetchWalletHistory(${response.currentWalletPage - 1})" aria-label="Previous">
+                            <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span>Prev
+                        </a>
+                    </li>
+                `);
+            } else {
+                walletPagination.append(`
+                    <li class="page-item disabled">
+                        <a class="page-link page-link-prev" href="#" aria-label="Previous" tabindex="-1" aria-disabled="true">
+                            <span aria-hidden="true"><i class="icon-long-arrow-left"></i></span>Prev
                         </a>
                     </li>
                 `);
             }
-        });
-    }
 
-    function toaccountDetails() {
-        $('#walletHistory').hide();
-        $('#accountDetails').show();
-    }
+            if (response.currentWalletPage > 3) {
+                walletPagination.append(`
+                    <li class="page-item"><a class="page-link" href="#" onclick="fetchWalletHistory(1)">01</a></li>
+                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                `);
+            }
+
+            for (let j = Math.max(1, response.currentWalletPage - 2); j <= Math.min(response.totalWalletPages, response.currentWalletPage + 2); j++) {
+                walletPagination.append(`
+                    <li class="page-item ${j === response.currentWalletPage ? 'active' : ''}">
+                        <a class="page-link" href="#" onclick="fetchWalletHistory(${j})">${j < 10 ? '0' + j : j}</a>
+                    </li>
+                `);
+            }
+
+            if (response.currentWalletPage < response.totalWalletPages - 2) {
+                walletPagination.append(`
+                    <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                    <li class="page-item"><a class="page-link" href="#" onclick="fetchWalletHistory(${response.totalWalletPages})">${response.totalWalletPages < 10 ? '0' + response.totalWalletPages : response.totalWalletPages}</a></li>
+                `);
+            }
+
+            if (response.currentWalletPage < response.totalWalletPages) {
+                walletPagination.append(`
+                    <li class="page-item">
+                        <a class="page-link page-link-next" href="#" onclick="fetchWalletHistory(${response.currentWalletPage + 1})" aria-label="Next">
+                            Next<span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
+                        </a>
+                    </li>
+                `);
+            } else {
+                walletPagination.append(`
+                    <li class="page-item disabled">
+                        <a class="page-link page-link-next" href="#" aria-label="Next" tabindex="-1" aria-disabled="true">
+                            Next<span aria-hidden="true"><i class="icon-long-arrow-right"></i></span>
+                        </a>
+                    </li>
+                `);
+            }
+        }
+    });
+}
+
+function toaccountDetails() {
+    $('#walletHistory').hide();
+    $('#accountDetails').show();
+}
 </script>
 
 <script>

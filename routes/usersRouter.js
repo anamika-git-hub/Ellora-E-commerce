@@ -75,6 +75,9 @@ userRouter.post('/returnProduct',isLogin,orderController.returnProduct);
 
 userRouter.get('/404',isLogin,userController.ErrorPage);
 
+userRouter.get('*',function(req,res){
+    res.redirect('/404');
+})
 
 module.exports = userRouter;
  

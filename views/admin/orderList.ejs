@@ -190,88 +190,127 @@
                 </div>
             </header>
             <section class="content-main">
-                <div class="content-header">
-                    <div>
-                        <h2 class="content-title card-title">Order List</h2>
-                        <p>Lorem ipsum dolor sit amet.</p>
-                    </div>
-                    <div>
-                        <input type="text" placeholder="Search order ID" class="form-control bg-white" />
-                    </div>
-                </div>
                 <div class="card mb-4">
                     <header class="card-header">
-                        <div class="row gx-3">
-                            <div class="col-lg-4 col-md-6 me-auto">
-                                <input type="text" placeholder="Search..." class="form-control" />
-                            </div>
+                        <h4 class="card-title">Orders list</h4>
                            
+                        <div class="row align-items-center">
+                            <div class="col-lg-6 col-md-6 me-auto">
+                                <div class="col-lg-6 col-md-6 me-auto">
+                                    <input type="text" placeholder="Search..." class="form-control" />
+                                </div>
+                               
+                            </div>
+                            <div class="col-md-4 col-6">
+                                <div class="custom_select dark">
+                                    <select class="form-select select-nice">
+                                        <option selected>All Categories</option>
+                                        <option>Women's Clothing</option>
+                                        <option>Men's Clothing</option>
+                                        <option>Cellphones</option>
+                                        <option>Computer & Office</option>
+                                        <option>Consumer Electronics</option>
+                                        <option>Jewelry & Accessories</option>
+                                        <option>Home & Garden</option>
+                                        <option>Luggage & Bags</option>
+                                        <option>Shoes</option>
+                                        <option>Mother & Kids</option>
+                                    </select>
+                                </div>
+                            </div>
+                          
+                            <div class="col-md-2 col-6">
+                                <div class="custom_select">
+                                    <select class="form-select select-nice">
+                                        <option selected>Status</option>
+                                        <option>All</option>
+                                        <option>Paid</option>
+                                        <option>Chargeback</option>
+                                        <option>Refund</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </header>
-                    <!-- card-header end// -->
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>#ID</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Email</th>
-                                        <th scope="col">Total</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col">Date</th>
-                                        <th scope="col" class="text-end">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                        <% orderData.forEach((order,indexes)=>{%>
-                                            <% order.products.forEach((value,index)=>{%>
-                                               
-                                    <tr>
-                                        <input type="hidden" name="productId" value="<%= order.productId %>">
-                                        <td><%=order._id.toString().toUpperCase().slice(-6) %></td>
-                                        <td><b><%= order.user_name %></b></td>
-                                        <td><%= order.userId.email %></td>
-                                        <td>Rs.<%= order.total_amount.toFixed(2) %></td>
-                                        <td><span class="badge rounded-pill alert-warning"><%=value.status %></span></td>
-                                        <td><%= new Date(order.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %></td>
-                                        <td class="text-end">
-                                            <a href="/admin/orderDetail?orderId=<%= order._id %>" class="btn btn-md rounded font-sm detail-btn">Detail</a>
-
-
-                                            <div class="dropdown">
-                                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> change Status </a>
-                                                <div class="dropdown-menu">
-                                                    <a class="dropdown-item" href="#"  onclick="statusChange('<%= order._id%>','Delivered')">Delivered</a>
-                                                    <a class="dropdown-item" href="#" onclick="statusChange('<%= order._id%>','Shipped')">Shipped</a>
-                                                    <a class="dropdown-item text-danger" href="#" onclick="cancelStatusChange('<%= order._id%>','<%= value._id%>','Cancelled')">Cancelled</a>
-                                                </div>
-                                            </div>
-                                            <!-- dropdown //end -->
-                                        </td>
-                                    </tr>
-                                    <%})%>
+                            <div class="table-responsive">
+                                <table class="table align-middle table-nowrap mb-0">
+                                    <thead class="table-light">
+                                        <tr>   
+                                            <th class="align-middle" scope="col">No.</th>
+                                            <th class="align-middle" scope="col">Order ID</th>
+                                            <th class="align-middle" scope="col">Billing Name</th>
+                                            <th class="align-middle" scope="col">Date</th>
+                                            <th class="align-middle" scope="col">Total</th>
+                                            <th class="align-middle" scope="col">Payment Status</th>
+                                            <th class="align-middle" scope="col">Payment Method</th>
+                                            <th class="align-middle" scope="col">View Details</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% orderData.forEach((order,index)=>{%>
+                                        <tr>
+                                            <input type="hidden" name="productId" value="<%= order.productId %>">
+                                            <td><%= index+1 %></td>
+                                            <td><a href="#" class="fw-bold"><%=order._id.toString().toUpperCase().slice(-6) %></a></td>
+                                            <td><%= order.user_name %></td>
+                                            <td><%= new Date(order.date).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }) %></td>
+                                            <td>Rs.<%= order.total_amount.toFixed(2) %></td>
+                                            <td>
+                                                <span class="badge badge-pill badge-soft-success"><%= order.status %></span>
+                                            </td>
+                                            <td><%= order.payment %></td>
+                                            <td>
+                                                <a href="/admin/orderDetail?orderId=<%= order._id %>" class="btn btn-xs"> View details</a>
+                                            </td>
+                                        </tr>
                                     <%}) %>
-                                    
-                                </tbody>
-                            </table>
-                            <div id="orderLists" class="pagination-area mt-30 mb-50">
-                                <nav aria-label="Page navigation example ">
-                                    <ul class="pagination justify-content-center">
-                                        <% for(let j=1; j<=totalPages; j++){ %>
-                                        <li class="page-item <%= j === currentPage ? "active":" "%>"><a class="page-link" href="?page=<%= j%>"><%= j%></a></li>
-                                        <% } %>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                                        </li>
-                                    </ul>
-                                </nav>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                        <!-- table-responsive //end -->
+                        <!-- table-responsive end// -->
                     </div>
-                    <!-- card-body end// -->
                 </div>
+                <div id="paginationId" class="pagination-area mt-30 mb-50">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-start">
+                            <% if (currentOrderPage > 1) { %>
+                                <li class="page-item">
+                                    <a class="page-link" href="?orderPage=<%= currentOrderPage - 1 %>">
+                                        <i class="material-icons md-chevron_left"></i>
+                                    </a>
+                                </li>
+                            <% } %>
+                
+                            <% if (currentOrderPage > 3) { %>
+                                <li class="page-item"><a class="page-link" href="?orderPage=1">01</a></li>
+                                <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                            <% } %>
+                
+                            <% for (let j = Math.max(1, currentOrderPage - 2); j <= Math.min(totalOrderPages, currentOrderPage + 2); j++) { %>
+                                <li class="page-item <%= j === currentOrderPage ? 'active' : '' %>">
+                                    <a class="page-link" href="?orderPage=<%= j %>"><%= j < 10 ? '0' + j : j %></a>
+                                </li>
+                            <% } %>
+                
+                            <% if (currentOrderPage < totalOrderPages - 2) { %>
+                                <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                                <li class="page-item"><a class="page-link" href="?orderPage=<%= totalOrderPages %>"><%= totalOrderPages < 10 ? '0' + totalOrderPages : totalOrderPages %></a></li>
+                            <% } %>
+                
+                            <% if (currentOrderPage < totalOrderPages) { %>
+                                <li class="page-item">
+                                    <a class="page-link" href="?orderPage=<%= currentOrderPage + 1 %>">
+                                        <i class="material-icons md-chevron_right"></i>
+                                    </a>
+                                </li>
+                            <% } %>
+                        </ul>
+                    </nav>
+                </div>
+                
                 <!-- card end// -->
                
             </section>

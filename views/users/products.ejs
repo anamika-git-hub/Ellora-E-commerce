@@ -124,7 +124,7 @@
                         </button>
 
                         <a href="/" class="logo">
-                            <img src="assets/images/logo.png" alt="Molla Logo" width="105" height="25">
+                            <img src="assets/images/demos/demo-6/Ellora-logo.png" alt="Molla Logo" width="105" height="25">
                         </a>
 
                         <nav class="main-nav">
@@ -249,9 +249,15 @@
                                 <div  class="col-6 col-md-4 col-lg-4 col-xl-3">
                                     <div class="product">
                                         <figure class="product-media">
-                                            <% if( element.offer && element.offer.status == true&& new Date(element.offer.expiredAt) > currentDate){%>
+                                            <% if(element.stock && element.offer && element.offer.status == true&& new Date(element.offer.expiredAt) > currentDate){%>
                                                 <span class="product-label label-primary">Sale</span>
                                                 <%} %>
+
+                                                <% if(element.stock == 0){%>
+                                                    <span class="product-label label-primary text-muted">Out of Stock</span>
+
+
+                                                    <%} %>
                                             <a href="/productDetail?id=<%=element._id%>">
                                                 <img src="<%=element.image[0]%>" alt="Product image" class="product-image">
                                             </a>
@@ -259,11 +265,16 @@
                                             <div class="product-action-vertical">
                                                 <a href="#" onclick="addtoWishlist('<%=element._id%>')" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
                                              </div><!-- End .product-action -->
-
+                                            <% if(element.stock == 0 ){%>
+                                                <div class="product-action">
+                                                    <a  onclick="addtoCart('<%=element._id%>')" class="btn-product btn-cart " style="color: #fff;padding-top: 1.3rem;background-color: #c96;" >add to cart</a>
+                                                </div><!-- End .product-action -->
+                                                <%}else{%>
+                                                   
                                              <div class="product-action">
                                                 <a  onclick="addtoCart('<%=element._id%>')" class="btn-product btn-cart" style="color: #fff;padding-top: 1.3rem;background-color: #c96;">add to cart</a>
                                             </div><!-- End .product-action -->
-
+                                               <%}%>
                                             
                                         </figure><!-- End .product-media -->
 
@@ -392,7 +403,7 @@
 	            	<div class="row">
 	            		<div class="col-sm-6 col-lg-3">
 	            			<div class="widget widget-about">
-	            				<img src="assets/images/logo.png" class="footer-logo" alt="Footer Logo" width="105" height="25">
+	            				<img src="assets/images/demos/demo-6/Ellora-logo.png" class="footer-logo" alt="Footer Logo" width="105" height="25">
 	            				<p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. </p>
 
 	            				<div class="social-icons">

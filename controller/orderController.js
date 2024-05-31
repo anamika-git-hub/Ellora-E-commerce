@@ -93,7 +93,7 @@ const placeOrder = async (req, res) => {
             userId: userId,
             delivery_address: address,
             user_name: name,
-            total_amount: subTotal-couponDiscount-offerDiscount,
+            total_amount: subTotal,
             date: date,
             expected_delivery: deliveryDate,
             status: status,
@@ -258,19 +258,16 @@ const loadFailedPage = async(req,res)=>{
 }
 const loadOrderList = async(req,res)=>{
     try {
-        var page = 1;
-    if(req.query.page){
-        page = req.query.page;
-    }
-    const limit = 5;
+        const itemsPerPage = 5;
+        const currentOrderPage = parseInt(req.query.orderPage) || 1;
+
         const orderData = await Order.find().sort({ '_id': -1 }).populate('products.productId').populate('userId')
-        .limit(limit * 1)
-      .skip((page-1)* limit)
-      .exec();
+        .skip((currentOrderPage - 1) * itemsPerPage)
+        .limit(itemsPerPage);
         
-    const count = await Order.find({
-    }).countDocuments();
-        res.render('orderList',{orderData,totalPages:Math.ceil(count/limit),currentPage:page})
+ const totalOrders = await Order.countDocuments();
+ const totalOrderPages = Math.ceil(totalOrders / itemsPerPage);
+        res.render('orderList',{orderData,totalOrderPages,currentOrderPage})
     } catch (error) {
         console.log(error.message);
     }
@@ -279,7 +276,7 @@ const loadOrderList = async(req,res)=>{
 const loadOrderDetails = async (req, res) => {
     try {
         const { orderId } = req.query; 
-        const orderData = await Order.findById(orderId).populate('products.productId').populate('userId');
+        const orderData = await Order.findById(orderId).populate({ path: 'products.productId', populate: { path: 'offer' } }).populate('userId');
         const totalAmount = orderData.products.reduce((price,product)=>{
             return price + product.totalPrice
         })
@@ -301,10 +298,18 @@ const cancelOrder = async(req,res)=>{
         });
         
         product.status="cancelled";
+
         await orderData.save()
         const userId = req.session.user_id
        if(product.status === 'cancelled'){
         const walletData = await Wallet.findOne({userId});
+        await Product.updateOne({
+            _id:productId
+        },{
+            $inc:{
+                stock : product.quantity
+            }
+        })
         if(walletData){
             walletData.walletAmount += product.totalPrice;
             walletData.walletHistory.push({

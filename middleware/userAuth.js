@@ -1,8 +1,9 @@
+const { isBlocked } = require('../middleware/isBlocked');
 
-const isLogin = (req, res, next) => {
+const isLogin = async (req, res, next) => {
     try {
         if (!req.session.user_id) {
-            if (req.path === '/wishlist' || req.path === '/cart' || req.path === '/addCart') {
+            if (req.path === '/wishlist' || req.path === '/addCart') {
                 const message = req.path === '/wishlist'
                     ? "Please login to add items to your wishlist."
                     : "Please login to add items to your cart.";
@@ -11,29 +12,28 @@ const isLogin = (req, res, next) => {
                 res.redirect('/');
             }
         } else {
+            await isBlocked(req, res, next); // Check if the user is blocked
+        }
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+const isLogout = async (req, res, next) => {
+    try {
+        if (req.session.user_id) {
+            res.redirect('/');
+        } else {
             next();
         }
     } catch (error) {
         console.log(error.message);
+        res.status(500).json({ message: 'Internal server error' });
     }
 };
 
-
-
-const isLogout = async(req,res,next)=>{
-    try {
-        if(req.session.user_id){
-            res.redirect('/')
-        }else{
-            next();
-        }
-    } catch (error) {
-        console.log(error.message)
-    }
-}
-
-
-module.exports={
+module.exports = {
     isLogin,
     isLogout
-}
+};

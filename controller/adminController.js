@@ -76,8 +76,6 @@ const loadHome = async (req, res) => {
     ]);
     const userIds = topUsers.map(user => user._id);
     const users = await User.find({_id:{$in:userIds}})
-    console.log(topUsers);
-    console.log('uuuuuuuuuu',users);
         //------------------top products -------------------//
         const bestSellingProducts = await Order.aggregate([
             { $unwind: "$products" },
@@ -132,9 +130,56 @@ const bestSellingCategories = categoryQuantities.map(category => ({
     totalQuantity: category.totalQuantity,
     percentage: (category.totalQuantity / totalQuantityAllCategories) * 100
 })).sort((a, b) => b.percentage - a.percentage).slice(0, 10);
-console.log('bbbbbbbbbbbbbbbb',bestSellingCategories);
 
-        res.render('adminHome', { bestSellingProducts, products ,topUsers ,users,bestSellingCategories});
+//-------------total amount  ,total order ,total products --------------//
+const totalOrderStats = await Order.aggregate([
+    {
+        $group: {
+            _id: null,
+            totalAmount: { $sum: "$total_amount" },
+            totalOrders: { $sum: 1 },
+            totalProductsOrdered: { $sum: { $sum: "$products.quantity" } }
+        }
+    }
+]);
+
+//--------------------previous month total amount ----------------------//
+
+const latestMonthStats = await Order.aggregate([
+    {
+        $match: {
+            date: {
+                $gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+                $lt: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1)
+            }
+        }
+    },
+    {
+        $group: {
+            _id: null,
+            amountOrdered: { $sum: "$total_amount" }
+        }
+    }
+]);
+
+const totalAmount = totalOrderStats[0]?.totalAmount || 0;
+const totalOrders = totalOrderStats[0]?.totalOrders || 0;
+const totalProductsOrdered = totalOrderStats[0]?.totalProductsOrdered || 0;
+const latestMonthAmount = latestMonthStats[0]?.amountOrdered || 0;
+
+
+        res.render('adminHome',
+         {
+            bestSellingProducts,
+            products ,
+            topUsers ,
+            users,
+            bestSellingCategories,
+            totalAmount,
+            totalOrders,
+            totalProductsOrdered,
+            latestMonthAmount
+        });
     } catch (error) {
         console.log(error.message);
     }
@@ -165,8 +210,6 @@ const orderChart = async (req, res) => {
 
 const loadUserList=async(req,res)=>{
     try {
-
-        console.log('re',req.query);
         let userQuery;
         var page = 1;
     if(req.query.page){
@@ -198,16 +241,35 @@ const loadUserList=async(req,res)=>{
     }
 }
 
-const blockUser=async (req,res)=>{
+const blockUser = async (req, res) => {
     try {
-        const {userId}= req.query
-        const data = await User.findOne({_id:userId});
-        data.is_blocked=!data.is_blocked
-       await data.save()
+        const { userId } = req.query;
+        const user = await User.findOne({ _id: userId });
+
+        if (user) {
+            user.is_blocked = !user.is_blocked;
+            await user.save();
+
+            // If the user is currently logged in, destroy their session
+            if (req.session.user_id === userId && user.is_blocked) {
+                req.session.destroy((err) => {
+                    if (err) {
+                        console.log('Error destroying session:', err);
+                    } else {
+                        res.status(200).json({ message: 'User blocked and logged out' });
+                    }
+                });
+            } else {
+                res.status(200).json({ message: 'User blocked/unblocked successfully' });
+            }
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
     } catch (error) {
-        console.log(error.message)
+        console.log(error.message);
+        res.status(500).json({ message: 'Internal server error' });
     }
-}
+};
 
 const loadAddUsers = async(req,res)=>{
     try {
@@ -321,6 +383,8 @@ const loadSignout = async(req,res)=>{
 
 
 
+
+
 module.exports ={
     loadLogin,
     verifyLogin,
@@ -332,5 +396,5 @@ module.exports ={
     editUserLoad,
     updateUser,
     loadSignout,
-    orderChart
+    orderChart,
 }

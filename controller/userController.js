@@ -275,15 +275,8 @@ const loadAbout = async(req,res)=>{
 
 const loadProfile = async (req, res) => {
     try {
-        let orderPage = 1;
-        let walletPage = 1;
-
-        if (req.query.orderPage) {
-            orderPage = parseInt(req.query.orderPage);
-        }
-        if (req.query.walletPage) {
-            walletPage = parseInt(req.query.walletPage);
-        }
+        const orderPage = parseInt(req.query.orderPage) || 1;
+        const walletPage = parseInt(req.query.walletPage)|| 1 ;
 
         const limit = 4;
         const userId = req.session.user_id;
@@ -293,13 +286,14 @@ const loadProfile = async (req, res) => {
         const wishlistData = await Wishlist.findOne({ userId: userId }).populate('userId').populate('products.productId');
         const walletData = await Wallet.findOne({ userId: req.session.user_id });
 
-        const orderData = await Order.find({ userId: userId }).sort({ '_id': -1 }).populate('products.productId').populate('userId');
+        const orderData = await Order.find({ userId: userId }).sort({ '_id': -1 }).populate('products.productId').populate('userId').skip((orderPage - 1) * limit)
+        .limit(limit);
         
-        const totalOrders = orderData.length;
+        const totalOrders = await Order.countDocuments();
         const totalOrderPages = Math.ceil(totalOrders / limit);
-        const paginatedOrders = orderData.slice((orderPage - 1) * limit, orderPage * limit);
+        
 
-        const walletHistory = walletData.walletHistory;
+        const walletHistory = walletData.walletHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
         const totalWalletEntries = walletHistory.length;
         const totalWalletPages = Math.ceil(totalWalletEntries / limit);
         const paginatedWalletHistory = walletHistory.slice((walletPage - 1) * limit, walletPage * limit);
@@ -307,7 +301,7 @@ const loadProfile = async (req, res) => {
         const couponData = await Coupon.find();
 
         res.render('profile', {
-            paginatedOrders,
+            orderData,
             userData,
             cartData,
             wishlistData,
@@ -327,36 +321,25 @@ const loadProfile = async (req, res) => {
 };
 
 
-
-
 const showOrderList = async(req,res)=>{
     try {
         
-        let page = 1;
-        if (req.query.page) {
-            page = parseInt(req.query.page);
-            console.log('ppppppppppp',page);
-        }
-        
+        const page = parseInt(req.query.page) || 1;
         const limit = 5;
         const userId = req.session.user_id;
 
         const userData = await User.findById(userId);
-        const orderData = await Order.find({ userId: userId }).sort({ '_id': -1 }).populate('products.productId').populate('userId');
-        let allProducts = [];
-        orderData.forEach(order => {
-            order.products.forEach(product => {
-                allProducts.push({ ...product._doc, orderDate: order.date, payment: order.payment, deliveryAddress: order.delivery_address, orderId: order._id });
-            });
-        });
+        const orderData = await Order.find({ userId: userId }).sort({ '_id': -1 }).populate('products.productId').populate('userId').skip((orderPage - 1) * limit)
+        .limit(limit);
+      
 
-        const totalProducts = allProducts.length;
-        const totalPages = Math.ceil(totalProducts / limit);
-        const paginatedProducts = allProducts.slice((page - 1) * limit, page * limit);
+        const totalOrders = await Order.countDocuments();
+        const totalOrderPages = Math.ceil(totalOrders / limit);
+        
         res.json({
             userData,
-            products: paginatedProducts,
-            totalPages,
+            orderData,
+            totalOrderPages,
             currentPage: page
         });
     } catch (error) {
@@ -366,27 +349,25 @@ const showOrderList = async(req,res)=>{
 }
 const showWalletHistory = async (req, res) => {
     try {
-        let page = 1;
-        if (req.query.page) {
-            page = parseInt(req.query.page);
-        }
-        const limit = 5;
+        const walletPage = parseInt(req.query.page) || 1;
+        const limit = 4;
         const userId = req.session.user_id;
 
-        const walletData = await Wallet.findOne({ userId: req.session.user_id });
-        const walletHistory = walletData.walletHistory;
-        const walletTotalPages = Math.ceil(walletHistory.length / limit);
-        const paginatedWalletHistory = walletHistory.slice((page - 1) * limit, page * limit);
+        const walletData = await Wallet.findOne({ userId: userId });
+        const walletHistory = walletData.walletHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        const totalWalletEntries = walletHistory.length;
+        const totalWalletPages = Math.ceil(totalWalletEntries / limit);
+        const paginatedWalletHistory = walletHistory.slice((walletPage - 1) * limit, walletPage * limit);
 
         res.json({
-            paginatedWalletHistory: paginatedWalletHistory,
-            totalWalletPages: walletTotalPages,
-            currentWalletPage: page
+            paginatedWalletHistory,
+            currentWalletPage: walletPage,
+            totalWalletPages
         });
-
     } catch (error) {
         console.log(error.message);
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).send("Internal Server Error");
     }
 }
 

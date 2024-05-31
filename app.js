@@ -38,10 +38,7 @@ app.use('/', usersRouter);
 // app.use(function(req, res, next) {
 //   next(createError(404));
 // });
-app.use((req, res, next) => {
-  res.status(404);
-  res.redirect("/404");
-});
+
 
 // error handler
 app.use(function(err, req, res, next) {

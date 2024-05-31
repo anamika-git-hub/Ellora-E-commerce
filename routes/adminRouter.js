@@ -80,8 +80,6 @@ adminRouter.post('/cancelStatusChanged/:orderId',isLogin,orderController.cancelS
 
 
 
-
-
 adminRouter.get('*',function(req,res){
     res.redirect('/admin');
 })

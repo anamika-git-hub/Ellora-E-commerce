@@ -123,6 +123,7 @@ const loadCheckOut = async(req,res)=>{
    try {
 
       const {total,selectedShipping} = req.query;
+      console.log('to',total);
 
       let shippingMethod = '';
       if(selectedShipping== 0){

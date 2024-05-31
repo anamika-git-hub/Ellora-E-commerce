@@ -83,7 +83,7 @@
                         </button>
 
                         <a href="index.html" class="logo">
-                            <img src="assets/images/logo.png" alt="Molla Logo" width="105" height="25">
+                            <img src="assets/images/demos/demo-6/Ellora-logo.png" alt="Molla Logo" width="105" height="25">
                         </a>
 
                         <nav class="main-nav">
@@ -182,6 +182,27 @@
                                                     <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
                                                         <p class="text-muted mb-0 small">Rs.<%= product.totalPrice %></p> <!-- Product total price -->
                                                     </div>
+                                                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                                            
+                                                        <%if(product.status === 'cancelled'){%>
+                                                            <button type="submit" class="btn btn-outline-primary-2 disabled">
+                                                                <span>Cancelled</span>
+                                                                </button>
+                                                        <%}else if(product.status === 'Delivered'){%>
+                                                            <button type="submit"  class="btn btn-outline-primary-2 " onclick="returnProduct('<%= product.productId._id %>','<%= orderData._id%>')">
+                                                                <span>Return</span>
+                                                                </button>
+                                                        <%}else if(product.status == 'Return Approved'){%>
+                                                            <button type="submit"  class="btn btn-outline-primary-2 " onclick="cancelOrder(this,'<%= product.productId._id %>','<%= orderData._id%>')">
+                                                                <span>Return Approved</span>
+                                                                </button>
+                                                        <%}else{%>
+                                                            <button type="submit"  class="btn btn-outline-primary-2 " onclick="cancelOrder(this,'<%= product.productId._id %>','<%= orderData._id%>')">
+                                                                <span>Cancel</span>
+                                                                </button>
+                                                        <%}%>
+                                                        
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -197,9 +218,27 @@
                                         <%} %>
 	                
                                     <!-- Additional details from orderData -->
-                                    <div class="d-flex justify-content-between pt-2">
-                                        <p class="fw-bold mb-0">Order Details</p>
-                                        <p class="text-muted mb-0"><span class="fw-bold me-4">Total</span> Rs.<%= orderData.total_amount %></p>
+                                    <div class="d-flex justify-content-between pt-1">
+                                        <p class="fw-bold ">Deliver to</p>
+                                        <% if(orderData.total_amount<1000){%>
+                                        <p class="text-muted "><span class="fw-bold me-4">Delivery Charge : </span>Rs.60</p>
+                                        <%}else{%>
+
+                                        <%} %>
+                                    </div>
+                                    <div class="d-flex justify-content-between pt-1">
+                                        <p class="fw-bold  "><%= orderData.delivery_address.name %></p>
+                                        <p class="text-muted "><span class="fw-bold me-4">Coupon Discount : </span><%= orderData.couponDiscount %></p>
+                                       
+                                    </div>
+                                    <div class="d-flex justify-content-between pt-0">
+                                        <p class="fw-bold  "><%= orderData.delivery_address.streetAddress %></p>
+                                    </div>
+                                    <div class="d-flex justify-content-between pt-0">
+                                        <p class="fw-bold  "><%= orderData.delivery_address.city %>,<%= orderData.delivery_address.pincode %></p>
+                                    </div>
+                                    <div class="d-flex justify-content-between pt-0">
+                                        <p class="fw-bold  "><%= orderData.delivery_address.state %></p>
                                     </div>
                                     
                                     <!-- Add more order details as needed -->
@@ -222,7 +261,7 @@
 	            	<div class="row">
 	            		<div class="col-sm-6 col-lg-3">
 	            			<div class="widget widget-about">
-	            				<img src="assets/images/logo.png" class="footer-logo" alt="Footer Logo" width="105" height="25">
+	            				<img src="assets/images/demos/demo-6/Ellora-logo.png" class="footer-logo" alt="Footer Logo" width="105" height="25">
 	            				<p>Praesent dapibus, neque id cursus ucibus, tortor neque egestas augue, eu vulputate magna eros eu erat. </p>
 
 	            				<div class="social-icons">
@@ -590,6 +629,7 @@
     <script src="assets/js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         async function placeOrder(orderId) {
@@ -708,6 +748,71 @@
             window.location = `/orderInvoice?orderId=${orderId}`;
         }
     </script>
+
+
+
+<script>
+    function   returnProduct(productId, orderId) {
+        Swal.fire({
+            title: 'Reason for Return',
+            input: 'textarea',
+            inputLabel: 'Please provide a reason for return',
+            inputPlaceholder: 'Enter your reason here...',
+            inputAttributes: {
+                autocapitalize: 'off'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Submit',
+            showLoaderOnConfirm: true,
+            preConfirm: (reason) => {
+                return fetch('/returnProduct', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({productId, orderId, reason })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(response.statusText);
+                    }
+                    return response.json();
+                })
+                .catch(error => {
+                    Swal.showValidationMessage(`Request failed: ${error}`);
+                });
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (result.value && !result.value.error) {
+                    Swal.fire({
+                        title: 'Return Request Submitted!',
+                        text: 'Your return request has been submitted successfully.',
+                        icon: 'success'
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Return Request Failed!',
+                        text: result.value.error || 'An error occurred while processing your request.',
+                        icon: 'error'
+                    });
+                }
+            }
+        })
+    }
+</script>
+
+<script>
+    function cancelOrder(tag, productId, orderId){
+        const confirmed = confirm("Are you sure you want to cancel this order?");
+        if (confirmed) {
+            tag.innerText = 'Cancelled';
+            tag.disabled = true;
+            fetch(`/cancelOrder?productId=${productId}&orderId=${orderId}`);
+        }
+    }
+</script>
 </body>
 
 
