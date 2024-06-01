@@ -297,7 +297,7 @@
 								        <a class="nav-link active" id="tab-dashboard-link" data-toggle="tab" href="#tab-dashboard" role="tab" aria-controls="tab-dashboard" aria-selected="true">Dashboard</a>
 								    </li>
 								    <li class="nav-item">
-								        <a class="nav-link" onclick="fetchOrderList(page=1)" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="true">Orders</a>
+								        <a class="nav-link" onclick="fetchOrderList(1)" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="true">Orders</a>
 								    </li>
 								    <li class="nav-item">
 								        <a class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads" role="tab" aria-controls="tab-downloads" aria-selected="false">Downloads</a>
@@ -1214,14 +1214,14 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    function fetchOrderList(page) {
+    function fetchOrderList(orderPage) {
         $.ajax({
-            url: `/orders?page=${page}`,
+            url: `/orders?orderPage=${orderPage}`,
             method: 'GET',
             success: function (response) {
                 const orderListContainer = $('#orderListContainer');
                 orderListContainer.empty(); // Clear existing content
-    
+
                 response.orderData.forEach(order => {
                     const productsHTML = order.products.map(product => `
                         <div class="product">
@@ -1235,7 +1235,7 @@
                             </h3>
                         </div>
                     `).join('');
-    
+
                     const orderHTML = `
                         <div class="order">
                             <div class="row">
@@ -1275,11 +1275,11 @@
                     `;
                     orderListContainer.append(orderHTML);
                 });
-    
+
                 // Update pagination HTML
                 const paginationArea = $('#orderPagination');
                 paginationArea.empty(); // Clear existing pagination
-    
+
                 // Construct pagination HTML and append to container
                 if (response.currentPage > 1) {
                     paginationArea.append(`
@@ -1298,30 +1298,30 @@
                         </li>
                     `);
                 }
-    
+
                 if (response.currentPage > 3) {
                     paginationArea.append(`
                         <li class="page-item"><a class="page-link" href="#" onclick="fetchOrderList(1)">01</a></li>
                         <li class="page-item"><a class="page-link dot" href="#">...</a></li>
                     `);
                 }
-    
-                for (let j = Math.max(1, response.currentPage - 2); j <= Math.min(response.totalPages, response.currentPage + 2); j++) {
+
+                for (let j = Math.max(1, response.currentPage - 2); j <= Math.min(response.totalOrderPages, response.currentPage + 2); j++) {
                     paginationArea.append(`
                         <li class="page-item ${j === response.currentPage ? 'active' : ''}">
                             <a class="page-link" href="#" onclick="fetchOrderList(${j})">${j < 10 ? '0' + j : j}</a>
                         </li>
                     `);
                 }
-    
-                if (response.currentPage < response.totalPages - 2) {
+
+                if (response.currentPage < response.totalOrderPages - 2) {
                     paginationArea.append(`
                         <li class="page-item"><a class="page-link dot" href="#">...</a></li>
-                        <li class="page-item"><a class="page-link" href="#" onclick="fetchOrderList(${response.totalPages})">${response.totalPages < 10 ? '0' + response.totalPages : response.totalPages}</a></li>
+                        <li class="page-item"><a class="page-link" href="#" onclick="fetchOrderList(${response.totalOrderPages})">${response.totalOrderPages < 10 ? '0' + response.totalOrderPages : response.totalOrderPages}</a></li>
                     `);
                 }
-    
-                if (response.currentPage < response.totalPages) {
+
+                if (response.currentPage < response.totalOrderPages) {
                     paginationArea.append(`
                         <li class="page-item">
                             <a class="page-link page-link-next" href="#" onclick="fetchOrderList(${response.currentPage + 1})" aria-label="Next">
@@ -1341,7 +1341,7 @@
             }
         });
     }
-    </script>
+</script>
 
 
 

@@ -277,7 +277,7 @@ const loadProfile = async (req, res) => {
     try {
         const orderPage = parseInt(req.query.orderPage) || 1;
         const walletPage = parseInt(req.query.walletPage)|| 1 ;
-
+        
         const limit = 4;
         const userId = req.session.user_id;
 
@@ -288,7 +288,6 @@ const loadProfile = async (req, res) => {
 
         const orderData = await Order.find({ userId: userId }).sort({ '_id': -1 }).populate('products.productId').populate('userId').skip((orderPage - 1) * limit)
         .limit(limit);
-        
         const totalOrders = await Order.countDocuments();
         const totalOrderPages = Math.ceil(totalOrders / limit);
         
@@ -314,39 +313,39 @@ const loadProfile = async (req, res) => {
             currentOrderPage: orderPage,
             currentWalletPage: walletPage
         });
-
     } catch (error) {
         console.log(error.message);
     }
 };
 
 
-const showOrderList = async(req,res)=>{
+const showOrderList = async (req, res) => {
     try {
-        
-        const page = parseInt(req.query.page) || 1;
+        const orderPage = parseInt(req.query.orderPage) || 1;
         const limit = 5;
         const userId = req.session.user_id;
 
-        const userData = await User.findById(userId);
-        const orderData = await Order.find({ userId: userId }).sort({ '_id': -1 }).populate('products.productId').populate('userId').skip((orderPage - 1) * limit)
-        .limit(limit);
-      
+        const orderData = await Order.find({ userId: userId })
+            .sort({ '_id': -1 })
+            .populate('products.productId')
+            .populate('userId')
+            .skip((orderPage - 1) * limit)
+            .limit(limit);
 
-        const totalOrders = await Order.countDocuments();
+        const totalOrders = await Order.countDocuments({ userId: userId });
         const totalOrderPages = Math.ceil(totalOrders / limit);
-        
+
         res.json({
-            userData,
             orderData,
             totalOrderPages,
-            currentPage: page
+            currentPage: orderPage
         });
     } catch (error) {
         console.log(error.message);
         res.status(500).json({ error: error.message });
     }
 }
+
 const showWalletHistory = async (req, res) => {
     try {
         const walletPage = parseInt(req.query.page) || 1;
