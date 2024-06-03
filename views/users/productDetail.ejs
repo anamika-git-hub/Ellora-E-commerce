@@ -34,6 +34,14 @@
 
 <body>
     <style>
+
+.btn-product[disabled] {
+    pointer-events: none;
+    background-color: #ccc;
+    cursor: not-allowed;
+    color: #fff;
+}
+
         .swal2-cancel.cancel-button-class {
     color: #333;
     background-color: transparent; 
@@ -191,6 +199,7 @@
             <!-- productDetail page -->
 
             <div class="page-content">
+                <% const currentDate = new Date(); %>
                 <div class="container">
                     <div class="product-details-top">
                         <div class="row">
@@ -198,7 +207,12 @@
                                 <div class="product-gallery product-gallery-vertical">
                                     <div class="row">
                                         <figure class="product-main-image">
-                                            
+                                            <% if(products.stock && products.offer && products.offer.status == true&& new Date(products.offer.expiredAt) > currentDate){%>
+                                                <span class="product-label label-primary">Sale</span>
+                                            <%} %>
+                                            <% if(products.stock == 0){%>
+                                                <span class="product-label label-out">Out of Stock</span>
+                                            <%} %>
                                             <img id="product-zoom" src="<%=products.image[0]%>" data-zoom-image="<%=products.image[0]%>" alt="product image">
 
                                             <a href="#" id="btn-product-gallery" class="btn-product-gallery">
@@ -238,7 +252,12 @@
                                     </div><!-- End .rating-container -->
 
                                     <div class="product-price">
-                                       Rs. <%= products.price %>
+                                        <% if( products.offer && new Date(products.offer.expiredAt) > currentDate ){%>
+                                            <span class="new-price" > Rs.<%=products.price - (products.offer.offerPrice * products.price)/100 %></span>
+                                            <span class="old-price"> Rs.<%= products.price %></span>
+                                            <%}else{%>
+                                                Rs.<%= products.price %>
+                                                <%} %>
                                     </div><!-- End .product-price -->
 
                                     <div class="product-content">
@@ -278,11 +297,19 @@
                                         <div class="product-details-quantity">
                                             <input type="number"  class="form-control" value="1" min="1" max="<%= products.stock %>" step="1" data-decimals="0" id="number" required>
                                         </div><!-- End .product-details-quantity -->
+                                          <% if(products.stock <=5){%>
+                                            <div><p class="text text-danger">&nbsp;  Only <%= products.stock %> left</p></div>
+                                            <%} %>
+                                        
                                     </div><!-- End .details-filter-row -->
 
                                     <div class="product-details-action">
-                                        <button onclick="addtoCart('<%= products._id %>')" class="btn-product btn-cart"><span>add to cart</span></button>
-
+                                        <% if(products.stock == 0) { %>
+                                            <button onclick="addtoCart('<%= products._id %>')" class="btn-product btn-cart" disabled style="background-color: #ccc; cursor: not-allowed;"><span>Out of Stock</span></button>
+                                        <% } else { %>
+                                            <button onclick="addtoCart('<%= products._id %>')" class="btn-product btn-cart"><span>add to cart</span></button>
+                                        <% } %>
+                                        
 
                                         <div class="details-action-wrapper">
                                             <a href="#" onclick="addtoWishlist('<%= products._id %>')" class="btn-product btn-wishlist" title="Wishlist"><span>Add to Wishlist</span></a>
@@ -930,11 +957,10 @@
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script><script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
+$.noConflict();
+jQuery(document).ready(function($) {
     $(document).ready(function() {
         $('#wishlist-link').on('click', function(event) {
             event.preventDefault();
@@ -972,7 +998,12 @@
             });
         });
     });
+});
 </script>
+
+
+
+
 
 
 <script>
@@ -1105,14 +1136,10 @@
     }
   </script>
   
-  
-
 <script>
   async function addtoWishlist(productId) {
     try {
-      const response = await axios.post('/wishlist', { productId });
-      console.log(response.data);
-
+      await axios.post('/wishlist', { productId });
       if (response.data.login) {
         Swal.fire({
           icon: "warning",

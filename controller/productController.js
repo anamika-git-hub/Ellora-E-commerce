@@ -306,64 +306,38 @@ const filterProduct = async (req, res) => {
         res.render("404");
     }
 }
-// const productPage = async(req,res) => {
-//     try {
-//         console.log(req.query);
-//         const {minPrice, maxPrice, sort} = req.query;
-//         const queryObj = {...req.query};
-//         const page = req.query.page ? parseInt(req.query.page) : 1;
-//         const limit = 12;
-//         // let productQuery = {is_listed:true}
-//         // if (queryObj.minPrice && queryObj.maxPrice && queryObj.categories) {
-//         //     const categories = queryObj.categories.split(',');
-//         //     productQuery = {
-//         //         ...productQuery,
-//         //         price: {'$gte': parseFloat(queryObj.minPrice), '$lte': parseFloat(queryObj.maxPrice)},
-//         //         "categories.name": {$in: categories}
-//         //     };
-        
-//         // } else if (queryObj.minPrice && queryObj.maxPrice) {
-//         //     productQuery = {
-//         //         ...productQuery,
-//         //         price: { '$gte': parseFloat(queryObj.minPrice), '$lte': parseFloat(queryObj.maxPrice)}
-//         //     }
-//         // }
 
 
-//         // const productData = await products.find(productQuery).populate({path:'categories',model:'categories'}).populate('offer')
-//         //     .limit(limit)
-//         //     .skip((page - 1) * limit)  ;
-//         // console.log(productQuery,productData)
-//         console.log("================================================================")
-//         console.log(minPrice,maxPrice)
-//         let query = {price:{$gte:minPrice || 0,$lte:maxPrice || 750}}
-//         const Xproducts = await products.find(query);
-//         console.log(Xproducts)
-//         console.log("================================================================")
-
-//         if(req.query.filter){
-//            return res.json({products:Xproducts}) ;
-//         }
-//         res.render('Xproducts',{hello:Xproducts})
-//     } catch (error) {
-//         console.log(error)
-//     }
-// }
-
-
-const productDetails = async(req,res)=>{
+const productDetails = async (req, res) => {
     try {
-        const {id} = req.query
+        const { id } = req.query;
         const userId = req.session.user_id;
-        const productData = await products.findById({_id:id});
-        const wishlistData = await Wishlist.findOne({userId:req.session.user_id}).populate('userId').populate('products.productId');
-        const cartData = await Cart.findOne({userId:req.session.user_id}).populate('userId').populate({path:'products.productId'});
-        res.render('productDetail',{products:productData,cartData,wishlistData,userId})
+        let productData = await products.findById({ _id: id });
+        const wishlistData = await Wishlist.findOne({ userId: req.session.user_id }).populate('userId').populate('products.productId');
+        const cartData = await Cart.findOne({ userId: req.session.user_id }).populate('userId').populate({ path: 'products.productId' });
+        const offerData = await Offer.find();
+
+        if (offerData) {
+            for (const offer of offerData) {
+                if (offer.offerTypeName === 'Product') {
+                    if (productData._id.equals(offer.product)) {
+                        const offerId = offer._id;
+                        if (offer.status === true) {
+                            // Populate the offer field with the offer document
+                            const updatedProduct = await products.updateOne({ _id: productData._id }, { offer: offerId });
+                            productData = await products.findById({ _id: id }).populate('offer'); // Re-fetch product data after update
+                        }
+                    }
+                }
+            }
+        }
+
+        res.render('productDetail', { products: productData, cartData, wishlistData, userId });
     } catch (error) {
-       console.log(error.message) 
+        console.log(error.message);
     }
-        
-}
+};
+
 
 const loadBestSellingProducts = async(req,res)=>{
     try {

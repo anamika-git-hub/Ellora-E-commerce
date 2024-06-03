@@ -58,7 +58,7 @@ userRouter.post('/deleteWishlistItem',isLogin,wishlistController.deleteWishlistI
 
 userRouter.get('/cart',isLogin,cartController.loadCart);
 userRouter.post('/addcart',isLogin,cartController.addtoCart);
-userRouter.post('/cartUpdate',isLogin,cartController.updatequantity);
+userRouter.post('/cartUpdate',isLogin,cartController.updateQuantity);
 userRouter.post('/deleteCartItem',isLogin,cartController.deleteCartItem);
 userRouter.get('/availableCoupons',isLogin,couponController.availableCoupons);
 userRouter.post('/applyCoupon',isLogin,couponController.applyCoupon);

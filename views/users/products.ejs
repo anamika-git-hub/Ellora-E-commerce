@@ -30,12 +30,21 @@
     <link rel="stylesheet" href="assets/css/plugins/owl-carousel/owl.carousel.css">
     <link rel="stylesheet" href="assets/css/plugins/magnific-popup/magnific-popup.css">
     <link rel="stylesheet" href="assets/css/plugins/nouislider/nouislider.css">
+    
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-sXQVvSljPzmrYELIYTqzINWWy4CzD/1Im7ZiEgPgP3z57WNYzDGprl15HSzOmXhPytbQyWto8rkM5ffIFE59zw==" crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
 
 </head>
 
 <body>
     <style>
+
+.btn-product.disabled {
+    pointer-events: none;
+    background-color: #ccc;
+    cursor: not-allowed;
+    color: #fff;
+}
+
 
 .swal2-cancel.cancel-button-class {
     color: #333;
@@ -251,13 +260,10 @@
                                         <figure class="product-media">
                                             <% if(element.stock && element.offer && element.offer.status == true&& new Date(element.offer.expiredAt) > currentDate){%>
                                                 <span class="product-label label-primary">Sale</span>
-                                                <%} %>
-
-                                                <% if(element.stock == 0){%>
-                                                    <span class="product-label label-primary text-muted">Out of Stock</span>
-
-
-                                                    <%} %>
+                                            <%} %>
+                                            <% if(element.stock == 0){%>
+                                                <span class="product-label label-out">Out of Stock</span>
+                                            <%} %>
                                             <a href="/productDetail?id=<%=element._id%>">
                                                 <img src="<%=element.image[0]%>" alt="Product image" class="product-image">
                                             </a>
@@ -265,16 +271,14 @@
                                             <div class="product-action-vertical">
                                                 <a href="#" onclick="addtoWishlist('<%=element._id%>')" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
                                              </div><!-- End .product-action -->
-                                            <% if(element.stock == 0 ){%>
-                                                <div class="product-action">
-                                                    <a  onclick="addtoCart('<%=element._id%>')" class="btn-product btn-cart " style="color: #fff;padding-top: 1.3rem;background-color: #c96;" >add to cart</a>
-                                                </div><!-- End .product-action -->
-                                                <%}else{%>
-                                                   
                                              <div class="product-action">
-                                                <a  onclick="addtoCart('<%=element._id%>')" class="btn-product btn-cart" style="color: #fff;padding-top: 1.3rem;background-color: #c96;">add to cart</a>
-                                            </div><!-- End .product-action -->
-                                               <%}%>
+                                                <% if(element.stock == 0) { %>
+                                                    <a class="btn-product btn-cart disabled" style="color: #fff; padding-top: 1.3rem; background-color: #ccc;" aria-disabled="true">Out of Stock</a>
+                                                <% } else { %>
+                                                    <a onclick="addtoCart('<%=element._id%>')" class="btn-product btn-cart" style="color: #fff; padding-top: 1.3rem; background-color: #c96;">add to cart</a>
+                                                <% } %>
+                                            </div>
+                                            
                                             
                                         </figure><!-- End .product-media -->
 
@@ -319,17 +323,56 @@
                         </div><!-- End .row -->
 
                         <div class="pagination-area mt-30 mb-50">
-                            <nav aria-label="Page navigation example ">
-                                <ul class="pagination justify-content-start">
-                                    <% for(let j=1; j<=totalPages; j++){ %>
-                                    <li class="page-item <%= j === currentPage ? "active":" "%>"><a class="page-link" href="?page=<%= j%>"><%= j%></a></li>
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center">
+                                    <% if (currentPage > 1) { %>
+                                        <li class="page-item">
+                                            <a class="page-link page-link-prev" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
+                                                <span aria-hidden="true"><i class="material-icons md-chevron_left"></i></span>Prev
+                                            </a>
+                                        </li>
+                                    <% } else { %>
+                                        <li class="page-item disabled">
+                                            <a class="page-link page-link-prev" href="#" aria-label="Previous" tabindex="-1" aria-disabled="true">
+                                                <span aria-hidden="true"><i class="material-icons md-chevron_left"></i></span>Prev
+                                            </a>
+                                        </li>
                                     <% } %>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                                    </li>
+                        
+                                    <% if (currentPage > 3) { %>
+                                        <li class="page-item"><a class="page-link" href="?page=1">01</a></li>
+                                        <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                                    <% } %>
+                        
+                                    <% for (let j = Math.max(1, currentPage - 2); j <= Math.min(totalPages, currentPage + 2); j++) { %>
+                                        <li class="page-item <%= j === currentPage ? 'active' : '' %>">
+                                            <a class="page-link" href="?page=<%= j %>"><%= j < 10 ? '0' + j : j %></a>
+                                        </li>
+                                    <% } %>
+                        
+                                    <% if (currentPage < totalPages - 2) { %>
+                                        <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                                        <li class="page-item"><a class="page-link" href="?page=<%= totalPages %>"><%= totalPages < 10 ? '0' + totalPages : totalPages %></a></li>
+                                    <% } %>
+                        
+                                    <% if (currentPage < totalPages) { %>
+                                        <li class="page-item">
+                                            <a class="page-link page-link-next" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                                                Next<span aria-hidden="true"><i class="material-icons md-chevron_right"></i></span>
+                                            </a>
+                                        </li>
+                                    <% } else { %>
+                                        <li class="page-item disabled">
+                                            <a class="page-link page-link-next" href="#" aria-label="Next" tabindex="-1" aria-disabled="true">
+                                                Next<span aria-hidden="true"><i class="material-icons md-chevron_right"></i></span>
+                                            </a>
+                                        </li>
+                                    <% } %>
                                 </ul>
                             </nav>
                         </div>
+                        
+                        
                     </div><!-- End .products -->
                    
                     <div class="sidebar-filter-overlay"></div><!-- End .sidebar-filter-overlay -->
@@ -780,6 +823,16 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const disabledLinks = document.querySelectorAll('.btn-product.disabled');
+    disabledLinks.forEach(link => {
+        link.addEventListener('click', function(event) {
+            event.preventDefault();
+        });
+    });
+});
+</script>
 <script>
     $(document).ready(function() {
         $('#wishlist-link').on('click', function(event) {

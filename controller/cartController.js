@@ -88,25 +88,25 @@ const Coupon = require('../models/couponModel')
         }
     };
 
-const updatequantity = async(req,res)=>{
+const updateQuantity = async (req, res) => {
     try {
-        const {productId,productQuantity} = req.body;
-        const cartData = await Cart.findOne({userId:req.session.user_id}).populate({path:'products.productId',populate:{ path:'offer' }});
-        
-        const products = cartData.products.find((product)=>product.productId.equals(productId))
-        
-        products.quantity=productQuantity
-           
-        products.totalPrice = products.productPrice * productQuantity
-       const subTotal = cartData.products.reduce((total,products)=>total + products.totalPrice,0)
-       
-        await cartData.save();
-        res.status(200).json({ status: 'success', message: 'Quantity updated successfully',totalPrice:products.totalPrice ,subTotal});
+        const { productId, productQuantity } = req.body;
+        req.session.productId = productId;
+        const cartData = await Cart.findOne({ userId: req.session.user_id }).populate({ path: 'products.productId', populate: { path: 'offer' } });
 
+        const product = cartData.products.find((product) => product.productId.equals(productId));
+        product.quantity = productQuantity;
+        product.totalPrice = product.productPrice * productQuantity;
+
+        const subTotal = cartData.products.reduce((total, product) => total + product.totalPrice, 0);
+
+        await cartData.save();
+        res.status(200).json({ status: 'success', message: 'Quantity updated successfully', totalPrice: product.totalPrice, subTotal });
     } catch (error) {
         console.log(error.message);
     }
 }
+
 
 const deleteCartItem = async(req,res)=>{
     try {
@@ -119,56 +119,75 @@ const deleteCartItem = async(req,res)=>{
     }
 }
 
-const loadCheckOut = async(req,res)=>{
-   try {
+const loadCheckOut = async (req, res) => {
+    try {
+        const { selectedShipping } = req.query;
+        let shippingMethod = '';
+        let shippingCost = 0;
 
-      const {total,selectedShipping} = req.query;
-      console.log('to',total);
+        if (selectedShipping == 0) {
+            shippingMethod = 'Free Shipping';
+        } else if (selectedShipping == 10) {
+            shippingMethod = 'Standard';
+            shippingCost = 10;
+        } else if (selectedShipping == 20) {
+            shippingMethod = 'Express';
+            shippingCost = 20;
+        } else {
+            shippingCost = 60;
+            shippingMethod = 'Delivery Charge';
+        }
 
-      let shippingMethod = '';
-      if(selectedShipping== 0){
-        shippingMethod = 'Free Shipping'
-      }else if(selectedShipping == 10){
-        shippingMethod = 'Standard'
-      }else if (selectedShipping == 20){
-        shippingMethod = 'Express';
-      }
-      
-      const userId = req.session.user_id;
-      const user = await User.findById(userId);
-      const addresses = user.addresses;
+        const userId = req.session.user_id;
+        const user = await User.findById(userId);
+        const addresses = user.addresses;
 
-      const cartData = await Cart.findOne({userId:userId}).populate({path:'products.productId'});
-      const wishlistData = await Wishlist.findOne({userId:req.session.user_id}).populate('userId').populate('products.productId');
+        const cartData = await Cart.findOne({ userId: userId }).populate({ path: 'products.productId' });
+        
+        if (cartData.products.length <= 0) {
+            res.redirect('/cart');
+        } else {
+            const subTotal = cartData.products.reduce((total, product) => total + product.totalPrice, 0);
+            const total = subTotal + shippingCost;
 
-      if(cartData.products.length<=0){
-        res.redirect('/cart'); 
-      }else{
-        const subTotal = req.flash('subTotal')[0]||total;
-        const discountAmount = req.flash('discountAmount')[0]|| 0;
-        const totalAfterDiscount =  req.flash('totalAfterDiscount')[0] || subTotal;
-        const errorMessages = req.flash('error');
+            const wishlistData = await Wishlist.findOne({ userId: req.session.user_id }).populate('userId').populate('products.productId');
 
-        const couponData = await Coupon.find({
-            minimumLimit: { $lte: total },
-            status: 'active',
-            is_listed: true,
-            'usedUsers.userId': { $ne: req.session.user_id }
-         });
+            const couponData = await Coupon.find({
+                minimumLimit: { $lte: subTotal },
+                status: 'active',
+                is_listed: true,
+                'usedUsers.userId': { $ne: req.session.user_id }
+            });
 
-        res.render('checkout',{cartData,subTotal,addresses:addresses,totalAfterDiscount,wishlistData,discountAmount,errorMessages,shippingMethod,couponData});
-      }
-     
-   } catch (error) {
-    console.log(error.message);
-   }
+            const discountAmount = 0; // You can modify this according to your discount logic
+            const totalAfterDiscount = subTotal; // Adjust if any discounts are applied
+
+            const errorMessages = req.flash('error');
+
+            res.render('checkout', {
+                cartData,
+                subTotal,
+                addresses,
+                totalAfterDiscount,
+                wishlistData,
+                discountAmount,
+                errorMessages,
+                shippingMethod,
+                couponData,
+                total
+            });
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
 }
+
 
 
 module.exports = {
     loadCart,
     addtoCart,
-    updatequantity,
+    updateQuantity,
     deleteCartItem,
     loadCheckOut
 }
