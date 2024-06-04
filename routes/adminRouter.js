@@ -49,6 +49,7 @@ adminRouter.post('/editUsers',isLogin,adminController.updateUser);
 
 adminRouter.get('/productList',isLogin,productController.loadProductList);
 adminRouter.get('/addProducts',isLogin,productController.loadAddProducts);
+// adminRouter.post('/addProducts',productController.addProducts);
 adminRouter.post('/addProducts',imageUpload,productController.addProducts);
 adminRouter.get('/listProduct',isLogin,productController.listProduct);
 adminRouter.get('/editproducts',isLogin,productController.editProductLoad);

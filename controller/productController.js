@@ -95,22 +95,29 @@ const addProducts = async(req,res)=>{
 //     try {
 //         console.log('body:',req.body);
 //        const value= await joiProductSchema.validateAsync(req.body)
-//        const {name,description,price,categories,image,stock} = value
-//        const result = await cloudinary.uploader.upload(image, {
-//         folder: "products",
-//         // width: 300,
-//         // crop: "scale"
-//     })
+//        const {name,description,price,categories,stock} = value
+//        const image = [...req.body.image];
+//        let imageBuffer = [];
+//        for(i=0;i<image.length;i++){
+//         const result = await cloudinary.uploader.upload(image[i], {
+//             folder: "products",
+//             // width: 300,
+//             // crop: "scale"
+//         })
+//         imageBuffer.push({
+//             public_id : result.public_id,
+//             url: result.secure_url
+
+//         })
+//        }
+//       req.body.image = imageBuffer
 
 //          await products.create(
 //              {name:name,
 //              description:description,
 //              price:price,
 //              categories:categories,
-//              image:{
-//                   public_id:result.public_id,
-//                   url:result.secure_url
-//              },
+//              image,
 //              stock:stock,
 //              is_listed:true,
 //              size:['s','xs']
@@ -323,9 +330,8 @@ const productDetails = async (req, res) => {
                     if (productData._id.equals(offer.product)) {
                         const offerId = offer._id;
                         if (offer.status === true) {
-                            // Populate the offer field with the offer document
                             const updatedProduct = await products.updateOne({ _id: productData._id }, { offer: offerId });
-                            productData = await products.findById({ _id: id }).populate('offer'); // Re-fetch product data after update
+                            productData = await products.findById({ _id: id }).populate('offer'); 
                         }
                     }
                 }
