@@ -3,6 +3,7 @@ const category=require('../models/categoryModel');
 const products= require('../models/productsModel');
 const Cart = require('../models/cartModel');
 const Wishlist = require('../models/wishlistModel');
+const multer = require('multer')
 const path = require('path');
 const {joiProductSchema} = require('../models/ValidationSchema')
 const uuid = require('uuid');
@@ -10,6 +11,9 @@ const cloudinary = require("../utils/cloudinary");
 const Offer = require('../models/offerModel');
 const Order = require('../models/orderModel')
 const mongoose = require('mongoose')
+
+const storage = multer.memoryStorage();
+const upload = multer({storage:storage});
 
 
 const loadProductList=async(req,res)=>{
@@ -56,68 +60,29 @@ const loadAddProducts = async(req,res)=>{
     }
 }
 
-const addProducts = async(req,res)=>{
-    try {
-
-        const { error } = joiProductSchema.validate(req.body, {
-            abortEarly: false
-          });
-    if(error){ 
-        const errorMessages = error.details.reduce((acc, cur) => {
-            acc[cur.context.key] = cur.message;
-            return acc;
-        }, {});
-        req.flash('messages', errorMessages);
-        req.flash('formData', req.body);
-        res.redirect('/admin/addProducts')
-    }
-       const value= await joiProductSchema.validateAsync(req.body)
-       const {name,description,price,categories,image,stock} = value
-         await products.create(
-             {name:name,
-             description:description,
-             price:price,
-             categories:categories,
-             image:image,
-             stock:stock,
-             is_listed:true,
-             size:['s','xs']
-             })
-                 res.redirect('/admin/productList')
-       
-    } catch (error) {
-        console.log(error.message)
-    }
-}
-
-
 // const addProducts = async(req,res)=>{
 //     try {
-//         console.log('body:',req.body);
+
+//         const { error } = joiProductSchema.validate(req.body, {
+//             abortEarly: false
+//           });
+//     if(error){ 
+//         const errorMessages = error.details.reduce((acc, cur) => {
+//             acc[cur.context.key] = cur.message;
+//             return acc;
+//         }, {});
+//         req.flash('messages', errorMessages);
+//         req.flash('formData', req.body);
+//         res.redirect('/admin/addProducts')
+//     }
 //        const value= await joiProductSchema.validateAsync(req.body)
-//        const {name,description,price,categories,stock} = value
-//        const image = [...req.body.image];
-//        let imageBuffer = [];
-//        for(i=0;i<image.length;i++){
-//         const result = await cloudinary.uploader.upload(image[i], {
-//             folder: "products",
-//             // width: 300,
-//             // crop: "scale"
-//         })
-//         imageBuffer.push({
-//             public_id : result.public_id,
-//             url: result.secure_url
-
-//         })
-//        }
-//       req.body.image = imageBuffer
-
+//        const {name,description,price,categories,image,stock} = value
 //          await products.create(
 //              {name:name,
 //              description:description,
 //              price:price,
 //              categories:categories,
-//              image,
+//              image:image,
 //              stock:stock,
 //              is_listed:true,
 //              size:['s','xs']
@@ -128,6 +93,64 @@ const addProducts = async(req,res)=>{
 //         console.log(error.message)
 //     }
 // }
+
+
+const addProducts = async (req, res) => {
+    try {
+        console.log('body:', req.body); // Log body content
+        console.log('files:', req.files); // Log files content
+
+        const value = await joiProductSchema.validateAsync(req.body);
+        const { name, description, price, categories, stock } = value;
+
+        // Check if files are present
+        if (!req.files || req.files.length === 0) {
+            throw new Error('"image" is required');
+        }
+
+        const images = req.files.map(file => ({
+            public_id: file.cloudinary_public_id,
+            url: file.cloudinary_url
+        }));
+
+        await products.create({
+            name,
+            description,
+            price,
+            categories,
+            image: images,
+            stock,
+            is_listed: true,
+            size: ['s', 'xs']
+        });
+
+        res.redirect('/admin/productList');
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send('An error occurred');
+    }
+};
+
+const handleFileUpload = async (req, res, next) => {
+    try {
+        let uploadCount = 0;
+        req.files.forEach((file, index) => {
+            cloudinary.uploader.upload_stream({ folder: "products" }, (error, result) => {
+                if (error) {
+                    return next(error);
+                }
+                file.cloudinary_public_id = result.public_id;
+                file.cloudinary_url = result.secure_url;
+                uploadCount++;
+                if (uploadCount === req.files.length) {
+                    next();
+                }
+            }).end(file.buffer);
+        });
+    } catch (error) {
+        next(error);
+    }
+};
 
 const listProduct=async (req,res)=>{
     try {
@@ -157,68 +180,133 @@ const editProductLoad = async(req,res)=>{
     }
 }
 
-const updateProducts = async (req,res)=>{
-    try {
-        const productId = req.body.id
-        const productData = await products.findById(req.body.id);
+// const updateProducts = async (req,res)=>{
+//     try {
+//         const productId = req.body.id
+//         const productData = await products.findById(req.body.id);
             
-        if (!mongoose.Types.ObjectId.isValid(productId)) {
-            console.log('Invalid product ID')
-        }
-        const { error } = joiProductSchema.validate(req.body, {
-            abortEarly: false
-          });
-    if(error){ 
-        const errorMessages = error.details.reduce((acc, cur) => {
-            acc[cur.context.key] = cur.message;
-            return acc;
-        }, {});
-        req.flash('messages', errorMessages);
-        req.flash('formData', req.body);
-        req.flash('id',productId)
-        res.redirect(`/admin/editproducts?id=${productId}`)
-    }
+//         if (!mongoose.Types.ObjectId.isValid(productId)) {
+//             console.log('Invalid product ID')
+//         }
+//         const { error } = joiProductSchema.validate(req.body, {
+//             abortEarly: false
+//           });
+//     if(error){ 
+//         const errorMessages = error.details.reduce((acc, cur) => {
+//             acc[cur.context.key] = cur.message;
+//             return acc;
+//         }, {});
+//         req.flash('messages', errorMessages);
+//         req.flash('formData', req.body);
+//         req.flash('id',productId)
+//         res.redirect(`/admin/editproducts?id=${productId}`)
+//     }
     
 
-    const value = await joiProductSchema.validateAsync(req.body)
+//     const value = await joiProductSchema.validateAsync(req.body)
 
-    const {name,description,price,categories,image,stock} = value
-        const data = {
-            name : name,
-            description : description,
-            price : price,
-            categories : categories,
-            price: price,
-            stock: stock,
-            image:image
-        }
+//     const {name,description,price,categories,image,stock} = value
+//         const data = {
+//             name : name,
+//             description : description,
+//             price : price,
+//             categories : categories,
+//             price: price,
+//             stock: stock,
+//             image:image
+//         }
 
-        // if(image !==''){
-        //     const imgId = productData.image._id;
-        //     if(imgId){
-        //         await cloudinary.uploader.destroy(imgId)
-        //     }
+//         // if(image !==''){
+//         //     const imgId = productData.image._id;
+//         //     if(imgId){
+//         //         await cloudinary.uploader.destroy(imgId)
+//         //     }
 
-        //     const newImage = await cloudinary.uploader.upload(image,file.path,{
-        //         folder:"product-images"
-        //     })
-        //     data.image = {
-        //         _id:newImage._id,
-        //         url:newImage.secure_url
-        //     }
-        // }
+//         //     const newImage = await cloudinary.uploader.upload(image,file.path,{
+//         //         folder:"product-images"
+//         //     })
+//         //     data.image = {
+//         //         _id:newImage._id,
+//         //         url:newImage.secure_url
+//         //     }
+//         // }
 
-        if(data){
-            const pro = await products.findOneAndUpdate({_id:req.body.id},data);
+//         if(data){
+//             const pro = await products.findOneAndUpdate({_id:req.body.id},data);
           
-        res.redirect('/admin/productList')
-        }else{
-            res.render('editProducts',{products:productData,message:'Category already exists'})
+//         res.redirect('/admin/productList')
+//         }else{
+//             res.render('editProducts',{products:productData,message:'Category already exists'})
+//         }
+//     } catch (error) {
+//         console.log(error.message)
+//     }
+// }
+
+
+const updateProducts = async (req, res) => {
+    try {
+        console.log('bodyl',req.body);
+        const productId = req.body.id;
+        console.log('produd',productId);
+        
+        if (!mongoose.Types.ObjectId.isValid(productId)) {
+            console.log('Invalid product ID');
+            return res.status(400).send('Invalid product ID');
         }
+
+        const { error } = joiProductSchema.validate(req.body, { abortEarly: false });
+        if (error) { 
+            const errorMessages = error.details.reduce((acc, cur) => {
+                acc[cur.context.key] = cur.message;
+                return acc;
+            }, {});
+            req.flash('messages', errorMessages);
+            req.flash('formData', req.body);
+            req.flash('id', productId);
+            return res.redirect(`/admin/editproducts?id=${productId}`);
+        }
+
+        const value = await joiProductSchema.validateAsync(req.body);
+        const { name, description, price, categories, stock } = value;
+        const productData = await products.findById(productId);
+        
+        if (!productData) {
+            console.log('Product not found');
+            return res.status(404).send('Product not found');
+        }
+
+            productData.name= name;
+            productData.description=description;
+            productData.price = price;
+            productData.categories = categories;
+            productData.stock = stock;
+        
+
+        if (req.files && req.files.length > 0) {
+            // Delete old images from Cloudinary
+            for (const image of productData.image) {
+                await cloudinary.uploader.destroy(image.public_id);
+            }
+
+            // Upload new images to Cloudinary
+            const newImages = req.files.map(file => ({
+                public_id: file.cloudinary_public_id,
+                url: file.cloudinary_url
+            }));
+
+            productData.image = newImages;
+        }
+
+        await productData.save();
+
+        res.redirect('/admin/productList');
     } catch (error) {
-        console.log(error.message)
+        console.log(error.message);
+        res.status(500).send('An error occurred');
     }
-}
+};
+
 
 const productPage = async(req,res)=>{
    try {
@@ -382,5 +470,7 @@ module.exports={
     productPage,
     productDetails,
     filterProduct,
-    loadBestSellingProducts
+    loadBestSellingProducts,
+    handleFileUpload,
+    upload
 }

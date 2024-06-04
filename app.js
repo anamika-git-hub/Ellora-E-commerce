@@ -56,6 +56,6 @@ app.use(function(err, req, res, next) {
 });
 
 
-app.listen(3000,()=>{
-  console.log('port is running on  ')
+app.listen(process.env.PORT,()=>{
+  console.log('sever is running.. ')
 })

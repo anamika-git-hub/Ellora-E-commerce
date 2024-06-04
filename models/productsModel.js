@@ -18,20 +18,20 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    // image: [{
-    //     public_id: {
-    //         type: String,
-    //         required: true
-    //     },
-    //     url: {
-    //         type: String,
-    //         required: true
-    //     }
-    // }],
-    image:{
-        type:Array,
-        validate:[arrayLimit,'You can pass only 4 images']
-      },
+    image: [{
+        public_id: {
+            type: String,
+            required: true
+        },
+        url: {
+            type: String,
+            required: true
+        }
+    }],
+    // image:{
+    //     type:Array,
+    //     validate:[arrayLimit,'You can pass only 4 images']
+    //   },
     
     size: {
         type: Array
@@ -51,9 +51,9 @@ const productSchema = new mongoose.Schema({
     }
 });
 
-function arrayLimit(val){
-    return val.length<=4
-  }
+// function arrayLimit(val){
+//     return val.length<=4
+//   }
   
 
 module.exports = mongoose.model('products', productSchema);

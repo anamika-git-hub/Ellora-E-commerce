@@ -258,29 +258,28 @@
                                 <div  class="col-6 col-md-4 col-lg-4 col-xl-3">
                                     <div class="product">
                                         <figure class="product-media">
-                                            <% if(element.stock && element.offer && element.offer.status == true&& new Date(element.offer.expiredAt) > currentDate){%>
+                                            <% if(element.stock && element.offer && element.offer.status == true && new Date(element.offer.expiredAt) > currentDate) { %>
                                                 <span class="product-label label-primary">Sale</span>
-                                            <%} %>
-                                            <% if(element.stock == 0){%>
+                                            <% } %>
+                                            <% if(element.stock == 0) { %>
                                                 <span class="product-label label-out">Out of Stock</span>
-                                            <%} %>
-                                            <a href="/productDetail?id=<%=element._id%>">
-                                                <img src="<%=element.image[0]%>" alt="Product image" class="product-image">
+                                            <% } %>
+                                            <a href="/productDetail?id=<%= element._id %>">
+                                                <img src="<%= element.image[0].url %>" alt="Product image" class="product-image">
                                             </a>
-
+                                        
                                             <div class="product-action-vertical">
-                                                <a href="#" onclick="addtoWishlist('<%=element._id%>')" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                             </div><!-- End .product-action -->
-                                             <div class="product-action">
+                                                <a href="#" onclick="addtoWishlist('<%= element._id %>')" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                            </div><!-- End .product-action -->
+                                            <div class="product-action">
                                                 <% if(element.stock == 0) { %>
                                                     <a class="btn-product btn-cart disabled" style="color: #fff; padding-top: 1.3rem; background-color: #ccc;" aria-disabled="true">Out of Stock</a>
                                                 <% } else { %>
-                                                    <a onclick="addtoCart('<%=element._id%>')" class="btn-product btn-cart" style="color: #fff; padding-top: 1.3rem; background-color: #c96;">add to cart</a>
+                                                    <a onclick="addtoCart('<%= element._id %>')" class="btn-product btn-cart" style="color: #fff; padding-top: 1.3rem; background-color: #c96;">add to cart</a>
                                                 <% } %>
                                             </div>
-                                            
-                                            
                                         </figure><!-- End .product-media -->
+                                        
 
                                         <div class="product-body">
                                             <div class="product-cat">
