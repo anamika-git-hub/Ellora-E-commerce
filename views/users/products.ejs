@@ -1114,7 +1114,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                             <figure class="product-media">
                                                 ${element.offer && element.offer.status == true ? `<span class="product-label label-primary">Sale</span>` : ''}
                                                 <a href="/productDetail?id=${element._id}">
-                                                    <img src="${element.image[0]}" alt="Product image" class="product-image">
+                                                    <img src="${element.image[0].url}" alt="Product image" class="product-image">
                                                 </a>
                                                 <div class="product-action-vertical">
                                                     <a href="#" onclick="addtoWishlist('${element._id}')" class="btn-product-icon btn-wishlist btn-expandable">

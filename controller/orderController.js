@@ -481,7 +481,6 @@ const filterSalesReport = async (req, res) => {
 const statusChange = async(req,res)=>{
     try {
         console.log(req.body.status);
-        
         const orderId = req.params.orderId;
         const order = await Order.findOne({_id:orderId});
         if(req.body.status== 'Shipped'){
