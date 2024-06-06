@@ -933,6 +933,7 @@
                         razorpayObject.open();
                     } else if (res.data.deliverySuccess == true) {
                         const orderId = res.data.orderId
+                        console.log('order',orderId);
                         window.location = `/successPage?orderId=${orderId}`;
                     }
                 } else {
@@ -985,7 +986,8 @@
                         buttons: false
                     })
                 setTimeout(function() {
-                    window.location.href = '/successPage';
+                    console.log("ssss",order);
+                    window.location.href = `/successPage?orderId=${order}`;
                     },500);            
                 }else{
                 Swal.fire({
@@ -996,7 +998,7 @@
                     timer: 1500,
                 });
                 setTimeout(function() {
-                    window.location.href = '/failedPage';
+                    window.location.href =  `/failedPage?orderId=${order}`;
                     },500);  
             }
         })

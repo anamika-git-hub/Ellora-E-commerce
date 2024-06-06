@@ -97,13 +97,10 @@ const loadAddProducts = async(req,res)=>{
 
 const addProducts = async (req, res) => {
     try {
-        console.log('body:', req.body); // Log body content
-        console.log('files:', req.files); // Log files content
 
         const value = await joiProductSchema.validateAsync(req.body);
         const { name, description, price, categories, stock } = value;
 
-        // Check if files are present
         if (!req.files || req.files.length === 0) {
             throw new Error('"image" is required');
         }
@@ -135,7 +132,9 @@ const handleFileUpload = async (req, res, next) => {
     try {
         let uploadCount = 0;
         req.files.forEach((file, index) => {
-            cloudinary.uploader.upload_stream({ folder: "products" }, (error, result) => {
+            cloudinary.uploader.upload_stream({ folder: "products", transformation: [
+                { width: 768, height: 1152, crop: "fill" }, 
+              ] }, (error, result) => {
                 if (error) {
                     return next(error);
                 }
@@ -246,9 +245,7 @@ const editProductLoad = async(req,res)=>{
 
 const updateProducts = async (req, res) => {
     try {
-        console.log('bodyl',req.body);
         const productId = req.body.id;
-        console.log('produd',productId);
         
         if (!mongoose.Types.ObjectId.isValid(productId)) {
             console.log('Invalid product ID');
@@ -272,7 +269,6 @@ const updateProducts = async (req, res) => {
         const productData = await products.findById(productId);
         
         if (!productData) {
-            console.log('Product not found');
             return res.status(404).send('Product not found');
         }
 

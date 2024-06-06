@@ -30,8 +30,8 @@ const placeOrder = async (req, res) => {
         const cartData = await Cart.findOne({ userId: userId }).populate({ path: 'products.productId', populate: { path: 'offer' } });
         const productData = cartData.products;
 
-        const status = paymentMethod === 'Razorpay' ? 'pending' : 'placed';
-        const statusLevel = status === 'placed' ? 1 : 0;
+        const status = paymentMethod === 'Wallet' ? 'Paid' : 'Pending';
+        const statusLevel = status === 'Paid' ? 1 : 0;
 
         const date = new Date();
         const delivery = new Date(date.getTime() + 10 * 24 * 60 * 60 * 1000);
@@ -96,7 +96,7 @@ const placeOrder = async (req, res) => {
             total_amount: subTotal,
             date: date,
             expected_delivery: deliveryDate,
-            status: status,
+            status:status,
             statusLevel: statusLevel,
             payment: paymentMethod,
             couponDiscount: couponDiscount,
@@ -236,11 +236,10 @@ const verifyPayment = async(req,res)=>{
 
 
 
-
-
 const loadSuccessPage = async(req,res)=>{
     try {
         const {orderId}=req.query;
+        console.log('lllll',orderId);
         res.render('successPage',{orderId})
     } catch (error) {
         console.log(error.message);
@@ -330,7 +329,7 @@ const cancelOrder = async(req,res)=>{
                         date:new Date(),
                         amount:product.totalPrice,
                         description:'Order Cancellation',
-                        status:'In'  
+                        status:'Credited'  
                     }
                 ]
             })
@@ -406,7 +405,7 @@ const returnApproval = async(req,res)=>{
                              date:new Date(),
                              amount:productPrice,
                              description:'Order Returned',
-                             status:'In'  
+                             status:'Credited'  
                          }
                      ]
                  })
