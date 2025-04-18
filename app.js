@@ -57,5 +57,5 @@ app.use(function(err, req, res, next) {
 
 
 app.listen(process.env.PORT,()=>{
-  console.log('sever is running.. ')
+  console.log('server is running.. ')
 })
