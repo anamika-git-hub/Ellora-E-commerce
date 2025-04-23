@@ -1085,6 +1085,22 @@ blockquote.text-white cite span {
     background-color: #c96
 }
 
+.compare-dropdown .cart-count {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1;
+    margin-left: .2rem;
+    margin-top: .1rem;
+    color: #fff;
+    background-color: #c96
+}
+
 .cart-dropdown .dropdown-cart-products {
     margin-top: -1rem
 }

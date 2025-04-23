@@ -38,7 +38,8 @@ const loadHome = async(req,res)=>{
 
 const loadLogin=async(req,res)=>{
     try{
-     res.render('login')
+        const userId = req.session.user_id;
+        res.render('login',{userId})
     }catch(error){
         console.log(error.message);
 
@@ -47,10 +48,10 @@ const loadLogin=async(req,res)=>{
 
 const loadSignup=async(req,res)=>{
     try {
-
+        const userId = req.session.user_id;
         const messages = req.flash('messages')[0] || {}; 
         const formData = req.flash('formData')[0] || {};
-        res.render('signUp',{messages,formData});
+        res.render('signUp',{messages,formData,userId});
     } catch (error) {
         console.log(error.message)
     }
@@ -116,8 +117,8 @@ const sendOTPverificationEmail=async ({email},res)=>{
         };
 
         const hashedOTP =await bcrypt.hash(otp,10);
-
-        const newOtpVerification = await new userOtpVerification({email:email,otp:hashedOTP});
+          console.log(otp)
+        const newOtpVerification =  new userOtpVerification({email:email,otp:hashedOTP});
         await newOtpVerification.save();
         await transporter.sendMail(mailOptions);
         res.redirect(`/otp?email=${email}`);
@@ -259,7 +260,8 @@ const loadLogout = async(req,res)=>{
 
 const loadContact = async(req,res)=>{
     try {
-        res.render('contact')
+        const userId = req.session.user_id;
+        res.render('contact',{userId})
     } catch (error) {
         console.log(error.message);
     }
@@ -267,7 +269,8 @@ const loadContact = async(req,res)=>{
 
 const loadAbout = async(req,res)=>{
     try {
-        res.render('about')
+        const userId = req.session.user_id;
+        res.render('about',{userId})
     } catch (error) {
         console.log(error.message);
     }
@@ -285,20 +288,21 @@ const loadProfile = async (req, res) => {
         const cartData = await Cart.findOne({ userId: req.session.user_id }).populate('userId').populate({ path: 'products.productId' });
         const wishlistData = await Wishlist.findOne({ userId: userId }).populate('userId').populate('products.productId');
         const walletData = await Wallet.findOne({ userId: req.session.user_id });
+       
 
         const orderData = await Order.find({ userId: userId }).sort({ '_id': -1 }).populate('products.productId').populate('userId').skip((orderPage - 1) * limit)
         .limit(limit);
         const totalOrders = await Order.countDocuments();
         const totalOrderPages = Math.ceil(totalOrders / limit);
-        
-
-        const walletHistory = walletData.walletHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
-        const totalWalletEntries = walletHistory.length;
-        const totalWalletPages = Math.ceil(totalWalletEntries / limit);
-        const paginatedWalletHistory = walletHistory.slice((walletPage - 1) * limit, walletPage * limit);
-
+       
         const couponData = await Coupon.find();
 
+        if(walletData){
+            const walletHistory = walletData.walletHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
+            const totalWalletEntries = walletHistory.length;
+            const totalWalletPages = Math.ceil(totalWalletEntries / limit);
+            const paginatedWalletHistory = walletHistory.slice((walletPage - 1) * limit, walletPage * limit);
+            
         res.render('profile', {
             orderData,
             userData,
@@ -313,6 +317,20 @@ const loadProfile = async (req, res) => {
             currentOrderPage: orderPage,
             currentWalletPage: walletPage
         });
+      }else{
+        res.render('profile', {
+            orderData,
+            userData,
+            cartData,
+            wishlistData,
+            couponData,
+            userId,
+            walletData,
+            totalOrderPages,
+            currentOrderPage: orderPage,
+            currentWalletPage: walletPage
+        });
+      }
     } catch (error) {
         console.log(error.message);
     }
