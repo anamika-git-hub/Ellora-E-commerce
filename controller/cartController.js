@@ -35,7 +35,7 @@ const Coupon = require('../models/couponModel')
                 await cartData.save();
             }
     
-            res.render('cart', { cartData, subTotal, wishlistData });
+            res.render('cart', { cartData, subTotal, wishlistData, userId });
         } catch (error) {
             console.error('Error loading cart:', error.message);
             res.status(500).send('Internal Server Error');
@@ -174,7 +174,8 @@ const loadCheckOut = async (req, res) => {
                 errorMessages,
                 shippingMethod,
                 couponData,
-                total
+                total,
+                userId
             });
         }
     } catch (error) {

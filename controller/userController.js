@@ -261,7 +261,9 @@ const loadLogout = async(req,res)=>{
 const loadContact = async(req,res)=>{
     try {
         const userId = req.session.user_id;
-        res.render('contact',{userId})
+        const cartData = await Cart.findOne({ userId: req.session.user_id }).populate('userId').populate({ path: 'products.productId' });
+        const wishlistData = await Wishlist.findOne({ userId: userId }).populate('userId').populate('products.productId');
+        res.render('contact',{userId, wishlistData, cartData})
     } catch (error) {
         console.log(error.message);
     }
@@ -270,7 +272,9 @@ const loadContact = async(req,res)=>{
 const loadAbout = async(req,res)=>{
     try {
         const userId = req.session.user_id;
-        res.render('about',{userId})
+        const cartData = await Cart.findOne({ userId: req.session.user_id }).populate('userId').populate({ path: 'products.productId' });
+        const wishlistData = await Wishlist.findOne({ userId: userId }).populate('userId').populate('products.productId');
+        res.render('about',{userId, cartData, wishlistData})
     } catch (error) {
         console.log(error.message);
     }

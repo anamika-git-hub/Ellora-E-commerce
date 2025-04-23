@@ -1,5 +1,6 @@
 const User = require('../models/userModel');
 const Cart = require('../models/cartModel');
+const Wishlist = require('../models/wishlistModel')
 const Order = require('../models/orderModel');
 const Product = require('../models/productsModel');
 const Wallet = require('../models/walletModel');
@@ -239,8 +240,10 @@ const verifyPayment = async(req,res)=>{
 const loadSuccessPage = async(req,res)=>{
     try {
         const {orderId}=req.query;
-        console.log('lllll',orderId);
-        res.render('successPage',{orderId})
+        const userId = req.session.user_id;
+        const cartData = await Cart.findOne({ userId: req.session.user_id }).populate('userId').populate({ path: 'products.productId' });
+        const wishlistData = await Wishlist.findOne({ userId: userId }).populate('userId').populate('products.productId');
+        res.render('successPage',{orderId, userId, cartData, wishlistData})
     } catch (error) {
         console.log(error.message);
     }
@@ -250,7 +253,10 @@ const loadSuccessPage = async(req,res)=>{
 const loadFailedPage = async(req,res)=>{
     try {
         const {orderId} = req.query;
-        res.render('failedPage',{orderId})
+        const userId = req.session.user_id;
+        const cartData = await Cart.findOne({ userId: req.session.user_id }).populate('userId').populate({ path: 'products.productId' });
+        const wishlistData = await Wishlist.findOne({ userId: userId }).populate('userId').populate('products.productId');
+        res.render('failedPage',{orderId, userId, cartData, wishlistData})
     } catch (error) {
         console.log(error.message);
     }
@@ -539,8 +545,6 @@ const loadOrderInvoice = async (req, res) => {
         const { orderId } = req.query;
 
         const orderData = await Order.findOne({ _id: orderId }).populate('products.productId').populate('userId');
-         console.log('orrrrrrrrrrrrr',orderData.products);
-         
 
         if (!orderData) {
             return res.status(404).send('Order not found');
@@ -555,6 +559,10 @@ const loadOrderInvoice = async (req, res) => {
 
 const loadOrderHistory = async (req, res) => {
     try {
+        
+        const userId = req.session.user_id;
+        const cartData = await Cart.findOne({ userId: req.session.user_id }).populate('userId').populate({ path: 'products.productId' });
+        const wishlistData = await Wishlist.findOne({ userId: userId }).populate('userId').populate('products.productId');
         const orderId = req.query.orderId;
         const orderData = await Order.findOne({ _id: orderId }).populate('products.productId').populate('userId');
 
@@ -562,7 +570,7 @@ const loadOrderHistory = async (req, res) => {
             return res.status(404).send('Order not found');
         }
 
-        res.render('orderHistory', { orderData });
+        res.render('orderHistory', { orderData, userId, cartData, wishlistData });
     } catch (error) {
         console.log(error.message);
         res.status(500).send('Internal Server Error');

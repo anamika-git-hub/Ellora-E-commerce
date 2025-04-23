@@ -12,7 +12,7 @@ const loadWishlist = async(req,res)=>{
           const  userId = req.session.user_id;
           const wishlistData = await Wishlist.findOne({userId:userId}).populate('userId').populate('products.productId');
           const cartData = await Cart.findOne({userId:userId}).populate('userId').populate({path:'products.productId'});
-            res.render('wishlist',{wishlistData,cartData});
+            res.render('wishlist',{wishlistData,cartData, userId});
         }
     } catch (error) {
         console.log(error.message);
