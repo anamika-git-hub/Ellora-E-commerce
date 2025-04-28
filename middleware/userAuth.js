@@ -3,7 +3,7 @@ const { isBlocked } = require('../middleware/isBlocked');
 const isLogin = async (req, res, next) => {
     try {
         if (!req.session.user_id) {
-            if (req.path === '/wishlist' || req.path === '/addCart') {
+            if (req.path === '/addWishlist' || req.path === '/addCart') {
                 const message = req.path === '/wishlist'
                     ? "Please login to add items to your wishlist."
                     : "Please login to add items to your cart.";

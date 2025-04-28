@@ -480,7 +480,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
   async function addtoWishlist(productId) {
     try {
-      const response = await axios.post('/wishlist', { productId });
+      const response = await axios.post('/addWishlist', { productId });
       console.log(response.data);
 
       if (response.data.login) {

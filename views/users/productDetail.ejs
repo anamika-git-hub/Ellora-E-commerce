@@ -716,7 +716,7 @@
     <script>
     async function addtoWishlist(productId) {
         try {
-        await axios.post('/wishlist', { productId });
+        await axios.post('/addWishlist', { productId });
         if (response.data.login) {
             Swal.fire({
             icon: "warning",

@@ -52,7 +52,7 @@ userRouter.get('/productDetail',productController.productDetails);
 
 
 userRouter.get('/wishlist',isLogin,wishlistController.loadWishlist);
-userRouter.post('/wishlist',isLogin,wishlistController.addtoWishlist);
+userRouter.post('/addWishlist',isLogin,wishlistController.addtoWishlist);
 userRouter.post('/deleteWishlistItem',isLogin,wishlistController.deleteWishlistItem);
 
 
