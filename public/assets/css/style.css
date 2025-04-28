@@ -396,6 +396,7 @@ blockquote.text-white cite span {
 }
 
 .page-wrapper {
+    user-select: none;
     position: relative;
     display: flex;
     flex-direction: column;

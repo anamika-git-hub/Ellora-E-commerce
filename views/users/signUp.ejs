@@ -23,52 +23,6 @@
 							    </li>
 							</ul>
 							<div class="tab-content">
-							    <div class="tab-pane fade" id="signin-2" role="tabpanel" aria-labelledby="signin-tab-2">
-							    	<form action="/login" method="post">
-                                        
-							    		<div class="form-group">
-							    			<label for="singin-email-2">Username or email addres</label>
-							    			<input type="text" class="form-control" id="singin-email-2" name="email" required>
-							    		</div><!-- End .form-group -->
-
-							    		<div class="form-group">
-							    			<label for="singin-password-2">Password *</label>
-							    			<input type="password" class="form-control" id="singin-password-2" name="password" required>
-							    		</div><!-- End .form-group -->
-
-							    		<div class="form-footer">
-							    			<button type="submit" class="btn btn-outline-primary-2">
-			                					<span>LOG IN</span>
-			            						<i class="icon-long-arrow-right"></i>
-			                				</button>
-
-			                				<div class="custom-control custom-checkbox">
-												<input type="checkbox" class="custom-control-input" id="signin-remember-2">
-												<label class="custom-control-label" for="signin-remember-2">Remember Me</label>
-											</div><!-- End .custom-checkbox -->
-
-											<a href="#" class="forgot-link">Forgot Your Password?</a>
-							    		</div><!-- End .form-footer -->
-							    	</form>
-                                   
-							    	<div class="form-choice">
-								    	<p class="text-center">or sign in with</p>
-								    	<div class="row">
-								    		<div class="col-sm-6">
-								    			<a href="/google" class="btn btn-login btn-g">
-								    				<i class="icon-google"></i>
-								    				Login With Google
-								    			</a>
-								    		</div><!-- End .col-6 -->
-								    		<div class="col-sm-6">
-								    			<a href="#" class="btn btn-login btn-f">
-								    				<i class="icon-facebook-f"></i>
-								    				Login With Facebook
-								    			</a>
-								    		</div><!-- End .col-6 -->
-								    	</div><!-- End .row -->
-							    	</div><!-- End .form-choice -->
-							    </div><!-- .End .tab-pane -->
 							    <div class="tab-pane fade show active" id="register-2" role="tabpanel" aria-labelledby="register-tab-2">
 							    	<form action="/signUp" method="post">
 							    		<div class="form-group">
@@ -141,6 +95,140 @@
         const email = urlParams.get('email');
         const mobile = urlParams.get('mobile');
     </script>
+
+	<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form[action="/signUp"]');
+    const nameField = document.getElementById('name-field');
+    const emailField = document.getElementById('email-field');
+    const mobileField = document.getElementById('mobile-field');
+    const passwordField = document.getElementById('register-password-2');
+    const confirmPasswordField = document.getElementsByName('confirmPassword')[0];
+    const policyCheckbox = document.getElementById('register-policy-2');
+    
+    // Function to show error message
+    function showError(field, message) {
+        const errorElement = field.nextElementSibling;
+        errorElement.textContent = message;
+        return false;
+    }
+    
+    // Function to clear error message
+    function clearError(field) {
+        const errorElement = field.nextElementSibling;
+        errorElement.textContent = '';
+    }
+    
+    // Validate name
+    nameField.addEventListener('blur', function() {
+        if (this.value.trim() === '') {
+            showError(this, 'Name is required');
+        } else if (this.value.length < 3) {
+            showError(this, 'Name must be at least 3 characters');
+        } else {
+            clearError(this);
+        }
+    });
+    
+    // Validate email
+    emailField.addEventListener('blur', function() {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (this.value.trim() === '') {
+            showError(this, 'Email is required');
+        } else if (!emailRegex.test(this.value)) {
+            showError(this, 'Please enter a valid email address');
+        } else {
+            clearError(this);
+        }
+    });
+    
+    // Validate mobile
+    mobileField.addEventListener('blur', function() {
+        const mobileRegex = /^[6-9]\d{9}$/;
+        if (this.value.trim() === '') {
+            showError(this, 'Mobile number is required');
+        } else if (!mobileRegex.test(this.value)) {
+            showError(this, 'Please enter a valid 10-digit mobile number');
+        } else {
+            clearError(this);
+        }
+    });
+    
+    // Validate password
+    passwordField.addEventListener('blur', function() {
+        if (this.value.trim() === '') {
+            showError(this, 'Password is required');
+        } else if (this.value.length < 6) {
+            showError(this, 'Password must be at least 6 characters long');
+        } else {
+            clearError(this);
+        }
+    });
+    
+    // Validate confirm password
+    confirmPasswordField.addEventListener('blur', function() {
+        if (this.value.trim() === '') {
+            showError(this, 'Please confirm your password');
+        } else if (this.value !== passwordField.value) {
+            showError(this, 'Passwords do not match');
+        } else {
+            clearError(this);
+        }
+    });
+    
+    // Form submission
+    form.addEventListener('submit', function(event) {
+        let isValid = true;
+        
+        // Validate name
+        if (nameField.value.trim() === '') {
+            isValid = showError(nameField, 'Name is required');
+        } else if (nameField.value.length < 3) {
+            isValid = showError(nameField, 'Name must be at least 3 characters');
+        }
+        
+        // Validate email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (emailField.value.trim() === '') {
+            isValid = showError(emailField, 'Email is required');
+        } else if (!emailRegex.test(emailField.value)) {
+            isValid = showError(emailField, 'Please enter a valid email address');
+        }
+        
+        // Validate mobile
+        const mobileRegex = /^[6-9]\d{9}$/;
+        if (mobileField.value.trim() === '') {
+            isValid = showError(mobileField, 'Mobile number is required');
+        } else if (!mobileRegex.test(mobileField.value)) {
+            isValid = showError(mobileField, 'Please enter a valid 10-digit mobile number');
+        }
+        
+        // Validate password
+        if (passwordField.value.trim() === '') {
+            isValid = showError(passwordField, 'Password is required');
+        } else if (passwordField.value.length < 6) {
+            isValid = showError(passwordField, 'Password must be at least 6 characters long');
+        }
+        
+        // Validate confirm password
+        if (confirmPasswordField.value.trim() === '') {
+            isValid = showError(confirmPasswordField, 'Please confirm your password');
+        } else if (confirmPasswordField.value !== passwordField.value) {
+            isValid = showError(confirmPasswordField, 'Passwords do not match');
+        }
+        
+        // Validate policy checkbox
+        if (!policyCheckbox.checked) {
+            alert('Please agree to the privacy policy');
+            isValid = false;
+        }
+        
+        if (!isValid) {
+            event.preventDefault(); 
+        }
+    });
+});
+	</script>
 
   
 <%- include('../layouts/users/footer', { path: '/signUp' }) %>
