@@ -2,8 +2,8 @@
 
         <style>
             .product-media img {
-                width: 50px; /* Adjusted the width to 50px */
-                height: auto; /* Maintain the aspect ratio */
+                width: 50px; 
+                height: auto; 
             }
             .order {
                 margin-bottom: 20px;
@@ -28,7 +28,7 @@
             }
             .product-title {
                 margin-left: 15px;
-                font-size: 14px; /* Adjusted the font size */
+                font-size: 14px; 
                 text-align: left;
             }
             .order-footer {
@@ -120,7 +120,6 @@
             }
         
             .code {
-                /* text-transform: uppercase; */
                 padding: 10px;
                 background-color: #fff;
                 color: rgb(255, 111, 0);
@@ -186,8 +185,9 @@
                                     <!---------------------------------------- Orders------------------------------------------------ -->
                                     
                                     <div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
+                                        <% if(orderData && orderData.length > 0) { %>
                                         <div id="orderListContainer">
-                                            <% if(orderData && orderData.length > 0) { %>
+                                           
                                                 <% orderData.forEach((order) => { %>
                                                     <div class="order">
                                                         <div class="row">
@@ -236,12 +236,8 @@
                                                     </div>
                                                     <hr>
                                                 <% }) %>
-                                            <% } else { %>
-                                                <p>No orders have been made yet.</p>
-                                                <a href="/products" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
-                                            <% } %>
                                         </div>
-                                    
+
                                         <div id="paginationId" class="pagination-area mt-30 mb-50">
                                             <nav aria-label="Page navigation example">
                                                 <ul class="pagination justify-content-start" id="orderPagination">
@@ -291,6 +287,10 @@
                                                 </ul>
                                             </nav>
                                         </div>
+                                        <% } else { %>
+                                            <p>No orders have been made yet.</p>
+                                            <a href="/products" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
+                                        <% } %>
                                     </div>
                                     
 								    <div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
@@ -305,10 +305,10 @@
 								    	<p>The following addresses will be used on the checkout page by default.</p>
                                        
                                         <a href="" id="showAddAddress" aria-controls="addAddress" aria-selected="false">Add address <i class="icon-edit"></i></a></p>
+                                        <%  if(userData && userData.addresses.length>0){ %>
+                                            <%  userData.addresses.forEach((value)=>{%>
 								    	<div class="row"  >
-                                            <%  if(userData && userData.addresses.length>0){ %>
-                                                
-                                              <%  userData.addresses.forEach((value)=>{%>
+                                              
                                                 <div  class="col-lg-6" >
                                                     
                                                     <div id="cardId<%= value._id %>" class="card card-dashboard">
@@ -331,104 +331,120 @@
                                                     </div><!-- End .card-dashboard -->
                                                 </div><!-- End .col-lg-6 -->
                                           
-                                                <div id="editAddress<%=value._id%>"  style="display: none;" >
-                                                    <div class="col-lg-12 text-right">
-                                                        <a onclick="toAddressList('<%=value._id%>')" href="#tab-address" id="toAddressList">back</a>
-                                                        </div>
-                                                    <form action="/editAddress" method="post">
-                                                    <div>
-                                                        <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
-                                      
-                                                            <input type="hidden" name="_id" value="<%=value._id%>">
-                                                            <label>User Name </label>
-                                                            <input name="name" type="text" class="form-control" value="<%= value.name%>">
-                    
-                                                            <label>Country </label>
-                                                            <input name="country" type="text" class="form-control" value="<%= value.country%>" required>
-                    
-                                                            <label>Street address </label>
-                                                            <input name="streetName" type="text" class="form-control" placeholder="House number and Street name" value="<%= value.streetAddress%>" required>
-                                                            <input name="landMark" type="text" class="form-control" placeholder="LandMark" value="<%= value.landMark%>" required>
-                    
-                                                            <div class="row">
-                                                                <div class="col-sm-6">
-                                                                    <label>Town / City </label>
-                                                                    <input name="town" type="text" class="form-control" value="<%= value.city%>" required>
-                                                                </div><!-- End .col-sm-6 -->
-                    
-                                                                <div class="col-sm-6">
-                                                                    <label>State / County </label>
-                                                                    <input name="state" type="text" class="form-control" value="<%= value.state%>" required>
-                                                                </div><!-- End .col-sm-6 -->
-                                                            </div><!-- End .row -->
-                    
-                                                            <div class="row">
-                                                                <div class="col-sm-6">
-                                                                    <label>Postcode / ZIP </label>
-                                                                    <input name="pin" type="text" class="form-control" value="<%= value.pincode%>"  required>
-                                                                </div><!-- End .col-sm-6 -->
-                    
-                                                                <div class="col-sm-6">
-                                                                    <label>Phone </label>
-                                                                    <input name="phone" type="tel" class="form-control" value="<%= value.mobile%>" required>
-                                                                </div><!-- End .col-sm-6 -->
-                                                            </div><!-- End .row -->
-                                                            
-                                                            <label>Email </label>
-                                                            <input name="email" type="email" class="form-control" value="<%= value.email%>" required>
-                    
-                                                            <button type="submit" class="btn btn-outline-primary-2">
-                                                                <span>Edit address</span>
-                                                                <i class="icon-long-arrow-right"></i>
-                                                            </button>
-                                                    </div>
-                                                    </form>
-                                                </div>
-                                              <%
-
-                                              })%>
-								    		
-                                            <% }else{%>
-								    		<div class="col-lg-6">
-								    			<div class="card card-dashboard">
-								    				<div class="card-body">
-								    					<h3 class="card-title">Billing Address</h3><!-- End .card-title -->
-
-														<p>You have not set up this type of address yet.<br>
-														<a href="" id="showAddAddress" aria-controls="addAddress" aria-selected="false">Add address <i class="icon-edit"></i></a></p>
-								    				</div><!-- End .card-body -->
-								    			</div><!-- End .card-dashboard -->
-								    		</div><!-- End .col-lg-6 -->
-                                            <% } %>
+                                                
 								    	</div><!-- End .row -->
+                                        <div class="row" id="editAddress<%=value._id%>"  style="display: none;" >
+                                            <form class="col-lg-12" action="/editAddress" method="post">
+                                                <div class="col-lg-12 d-flex justify-content-between align-items-center mb-2">
+                                                    <h2 class="checkout-title mb-0">Billing Details</h2>
+                                                    <a onclick="toAddressList('<%= value._id %>')" href="#tab-address" id="toAddressList" class="btn btn-link">Back</a>
+                                                </div>
+
+                                                    <input type="hidden" name="_id" value="<%=value._id%>">
+                                                    <label>User Name </label>
+                                                    <input name="name" type="text" class="form-control" value="<%= value.name%>">
+                                                    <span class="error-message" style="color: red;"></span>
+
+                                                    <label>Country </label>
+                                                    <input name="country" type="text" class="form-control" value="<%= value.country%>" required>
+                                                    <span class="error-message" style="color: red;"></span>
+
+                                                    <label>Street address </label>
+                                                    <input name="streetName" type="text" class="form-control" placeholder="House number and Street name" value="<%= value.streetAddress%>" required>
+                                                    <span class="error-message" style="color: red;"></span>
+                                                    
+                                                    <input name="landMark" type="text" class="form-control" placeholder="LandMark" value="<%= value.landMark%>" required>
+                                                    <span class="error-message" style="color: red;"></span>
+
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <label>Town / City </label>
+                                                            <input name="town" type="text" class="form-control" value="<%= value.city%>" required>
+                                                            <span class="error-message" style="color: red;"></span>
+                                                        </div>
+
+                                                        <div class="col-sm-6">
+                                                            <label>State / County </label>
+                                                            <input name="state" type="text" class="form-control" value="<%= value.state%>" required>
+                                                            <span class="error-message" style="color: red;"></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <label>Postcode / ZIP </label>
+                                                            <input name="pin" type="text" class="form-control" value="<%= value.pincode%>" required>
+                                                            <span class="error-message" style="color: red;"></span>
+                                                        </div>
+
+                                                        <div class="col-sm-6">
+                                                            <label>Phone </label>
+                                                            <input name="phone" type="tel" class="form-control" value="<%= value.mobile%>" required>
+                                                            <span class="error-message" style="color: red;"></span>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <label>Email </label>
+                                                    <input name="email" type="email" class="form-control" value="<%= value.email%>" required>
+                                                    <span class="error-message" style="color: red;"></span>
+            
+                                                    <button type="submit" class="btn btn-outline-primary-2">
+                                                        <span>Edit address</span>
+                                                        <i class="icon-long-arrow-right"></i>
+                                                    </button>
+                                            </form>
+                                        </div>
+                                      <%
+                                      })%>
+                                    
+                                    <% }else{%>
+                                    <div class="col-lg-6">
+                                        <div class="card card-dashboard">
+                                            <div class="card-body">
+                                                <h3 class="card-title">Billing Address</h3><!-- End .card-title -->
+
+                                                <p>You have not set up this type of address yet.<br>
+                                            </div><!-- End .card-body -->
+                                        </div><!-- End .card-dashboard -->
+                                    </div><!-- End .col-lg-6 -->
+                                    <% } %>
                                     
 
                                         <div class="row" id="addAddress"  style="display: none;" >
-                                            <div class="col-lg-12 text-right">
-                                                <a onclick="toAddressLists()" href="#tab-address" id="toAddressList">back</a>
-                                                </div>
-                                            <form action="/addAddress" method="post">
-                                                <div class="col-lg-9">
+                                            
+                                            <form class="col-lg-12" action="/addAddress" method="post">
+                                                <div class="col-lg-12 d-flex justify-content-between align-items-center mb-2">
+                                                    
                                                     <h2 class="checkout-title">Billing Details</h2>
+                                                    <a onclick="toAddressLists()" href="#tab-address" id="toAddressList" class="btn btn-link">back</a>
+                                                    </div>
+
                                                     <label>User Name </label>
                                                     <input name="name" type="text" class="form-control">
+                                                    <span class="error-message" style="color: red;"></span>
                                             
-                                                    <label>Country </label>
+                                                    <label class="mt-2">Country </label>
                                                     <input name="country" type="text" class="form-control" required>
+                                                    <span class="error-message" style="color: red;"></span>
                                             
                                                     <label>Street address </label>
                                                     <input name="streetName" type="text" class="form-control" placeholder="House number and Street name" required>
+                                                    <span class="error-message" style="color: red;"></span>
+                                                    
                                                     <input name="landMark" type="text" class="form-control" placeholder="LandMark" required>
+                                                    <span class="error-message" style="color: red;"></span>
                                             
                                                     <div class="row">
                                                         <div class="col-sm-6">
                                                             <label>Town / City </label>
                                                             <input name="town" type="text" class="form-control" required>
+                                                            <span class="error-message" style="color: red;"></span>
                                                         </div>
                                             
                                                         <div class="col-sm-6">
                                                             <label>State / County </label>
                                                             <input name="state" type="text" class="form-control" required>
+                                                            <span class="error-message" style="color: red;"></span>
                                                         </div>
                                                     </div>
                                             
@@ -436,22 +452,24 @@
                                                         <div class="col-sm-6">
                                                             <label>Postcode / ZIP </label>
                                                             <input name="pin" type="text" class="form-control" required>
+                                                            <span class="error-message" style="color: red;"></span>
                                                         </div>
                                             
                                                         <div class="col-sm-6">
                                                             <label>Phone </label>
                                                             <input name="phone" type="tel" class="form-control" required>
+                                                            <span class="error-message" style="color: red;"></span>
                                                         </div>
                                                     </div>
                                                     
                                                     <label>Email </label>
                                                     <input name="email" type="email" class="form-control" required>
+                                                    <span class="error-message" style="color: red;"></span>
                                             
                                                     <button type="submit" class="btn btn-outline-primary-2">
                                                         <span>Add address</span>
                                                         <i class="icon-long-arrow-right"></i>
                                                     </button>
-                                                </div>
                                             </form>
                                             
                                         </div>
@@ -667,13 +685,275 @@
 <script>
     function toAddressLists(){
         $(`#addAddress`).hide();
-        $('.card-dashboard').show();
+        $('.col-lg-6').show();
     }
 </script>
 
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Validation for Add Address form
+    const addAddressForm = document.querySelector('form[action="/addAddress"]');
+    
+    // Validation for Edit Address form(s)
+    const editAddressForms = document.querySelectorAll('form[action="/editAddress"]');
+    
+    // Add validation to both form types
+    if (addAddressForm) setupFormValidation(addAddressForm);
+    
+    if (editAddressForms.length > 0) {
+        editAddressForms.forEach(form => {
+            setupFormValidation(form);
+        });
+    }
+    
+    // Function to setup validation for a form
+    function setupFormValidation(form) {
+        const nameField = form.querySelector('input[name="name"]');
+        const countryField = form.querySelector('input[name="country"]');
+        const streetField = form.querySelector('input[name="streetName"]');
+        const landmarkField = form.querySelector('input[name="landMark"]');
+        const townField = form.querySelector('input[name="town"]');
+        const stateField = form.querySelector('input[name="state"]');
+        const pinField = form.querySelector('input[name="pin"]');
+        const phoneField = form.querySelector('input[name="phone"]');
+        const emailField = form.querySelector('input[name="email"]');
+        
+        // Function to show error message
+        function showError(field, message) {
+            // Check if error element already exists
+            let errorElement = field.nextElementSibling;
+            
+            if (!errorElement || !errorElement.classList.contains('error-message')) {
+                // Create new error element if it doesn't exist
+                errorElement = document.createElement('span');
+                errorElement.className = 'error-message';
+                errorElement.style.color = 'red';
+                field.parentNode.insertBefore(errorElement, field.nextSibling);
+            }
+            
+            errorElement.textContent = message;
+            return false;
+        }
+        
+        // Function to clear error message
+        function clearError(field) {
+            const errorElement = field.nextElementSibling;
+            if (errorElement && errorElement.classList.contains('error-message')) {
+                errorElement.textContent = '';
+            }
+        }
+        
+        // Validate name
+        if (nameField) {
+            nameField.addEventListener('blur', function() {
+                if (this.value.trim() === '') {
+                    showError(this, 'Name is required');
+                } else if (this.value.trim().length < 3) {
+                    showError(this, 'Name must be at least 3 characters');
+                } else {
+                    clearError(this);
+                }
+            });
+        }
+        
+        // Validate country
+        if (countryField) {
+            countryField.addEventListener('blur', function() {
+                if (this.value.trim() === '') {
+                    showError(this, 'Country is required');
+                } else {
+                    clearError(this);
+                }
+            });
+        }
+        
+        // Validate street address
+        if (streetField) {
+            streetField.addEventListener('blur', function() {
+                if (this.value.trim() === '') {
+                    showError(this, 'Street address is required');
+                } else if (this.value.trim().length < 5) {
+                    showError(this, 'Please enter a valid street address');
+                } else {
+                    clearError(this);
+                }
+            });
+        }
+        
+        // Validate landmark
+        if (landmarkField) {
+            landmarkField.addEventListener('blur', function() {
+                if (this.value.trim() === '') {
+                    showError(this, 'Landmark is required');
+                } else {
+                    clearError(this);
+                }
+            });
+        }
+        
+        // Validate town/city
+        if (townField) {
+            townField.addEventListener('blur', function() {
+                if (this.value.trim() === '') {
+                    showError(this, 'Town/City is required');
+                } else {
+                    clearError(this);
+                }
+            });
+        }
+        
+        // Validate state
+        if (stateField) {
+            stateField.addEventListener('blur', function() {
+                if (this.value.trim() === '') {
+                    showError(this, 'State is required');
+                } else {
+                    clearError(this);
+                }
+            });
+        }
+        
+        // Validate pincode
+        if (pinField) {
+            pinField.addEventListener('blur', function() {
+                const pinRegex = /^\d{6}$/;  // For 6-digit PIN code (adjust if needed)
+                if (this.value.trim() === '') {
+                    showError(this, 'PIN code is required');
+                } else if (!pinRegex.test(this.value.trim())) {
+                    showError(this, 'Please enter a valid 6-digit PIN code');
+                } else {
+                    clearError(this);
+                }
+            });
+        }
+        
+        // Validate phone
+        if (phoneField) {
+            phoneField.addEventListener('blur', function() {
+                const phoneRegex = /^[6-9]\d{9}$/;  // For 10-digit Indian mobile numbers
+                if (this.value.trim() === '') {
+                    showError(this, 'Phone number is required');
+                } else if (!phoneRegex.test(this.value.trim())) {
+                    showError(this, 'Please enter a valid 10-digit mobile number');
+                } else {
+                    clearError(this);
+                }
+            });
+        }
+        
+        // Validate email
+        if (emailField) {
+            emailField.addEventListener('blur', function() {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (this.value.trim() === '') {
+                    showError(this, 'Email is required');
+                } else if (!emailRegex.test(this.value.trim())) {
+                    showError(this, 'Please enter a valid email address');
+                } else {
+                    clearError(this);
+                }
+            });
+        }
+        
+        // Form submission validation
+        form.addEventListener('submit', function(event) {
+            let isValid = true;
+            
+            // Validate name
+            if (nameField && nameField.value.trim() === '') {
+                isValid = showError(nameField, 'Name is required') && isValid;
+            } else if (nameField && nameField.value.trim().length < 3) {
+                isValid = showError(nameField, 'Name must be at least 3 characters') && isValid;
+            }
+            
+            // Validate country
+            if (countryField && countryField.value.trim() === '') {
+                isValid = showError(countryField, 'Country is required') && isValid;
+            }
+            
+            // Validate street address
+            if (streetField && streetField.value.trim() === '') {
+                isValid = showError(streetField, 'Street address is required') && isValid;
+            } else if (streetField && streetField.value.trim().length < 5) {
+                isValid = showError(streetField, 'Please enter a valid street address') && isValid;
+            }
+            
+            // Validate landmark
+            if (landmarkField && landmarkField.value.trim() === '') {
+                isValid = showError(landmarkField, 'Landmark is required') && isValid;
+            }
+            
+            // Validate town/city
+            if (townField && townField.value.trim() === '') {
+                isValid = showError(townField, 'Town/City is required') && isValid;
+            }
+            
+            // Validate state
+            if (stateField && stateField.value.trim() === '') {
+                isValid = showError(stateField, 'State is required') && isValid;
+            }
+            
+            // Validate pincode
+            const pinRegex = /^\d{6}$/;  // For 6-digit PIN code
+            if (pinField && pinField.value.trim() === '') {
+                isValid = showError(pinField, 'PIN code is required') && isValid;
+            } else if (pinField && !pinRegex.test(pinField.value.trim())) {
+                isValid = showError(pinField, 'Please enter a valid 6-digit PIN code') && isValid;
+            }
+            
+            // Validate phone
+            const phoneRegex = /^[6-9]\d{9}$/;  // For 10-digit Indian mobile numbers
+            if (phoneField && phoneField.value.trim() === '') {
+                isValid = showError(phoneField, 'Phone number is required') && isValid;
+            } else if (phoneField && !phoneRegex.test(phoneField.value.trim())) {
+                isValid = showError(phoneField, 'Please enter a valid 10-digit mobile number') && isValid;
+            }
+            
+            // Validate email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (emailField && emailField.value.trim() === '') {
+                isValid = showError(emailField, 'Email is required') && isValid;
+            } else if (emailField && !emailRegex.test(emailField.value.trim())) {
+                isValid = showError(emailField, 'Please enter a valid email address') && isValid;
+            }
+            
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+    }
+    
+    // Show/hide add address form
+    const showAddAddressBtn = document.getElementById('showAddAddress');
+    if (showAddAddressBtn) {
+        showAddAddressBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('addAddress').style.display = 'block';
+        });
+    }
+    
+    // Function to show edit address form
+    window.showEditAddress = function(id) {
+        document.getElementById('editAddress' + id).style.display = 'block';
+        document.getElementById('cardId' + id).style.display = 'none';
+    };
+    
+    // Function to go back to address list
+    window.toAddressList = function(id) {
+        document.getElementById('editAddress' + id).style.display = 'none';
+        document.getElementById('cardId' + id).style.display = 'block';
+    };
+    
+    // Function to go back to address list from add address form
+    window.toAddressLists = function() {
+        document.getElementById('addAddress').style.display = 'none';
+    };
+});
+</script>
 
 <script>
     function fetchOrderList(orderPage) {

@@ -496,7 +496,7 @@ const addAddress = async(req,res)=>{
                 }
             }
         })
-        res.json({success:true});
+        res.redirect('/profile')
 
     }catch(error){
         console.log(error.message);
