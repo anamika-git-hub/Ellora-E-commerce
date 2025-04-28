@@ -5780,6 +5780,7 @@ p {
 
 .footer-bottom .container,
 .footer-bottom .container-fluid {
+    height: 50px;
     position: relative;
     display: flex;
     align-content: center;
