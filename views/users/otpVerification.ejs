@@ -1,104 +1,150 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link rel="stylesheet" href="assets/css/theme.bundle.css">
-</head>
-<body>
-<style>
-.otpcard{
-    margin-top: -7rem;
-    margin-bottom: -4rem;
-}
-.card {
-    width: 350px;
-    padding: 10px;
-    border-radius: 20px;
-    background: #fff;
-    border: none;
-    height: 350px;
-    position: relative;
-  }
+<%- include('../layouts/users/header', { title: 'Ellora Store', path: '/login',userId:userId, wishlistData:null, cartData: null }) %>
   
-  .container {
-    height: 100vh;
-  }
+  <main class="main">
+    <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+      <div class="container">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
+          <li class="breadcrumb-item"><a href="/login">Login</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Verification</li>
+        </ol>
+      </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
 
+    <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17" style="background-image: url('assets/images/backgrounds/login-bg.jpg')">
+      <div class="container">
+        <div class="form-box">
+          <div class="form-tab">
+            <ul class="nav nav-pills nav-fill" role="tablist">
+              <li class="nav-item">
+                <span class="nav-link active">Email Verification</span>
+              </li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane fade show active">
+                <% if (messages && messages.otp) { %>
+                <div class="alert alert-danger d-flex align-items-center" role="alert" id="existAlert">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img" aria-label="Warning:">
+                    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                  </svg>
+                  <div>
+                    <strong>!!!</strong>
+                    <%= messages.otp %>
+                  </div>
+                </div>
+                <% } %>
+                
+                <form id="verificationForm" onsubmit="return validate()" method="post" action="">
+                  <% if(locals.email) { %>
+                  <input type="hidden" name="email" value="<%= email %>">
+                  <% } %>
+                  
+                  <div class="form-group text-center">
+                    <p class="text-muted">Enter the code we just sent to your email</p>
+                    <p class="font-weight-bold"><%= locals.email %></p>
+                  </div>
+                  
+                  <div class="form-group d-flex justify-content-center mb-4">
+                    <input type="text" class="form-control text-center mr-2" style="width: 60px;" id="digit1" name="digit1" maxlength="1" autofocus required>
+                    <input type="text" class="form-control text-center mr-2" style="width: 60px;" id="digit2" name="digit2" maxlength="1" required>
+                    <input type="text" class="form-control text-center mr-2" style="width: 60px;" id="digit3" name="digit3" maxlength="1" required>
+                    <input type="text" class="form-control text-center" style="width: 60px;" id="digit4" name="digit4" maxlength="1" required>
+                  </div>
+                  
+                  <div class="form-footer">
+                    <button type="submit" class="btn btn-outline-primary-2 w-100">
+                      <span>VERIFY</span>
+                      <i class="icon-long-arrow-right"></i>
+                    </button>
+                  </div><!-- End .form-footer -->
+                  
+                  <div class="text-center mt-4">
+                    <p class="text-muted">Didn't receive the code?</p>
+                    <a href="#" id="resend" onclick="resend()" class="btn-link text-primary">Resend Code</a>
+                    <div id="otpTimer" class="mt-2"></div>
+                  </div>
+                </form>
+              </div><!-- .End .tab-pane -->
+            </div><!-- End .tab-content -->
+          </div><!-- End .form-tab -->
+        </div><!-- End .form-box -->
+      </div><!-- End .container -->
+    </div><!-- End .login-page section-bg -->
+  </main><!-- End .main -->
+
+  <!-- Include your footer here - Same as on login page -->
   
-  .mobile-text {
-    color: #989696b8;
-    font-size: 15px;
-  }
-  
-  .form-control {
-    margin-right: 12px;
-  }
-  
-  .form-control:focus {
-    color: #495057;
-    background-color: #fff;
-    border-color: #ff8880;
-    outline: 0;
-    box-shadow: none;
-  }
-  
-  .cursor {
-    cursor: pointer;
-  }
-  .time {
-    font-size: 1rem;
-    font-weight: bold;
-    color: #333;
-  }
-  #otpTimer {
-            font-size: 18px;
-            color: #333;
-            display: flex;
-            justify-content: center;
-        }
-</style>
-<div class="d-flex justify-content-center align-items-center container otpcard" >
-    <div class="card py-5 px-3">  <% if (messages.otp) { %>
-      <div class="alert alert-danger d-flex align-items-center" role="alert" id="existAlert">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2 " viewBox="0 0 16 16" role="img" aria-label="Warning:">
-            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-          </svg>
-          <div >
-              <strong>!!!</strong>
-            <%= messages.otp %>
-            
-          </div>
-        </div>
-        
+  <script>
+    // Auto-move to next input field
+    document.addEventListener('DOMContentLoaded', function() {
+      const inputs = document.querySelectorAll('#verificationForm input[type="text"]');
       
-  <% } %>
-        <form id="verificationForm" onsubmit="return validate()" method="post" action="">
-          <% if(locals.email) { %>
-          <input type="hidden" name="email" value="<%= email %>">
-          <% } %>
-            <h5 class="m-0">E-mail verification</h5>
-            <span class="mobile-text">Enter the code we just sent to your Email <b class="text-danger"> <%= locals.email %> </b></span>
-            <div class="d-flex flex-row mt-2">
-                <input type="text" class="form-control" id="digit1" name="digit1" autofocus required>
-                <input type="text" class="form-control" id="digit2" name="digit2" required>
-                <input type="text" class="form-control" id="digit3" name="digit3" required>
-                <input type="text" class="form-control" id="digit4" name="digit4" required>
-            </div>
-            <button type="submit" class="btn btn-dark d-block w-100 my-4">Submit</button>
-        </form>
-        <span class="time text-center"></span>
-        <div class="text-center ">
-            <span class="d-block mobile-text">Don't receive the code?</span>
-            
-            <span class="font-weight-bold text-danger cursor"  ><a id="resend" onclick="resend()" >Resend</a></span>
-           
-        </div>
-    </div>
-</div>
-
-<script src="assets/js/form-validation-and-fetch.js"></script>
-</body>
-</html>
-
+      inputs.forEach((input, index) => {
+        input.addEventListener('input', function() {
+          if (this.value.length === 1 && index < inputs.length - 1) {
+            inputs[index + 1].focus();
+          }
+        });
+        
+        input.addEventListener('keydown', function(e) {
+          if (e.key === 'Backspace' && !this.value && index > 0) {
+            inputs[index - 1].focus();
+          }
+        });
+      });
+    });
+    
+    // Timer functionality
+    function startTimer(duration, display) {
+      let timer = duration;
+      let minutes, seconds;
+      let interval = setInterval(function() {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+        
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+        
+        display.textContent = "Resend in " + minutes + ":" + seconds;
+        
+        if (--timer < 0) {
+          clearInterval(interval);
+          display.textContent = "";
+          document.getElementById('resend').style.display = "inline";
+        }
+      }, 1000);
+    }
+    
+    // Start timer on page load
+    window.onload = function() {
+      const timerDisplay = document.getElementById('otpTimer');
+      document.getElementById('resend').style.display = "none";
+      startTimer(60, timerDisplay);
+    };
+    
+    // Resend function
+    function resend() {
+      // Add your resend functionality here
+      document.getElementById('resend').style.display = "none";
+      const timerDisplay = document.getElementById('otpTimer');
+      startTimer(60, timerDisplay);
+    }
+    
+    // Validation function
+    function validate() {
+      const inputs = document.querySelectorAll('#verificationForm input[type="text"]');
+      for(let input of inputs) {
+        if(!input.value.match(/^[0-9]$/)) {
+          alert('Please enter numbers only');
+          return false;
+        }
+      }
+      return true;
+    }
+  </script>
+  
+  <!-- Include your JS files here - Same as on login page -->
+  <script src="assets/js/jquery.min.js"></script>
+  <script src="assets/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/js/main.js"></script>
+  <%- include('../layouts/users/footer', { path: '/login' }) %>

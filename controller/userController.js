@@ -131,8 +131,10 @@ const sendOTPverificationEmail=async ({email},res)=>{
 
 const loadOtp =async(req,res)=>{
     try {
+        const userId = req.session.user_id;
         const email =req.query.email;
-        res.render('otpVerification',{email:email});
+
+        res.render('otpVerification',{email:email,userId});
     } catch (error) {
         console.log(error.message);
     }
