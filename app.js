@@ -1,6 +1,7 @@
 const mongoose=require('mongoose');
 const dotenv = require('dotenv').config();
 mongoose.connect(process.env.MONGODB_URL).then(()=>console.log("connect")).catch((err)=>console.log(err))
+const MongoStore = require('connect-mongo');
 
 const createError = require('http-errors');
 const express = require('express');
@@ -19,7 +20,14 @@ const usersRouter = require('./routes/usersRouter');
 const app = express();
 app.use(nocache());
 // app.use(morgan('tiny'))
-app.use(session({secret:"abc",resave:false,saveUninitialized:true}));
+app.use(session({
+  secret: 'your_secret_key',
+  resave: false,
+  saveUninitialized: false,
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI
+  })
+}));
 app.use(flash());
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

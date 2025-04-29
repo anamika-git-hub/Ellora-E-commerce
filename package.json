@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-     "start": "node ./app.js",
+    "start": "node ./app.js",
     "dev": "nodemon ./app.js"
   },
   "dependencies": {
@@ -12,6 +12,7 @@
     "body-parser": "^1.20.2",
     "boom": "^7.3.0",
     "cloudinary": "^2.0.3",
+    "connect-mongo": "^5.1.0",
     "cookie-parser": "~1.4.4",
     "cookie-session": "^2.1.0",
     "debug": "~2.6.9",
