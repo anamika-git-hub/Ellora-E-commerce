@@ -137,7 +137,7 @@ const loadCheckOut = async (req, res) => {
             shippingCost = 60;
             shippingMethod = 'Delivery Charge';
         }
-
+      
         const userId = req.session.user_id;
         const user = await User.findById(userId);
         const addresses = user.addresses;
@@ -148,7 +148,6 @@ const loadCheckOut = async (req, res) => {
             res.redirect('/cart');
         } else {
             const subTotal = cartData.products.reduce((total, product) => total + product.totalPrice, 0);
-            const total = subTotal + shippingCost;
 
             const wishlistData = await Wishlist.findOne({ userId: req.session.user_id }).populate('userId').populate('products.productId');
 
@@ -159,8 +158,8 @@ const loadCheckOut = async (req, res) => {
                 'usedUsers.userId': { $ne: req.session.user_id }
             });
 
-            const discountAmount = 0; // You can modify this according to your discount logic
-            const totalAfterDiscount = subTotal; // Adjust if any discounts are applied
+            const discountAmount = 0; 
+            const totalAfterDiscount = subTotal+shippingCost; 
 
             const errorMessages = req.flash('error');
 
@@ -174,7 +173,6 @@ const loadCheckOut = async (req, res) => {
                 errorMessages,
                 shippingMethod,
                 couponData,
-                total,
                 userId
             });
         }

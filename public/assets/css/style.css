@@ -633,6 +633,7 @@ blockquote.text-white cite span {
 
 .header {
     width: 100%;
+    height: 80px;
     background-color: #fff
 }
 
@@ -640,7 +641,8 @@ blockquote.text-white cite span {
 .header .container-fluid {
     position: relative;
     display: flex;
-    align-items: center
+    align-items: center;
+    height: 80px;
 }
 
 .header-left,
@@ -882,7 +884,8 @@ blockquote.text-white cite span {
 }
 
 .header-middle {
-    border-bottom: .1rem solid #f4f4f4
+    border-bottom: .1rem solid #f4f4f4;
+    height: 80px;
 }
 
 .header-middle .menu>li>a {
@@ -2731,7 +2734,7 @@ blockquote.text-white cite span {
 
     .sticky-header.fixed.header-middle .menu>li>a {
         padding-top: 2rem;
-        padding-bottom: 2rem
+        padding-bottom: 2rem;
     }
 }
 
@@ -9304,7 +9307,7 @@ p {
 
 @media screen and (max-width: 991px) {
     .sticky-wrapper {
-        z-index: 1
+        z-index: 1;
     }
 }
 

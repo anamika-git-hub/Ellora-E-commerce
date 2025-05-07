@@ -74,7 +74,8 @@ const placeOrder = async (req, res) => {
 
         if (paymentMethod === 'Wallet') {
             const walletData = await Wallet.findOne({ userId: req.session.user_id });
-            if (walletData.walletAmount < subTotal) {
+            
+            if (!walletData || walletData.walletAmount < subTotal) {
                 return res.json({message: 'Your wallet does not have enough money' });
             } else {
                 walletData.walletAmount -= subTotal;
