@@ -1,149 +1,149 @@
-<%- include('../layouts/admin/header', { title: 'Admin Panel', path: '/userList'}) %>
+<%- include('../layouts/admin/header', { title: 'Admin Panel', path: '/users'}) %>
 
-            <section class="content-main">
-                <div class="content-header">
-                    <div>
-                        <h2 class="content-title card-title">User List</h2>
-                        
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">User List</h2>
+        </div>
+        <div>
+            <a href="addUsers" class="btn btn-primary btn-sm rounded">Create new</a>
+        </div>
+    </div>
+    <div class="card mb-4">
+        <header class="card-header">
+            <form action="">
+                <div class="row gx-3">
+                    <div class="col-lg-4 col-md-6 me-auto">
+                        <input type="text" name="search" placeholder="Search..." class="form-control" id="inputThings" onkeyup="searchName()"/>
                     </div>
-                    <div>
-                        <a href="addUsers" class="btn btn-primary btn-sm rounded">Create new</a>
+                    <div class="col-lg-2 col-6 col-md-3">
+                        <select class="form-select">
+                            <option>Status</option>
+                            <option>Active</option>
+                            <option>Disabled</option>
+                            <option>Show all</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-2 col-6 col-md-3">
+                        <select class="form-select">
+                            <option>Show 20</option>
+                            <option>Show 30</option>
+                            <option>Show 40</option>
+                        </select>
                     </div>
                 </div>
-                <div class="card mb-4">
-                    <header class="card-header">
-                        <form action="">
-                        <div class="row gx-3">
-                            <div class="col-lg-4 col-md-6 me-auto">
-                                <input type="text" name="search" placeholder="Search..." class="form-control" id="inputThings" onkeyup="searchName()"/>
-                            </div>
-                       
-                            <div class="col-lg-2 col-6 col-md-3">
-                                <select class="form-select">
-                                    <option>Status</option>
-                                    <option>Active</option>
-                                    <option>Disabled</option>
-                                    <option>Show all</option>
-                                </select>
-                            </div>
-                            <div class="col-lg-2 col-6 col-md-3">
-                                <select class="form-select">
-                                    <option>Show 20</option>
-                                    <option>Show 30</option>
-                                    <option>Show 40</option>
-                                </select>
-                            </div>
-                        </div>
-                     </form>
-                    </header>
-                    <!-- card-header end// -->
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table id="tableId" class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Email</th>
-                                        <th scope="col">Mobile</th>
-                                        <th scope="col" class="text-end">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                 <%if(users.length>0){
-                                    for(let i=0;i<users.length;i++){
-                                 %>
-                                          <tr style="border: 1px solid #ddd;">
-                                            <td style="padding: 8px; border: 1px solid #ddd;"><%= users[i].name %></td>
-                                            <td style="padding: 8px; border: 1px solid #ddd;"><%= users[i].email %></td>
-                                            <td style="padding: 8px; border: 1px solid #ddd;"><%= users[i].mobile %></td>
-                                            <td><%if(users[i].is_blocked=== true){
-                                                %>
-                                                <button class="btn btn-sm font-sm rounded btn-danger" onclick="BlockUser(this,'<%=users[i]._id %>')">Unblock</button>
-                                                <% 
-                                            }else{
-                                                 %> 
-                                                 <button class="btn btn-sm font-sm rounded btn-success" onclick="BlockUser (this,'<%=users[i]._id%>')">Block</button>
-                                                 <%
-                                                } %>
-                                            </td>
-                                            <td >
-                                                <a class="btn btn-sm font-sm rounded btn-primary" href='/admin/editUsers?id=<%= users[i]._id %>' >Edit</a>
-                                            </td>
-                                        </tr>
-                                   <%
-                                }
-                            } else { %>
-                                <tr>
-                                    <td colspan="5" style="text-align: center; padding: 10px;">Users not found</td>
+            </form>
+        </header>
+        <!-- card-header end// -->
+        <div class="card-body">
+            <div class="table-responsive">
+                <table id="tableId" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Mobile</th>
+                            <th scope="col" class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if(users.length > 0) { %>
+                            <% for(let i=0; i<users.length; i++) { %>
+                                <tr style="border: 1px solid #ddd;">
+                                    <td style="padding: 8px; border: 1px solid #ddd;"><%= users[i].name %></td>
+                                    <td style="padding: 8px; border: 1px solid #ddd;"><%= users[i].email %></td>
+                                    <td style="padding: 8px; border: 1px solid #ddd;"><%= users[i].mobile %></td>
+                                    <td>
+                                        <% if(users[i].is_blocked === true) { %>
+                                            <button class="btn btn-sm font-sm rounded btn-danger" onclick="BlockUser(this,'<%= users[i]._id %>')">
+                                                Unblock
+                                            </button>
+                                        <% } else { %> 
+                                            <button class="btn btn-sm font-sm rounded btn-success" onclick="BlockUser(this,'<%= users[i]._id %>')">
+                                                Block
+                                            </button>
+                                        <% } %>
+                                    </td>
+                                    <td>
+                                        <a class="btn btn-sm font-sm rounded btn-primary" href='/admin/editUsers?id=<%= users[i]._id %>'>
+                                            Edit
+                                        </a>
+                                    </td>
                                 </tr>
                             <% } %>
-                                    
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- table-responsive //end -->
-                    </div>
-                    <!-- card-body end// -->
-                </div>
-                <!-- card end// -->
-                <div class="pagination-area mt-15 mb-50">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-start">
-                            <% for(let j=1; j<=totalPages; j++){ %>
-                            <li class="page-item <%= j === currentPage ? 'active':''%>"><a class="page-link" href="?page=<%= j%>"><%= j%></a></li>
-                            <% } %>
-                            <li class="page-item">
-                                <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </section>
+                        <% } else { %>
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 10px;">Users not found</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+            <!-- table-responsive //end -->
+        </div>
+        <!-- card-body end// -->
+    </div>
+    <!-- card end// -->
+    <div class="pagination-area mt-15 mb-50">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-start">
+                <% for(let j=1; j<=totalPages; j++) { %>
+                    <li class="page-item <%= j === currentPage ? 'active' : '' %>">
+                        <a class="page-link" href="?page=<%= j %>"><%= j %></a>
+                    </li>
+                <% } %>
+                <li class="page-item">
+                    <a class="page-link" href="#">
+                        <i class="material-icons md-chevron_right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</section>
             
-        <script>
-            function searchName(){
-        
-               var table,input,tr,i,filter
-               input = document.getElementById('inputThings')
-               table = document.getElementById('tableId')
-               filter = input.value.toUpperCase()
+<script>
+    function searchName() {
+        var table, input, tr, i, filter;
+        input = document.getElementById('inputThings');
+        table = document.getElementById('tableId');
+        filter = input.value.toUpperCase();
 
-               tr = table.getElementsByTagName('tr')
-               for(i=0;i<tr.length;i++){
-                    td=tr[i].getElementsByTagName('td')[0]
-                    if(td){
-                        txtValue=td.textContent
-                        console.log(txtValue)
-                        if(txtValue.toUpperCase().indexOf(filter)>-1){
-                             tr[i].style.display=""
-                        }else{
-                            tr[i].style.display="none"
-                        }
-                    }
+        tr = table.getElementsByTagName('tr');
+        for(i=0; i<tr.length; i++) {
+            td = tr[i].getElementsByTagName('td')[0];
+            if(td) {
+                txtValue = td.textContent;
+                console.log(txtValue);
+                if(txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
                 }
-
-
-             }
-        </script>
-        <script>
-            function BlockUser(tag,userId){
-                if(tag.innerText=='Block'){
-                    const confirmed = confirm('Are you sure you want to block this user?');
-                    if(confirmed){
-                    tag.innerText='Unblock'
-                    tag.style.background='red'
-                    tag.style.color='white'
-                    }
-                }else if(tag.innerText == 'Unblock'){
-                    const confirmed = confirm('Are you sure you want to unblock this user again?');
-                    if(confirmed){
-                    tag.innerText='Block'
-                    tag.style.background='green'
-                    tag.style.color='black'}
-                }
-                fetch(`/admin/blockUser?userId=${userId}`)
             }
-        </script>
+        }
+    }
+</script>
+
+<script>
+    function BlockUser(tag, userId) {
+        if(tag.innerText == 'Block') {
+            const confirmed = confirm('Are you sure you want to block this user?');
+            if(confirmed) {
+                tag.innerText = 'Unblock';
+                tag.style.background = 'red';
+                tag.style.color = 'white';
+            }
+        } else if(tag.innerText == 'Unblock') {
+            const confirmed = confirm('Are you sure you want to unblock this user again?');
+            if(confirmed) {
+                tag.innerText = 'Block';
+                tag.style.background = 'green';
+                tag.style.color = 'black';
+            }
+        }
+        fetch(`/admin/blockUser?userId=${userId}`);
+    }
+</script>
 
 <%- include('../layouts/admin/footer', { path: '/userList' }) %>

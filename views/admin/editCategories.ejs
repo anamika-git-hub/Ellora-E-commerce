@@ -1,48 +1,45 @@
-<%- include('../layouts/admin/header', { title: 'Admin Panel', path: '/editCategories'}) %>
+<%- include('../layouts/admin/header', { title: 'Admin Panel', path: '/categories'}) %>
 
-            <section class="content-main">
-                <div class="content-header">
-                    <div>
-                        <h2 class="content-title card-title">Categories</h2>
-                        <p>Add, edit or delete a category</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <form action="" method="post"  >
-                                    <% if (typeof message !== 'undefined') { %>
-                                        <p style="color: red; display: flex; justify-content: center; align-items: center;">
-                                          <%= message %>
-                                        </p>
-                                        
-                                      <% } %>
-                                    <div class="mb-4">
-                                        <label for="product_name" class="form-label">Name</label>
-                                        <input type="text" placeholder="Type here" name="name" class="form-control" value="<%= category.name %>" id="product_name" />
-                                    </div>
-                                    <div class="mb-4">
-                                        <input type="hidden" name="id"  value="<%= category._id %>"  />
-                                    </div>
-                                    <div class="mb-4">
-                                        <label class="form-label">Description</label>
-                                        <input placeholder="Type here" name="description"  value="<%= category.description %>" class="form-control"></input>
-                                    </div>
-                                    <div class="d-grid">
-                                        <button class="btn btn-primary" type="submit">Edit category</button>
-                                    </div>
-                                </form>
-                            </div>
-                            
-                            <!-- .col// -->
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Categories</h2>
+            <p>Add, edit or delete a category</p>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <form action="" method="post">
+                        <% if (typeof message !== 'undefined') { %>
+                            <p style="color: red; display: flex; justify-content: center; align-items: center;">
+                                <%= message %>
+                            </p>
+                        <% } %>
+                        <div class="mb-4">
+                            <label for="product_name" class="form-label">Name</label>
+                            <input type="text" placeholder="Type here" name="name" class="form-control" value="<%= category.name %>" id="product_name" />
                         </div>
-                        <!-- .row // -->
-                    </div>
-                    <!-- card body .// -->
+                        <div class="mb-4">
+                            <input type="hidden" name="id" value="<%= category._id %>" />
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Description</label>
+                            <input placeholder="Type here" name="description" value="<%= category.description %>" class="form-control" />
+                        </div>
+                        <div class="d-grid">
+                            <button class="btn btn-primary" type="submit">Edit category</button>
+                        </div>
+                    </form>
                 </div>
-                <!-- card .// -->
-            </section>
+                <!-- .col// -->
+            </div>
+            <!-- .row // -->
+        </div>
+        <!-- card body .// -->
+    </div>
+    <!-- card .// -->
+</section>
 
-            <%- include('../layouts/admin/footer', { path: '/editCategories' }) %> 
-          
+<%- include('../layouts/admin/footer', { path: '/editCategories' }) %>

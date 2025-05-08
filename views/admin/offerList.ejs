@@ -1,48 +1,47 @@
-<%- include('../layouts/admin/header', { title: 'Admin Panel', path: '/offerList'}) %>
+<%- include('../layouts/admin/header', { title: 'Admin Panel', path: '/offer'}) %>
 
-            <section class="content-main">
-                <div class="content-header">
-                    <div>
-                        <h2 class="content-title card-title">Offers</h2>
-                        <p>Add, edit or delete Offers</p>
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Offers</h2>
+            <p>Add, edit or delete Offers</p>
+        </div>
+        <div>
+            <a href="addOffer" class="btn btn-primary btn-sm rounded">Create new</a>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-lg-4 col-md-6 me-auto">
+                        <input type="text" placeholder="Search..." class="form-control" id="inputThings" onkeyup="searchName()"/>
                     </div>
-                    <div>
-                        <a href="addOffer" class="btn btn-primary btn-sm rounded">Create new</a>
-                    </div>
-
-                </div>
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="col-lg-4 col-md-6 me-auto">
-                                    <input type="text" placeholder="Search..." class="form-control" id="inputThings" onkeyup="searchName()"/>
-                                </div>
-                                <br>
-                                <div class="table-responsive">
-                                    <table id="tableId" class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Name</th>
-                                                <th>Percentage</th>
-                                                <th>Offer Type</th>
-                                                <th>Expired At</th>
-                                                <th>Status</th>
-                                                <th class="text-end">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                           <% if(offerData && offerData.length>0){%>
-                                            <% offerData.forEach((offer,index)=>{%>
-                                            <tr>
-                                                <td><%= index +1 %></td>
-                                                <td><%= offer.name %></td>
-                                                <td><%= offer.offerPrice %></td>
-                                                <td ><%= offer.offerTypeName %></td>
-                                                <td ><%= offer.expiredAt.toLocaleDateString() %></td> 
-                                                <td><% const currentDate = new Date(); %>
-                                                    
+                    <br>
+                    <div class="table-responsive">
+                        <table id="tableId" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Percentage</th>
+                                    <th>Offer Type</th>
+                                    <th>Expired At</th>
+                                    <th>Status</th>
+                                    <th class="text-end">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if(offerData && offerData.length>0){ %>
+                                    <% offerData.forEach((offer,index)=>{ %>
+                                        <tr>
+                                            <td><%= index +1 %></td>
+                                            <td><%= offer.name %></td>
+                                            <td><%= offer.offerPrice %></td>
+                                            <td><%= offer.offerTypeName %></td>
+                                            <td><%= offer.expiredAt.toLocaleDateString() %></td> 
+                                            <td>
+                                                <% const currentDate = new Date(); %>
                                                 <% const offerExpiredDate = new Date(offer.expiredAt); %>
                                                 <% if (offerExpiredDate > currentDate) { %>
                                                     <div class="col-lg-1 col-sm-2 col-4 col-date">
@@ -55,79 +54,77 @@
                                                 <% } %>
                                             </td>
                                             <td>
-                                                <a href="/admin/editOffer?id=<%= offer._id %>" class="btn btn-sm font-sm rounded btn-brand"> <i class="material-icons md-edit"></i> Edit </a>
-                                                
-                                                    <%if(offer.is_listed === true){%>
-                                                    <button class="btn btn-sm font-sm rounded text-white btn-success " onclick="listOffer(this,'<%=offer._id%>') "> List </button>
-                                                    <%}else{ %>
-                                                    <button  class="btn btn-sm font-sm rounded text-white btn-danger " onclick="listOffer(this,'<%=offer._id%>') ">  Unlist </button>
-                                                    <%} %>  
-                                                </td>
-                                            </tr>
-                                            <%}) %>
-                                            <%}else{%> 
-                                                <tr>
-                                                    <td colspan="5" style="text-align: center; padding: 10px;">Offers not found</td>
-                                                </tr>
-                                                <%} %>
-                                            
-                                        </tbody>
-                                    </table>
-                                    <div class="pagination-area mt-15 mb-50">
-                                        <nav aria-label="Page navigation example">
-                                            <ul class="pagination justify-content-start">
-                                                <% for(let j=1; j<=totalPages; j++){ %>
-                                                <li class="page-item <%= j === currentPage ? 'active':''%>"><a class="page-link" href="?page=<%= j%>"><%= j%></a></li>
-                                                <% } %>
-                                                <li class="page-item">
-                                                    <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                                                </li>
-                                            </ul>
-                                        </nav>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- .col// -->
+                                                <a href="/admin/editOffer?id=<%= offer._id %>" class="btn btn-sm font-sm rounded btn-brand"> 
+                                                    <i class="material-icons md-edit"></i> Edit 
+                                                </a>
+                                                <% if(offer.is_listed === true){ %>
+                                                    <button class="btn btn-sm font-sm rounded text-white btn-success" onclick="listOffer(this,'<%= offer._id %>')"> List </button>
+                                                <% } else { %>
+                                                    <button class="btn btn-sm font-sm rounded text-white btn-danger" onclick="listOffer(this,'<%= offer._id %>')"> Unlist </button>
+                                                <% } %>  
+                                            </td>
+                                        </tr>
+                                    <% }) %>
+                                <% } else { %> 
+                                    <tr>
+                                        <td colspan="5" style="text-align: center; padding: 10px;">Offers not found</td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                        <div class="pagination-area mt-15 mb-50">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-start">
+                                    <% for(let j=1; j<=totalPages; j++){ %>
+                                        <li class="page-item <%= j === currentPage ? 'active':'' %>">
+                                            <a class="page-link" href="?page=<%= j %>"><%= j %></a>
+                                        </li>
+                                    <% } %>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                                    </li>
+                                </ul>
+                            </nav>
                         </div>
-                        <!-- .row // -->
                     </div>
-                    <!-- card body .// -->
                 </div>
-                <!-- card .// -->
-                <div class="pagination-area mt-15 mb-50">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination justify-content-start">
-                            
-                            <li class="page-item">
-                                <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
-            </section>
+                <!-- .col// -->
+            </div>
+            <!-- .row // -->
+        </div>
+        <!-- card body .// -->
+    </div>
+    <!-- card .// -->
+    <div class="pagination-area mt-15 mb-50">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-start">
+                <li class="page-item">
+                    <a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</section>
            
-        <script>
-
-            function listOffer(tag,OfferId){
-        
-                if(tag.innerText=='List'){
-                    const confirmed = confirm("Are you sure you want to Unlist this Offer?");
-                    if(confirmed){
-                    tag.innerText='Unlist'
-                    tag.style.background='red'
-                    tag.style.color='white'}
-                    
-                }else if(tag.innerText == 'Unlist'){
-                    const confirmed = confirm("Are you sure you want to list this Offer again?");
-                    if(confirmed){
-                    tag.innerText='List'
-                    tag.style.background='green'
-                    tag.style.color='black'
-                    }
-                   
-                }
-                fetch(`/admin/listOffer?OfferId=${OfferId}`)
+<script>
+    function listOffer(tag, OfferId) {
+        if (tag.innerText == 'List') {
+            const confirmed = confirm("Are you sure you want to Unlist this Offer?");
+            if (confirmed) {
+                tag.innerText = 'Unlist';
+                tag.style.background = 'red';
+                tag.style.color = 'white';
             }
-        </script>
+        } else if (tag.innerText == 'Unlist') {
+            const confirmed = confirm("Are you sure you want to list this Offer again?");
+            if (confirmed) {
+                tag.innerText = 'List';
+                tag.style.background = 'green';
+                tag.style.color = 'black';
+            }
+        }
+        fetch(`/admin/listOffer?OfferId=${OfferId}`);
+    }
+</script>
   
 <%- include('../layouts/admin/footer', { path: '/salesReport' }) %>

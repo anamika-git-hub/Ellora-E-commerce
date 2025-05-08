@@ -29,52 +29,52 @@
             </div>
             <nav>
                 <ul class="menu-aside">
-                    <li class="menu-item active">
+                    <li class="menu-item <%= path === '/home' ? 'active' : '' %>">
                         <a class="menu-link" href="home">
                             <i class="icon material-icons md-home"></i>
                             <span class="text">Dashboard</span>
                         </a>
                     </li>
-                    <li class="menu-item ">
+                    <li class="menu-item <%= path === '/products' ? 'active' : '' %>">
                         <a class="menu-link" href="productList">
                             <i class="icon material-icons md-shopping_bag"></i>
                             <span class="text">Products</span>
                         </a>
                     
                     </li>
-                    <li class="menu-item ">
+                    <li class="menu-item <%= path === '/users' ? 'active' : '' %>">
                         <a class="menu-link" href="userList">
                             <i class="icon material-icons md-people"></i>
                             <span class="text">Users</span>
                         </a>
                        
                     </li>
-                    <li class="menu-item ">
+                    <li class="menu-item <%= path === '/orders' ? 'active' : '' %>">
                         <a class="menu-link" href="orderList">
                             <i class="icon material-icons md-shopping_cart"></i>
                             <span class="text">Orders</span>
                         </a>
                        
                     </li>
-                    <li class="menu-item ">
+                    <li class="menu-item <%= path === '/coupon' ? 'active' : '' %>">
                         <a class="menu-link" href="couponList">
                             <i class="icon material-icons md-store"></i>
                             <span class="text">Coupon</span>
                         </a>
                     </li>
-                    <li class="menu-item">
+                    <li class="menu-item <%= path === '/offer' ? 'active' : '' %>">
                         <a class="menu-link" href="offerList">
                             <i class="icon material-icons md-store"></i>
                             <span class="text">Offer</span>
                         </a>
                     </li>
-                    <li class="menu-item">
+                    <li class="menu-item <%= path === '/categories' ? 'active' : '' %>">
                         <a class="menu-link" href="Categories">
                             <i class="icon material-icons md-add_box"></i>
                             <span class="text">Categories</span>
                         </a>
                     </li>
-                    <li class="menu-item">
+                    <li class="menu-item ">
                         <a class="menu-link" href="Account">
                             <i class="icon material-icons md-person"></i>
                             <span class="text">Account</span>

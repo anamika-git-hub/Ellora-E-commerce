@@ -1,157 +1,158 @@
 <%- include('../layouts/admin/header', { title: 'Ellora Admin', path: '/home'}) %>
 
-            <section class="content-main">
-                <div class="content-header">
-                    <div>
-                        <h2 class="content-title card-title">Dashboard</h2>
-                        <p>Whole data about your business here</p>
+<section class="content-main">
+    <div class="content-header">
+        <div>
+            <h2 class="content-title card-title">Dashboard</h2>
+            <p>Whole data about your business here</p>
+        </div>
+        <div>
+            <a href="/admin/salesReport" class="btn btn-primary"><i class="text-muted material-icons md-post_add"></i>Create report</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="card card-body mb-4">
+                <article class="icontext">
+                    <span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary material-icons md-monetization_on"></i></span>
+                    <div class="text">
+                        <h6 class="mb-1 card-title">Revenue</h6>
+                        <span>Rs.<%= totalAmount.toFixed(2) %></span>
+                        <span class="text-sm"> Shipping fees are included </span>
                     </div>
-                    <div>
-                        <a href="/admin/salesReport" class="btn btn-primary"><i class="text-muted material-icons md-post_add"></i>Create report</a>
+                </article>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card card-body mb-4">
+                <article class="icontext">
+                    <span class="icon icon-sm rounded-circle bg-success-light"><i class="text-success material-icons md-local_shipping"></i></span>
+                    <div class="text">
+                        <h6 class="mb-1 card-title">Orders</h6>
+                        <span><%= totalOrders %></span>
+                        <span class="text-sm"> Excluding orders in transit </span>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-3">
-                        <div class="card card-body mb-4">
-                            <article class="icontext">
-                                <span class="icon icon-sm rounded-circle bg-primary-light"><i class="text-primary material-icons md-monetization_on"></i></span>
-                                <div class="text">
-                                    <h6 class="mb-1 card-title">Revenue</h6>
-                                    <span>Rs.<%= totalAmount.toFixed(2) %></span>
-                                    <span class="text-sm"> Shipping fees are included </span>
-                                </div>
-                            </article>
-                        </div>
+                </article>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card card-body mb-4">
+                <article class="icontext">
+                    <span class="icon icon-sm rounded-circle bg-warning-light"><i class="text-warning material-icons md-qr_code"></i></span>
+                    <div class="text">
+                        <h6 class="mb-1 card-title">Products</h6>
+                        <span><%= totalProductsOrdered %></span>
+                        <span class="text-sm"> In 2 Categories </span>
                     </div>
-                    <div class="col-lg-3">
-                        <div class="card card-body mb-4">
-                            <article class="icontext">
-                                <span class="icon icon-sm rounded-circle bg-success-light"><i class="text-success material-icons md-local_shipping"></i></span>
-                                <div class="text">
-                                    <h6 class="mb-1 card-title">Orders</h6>
-                                    <span><%= totalOrders %></span>
-                                    <span class="text-sm"> Excluding orders in transit </span>
-                                </div>
-                            </article>
-                        </div>
+                </article>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card card-body mb-4">
+                <article class="icontext">
+                    <span class="icon icon-sm rounded-circle bg-info-light"><i class="text-info material-icons md-shopping_basket"></i></span>
+                    <div class="text">
+                        <h6 class="mb-1 card-title">Monthly Earning</h6>
+                        <span>Rs.<%= latestMonthAmount.toFixed(2) %></span>
+                        <span class="text-sm"> Based on latest month. </span>
                     </div>
-                    <div class="col-lg-3">
-                        <div class="card card-body mb-4">
-                            <article class="icontext">
-                                <span class="icon icon-sm rounded-circle bg-warning-light"><i class="text-warning material-icons md-qr_code"></i></span>
-                                <div class="text">
-                                    <h6 class="mb-1 card-title">Products</h6>
-                                    <span><%= totalProductsOrdered %></span>
-                                    <span class="text-sm"> In 2 Categories </span>
-                                </div>
-                            </article>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="card card-body mb-4">
-                            <article class="icontext">
-                                <span class="icon icon-sm rounded-circle bg-info-light"><i class="text-info material-icons md-shopping_basket"></i></span>
-                                <div class="text">
-                                    <h6 class="mb-1 card-title">Monthly Earning</h6>
-                                    <span>Rs.<%= latestMonthAmount.toFixed(2) %></span>
-                                    <span class="text-sm"> Based on latest month. </span>
-                                </div>
-                            </article>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-xl-8 col-lg-12">
-                        <div class="card mb-4">
-                            <article class="card-body">
-                                <h5 class="card-title">Sale statistics</h5>
-                                <canvas id="myChart" height="120px"></canvas>
-                            </article>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-5">
-                                <div class="card mb-4">
-                                    <article class="card-body">
-                                        <h5 class="card-title">Top 10 Users</h5>
-                                        <div class="new-member-list">
-                                            <% for (let i = 0; i < topUsers.length; i++) { %>
-                                                <div class="d-flex align-items-center justify-content-between mb-4">
-                                                    <div class="d-flex align-items-center">
-                                                        <!-- User Avatar -->
-                                                        <img src="assets/imgs/people/avatar-<%= i + 1 %>.png" alt="" class="avatar" />
-                                                        <div>
-                                                            <!-- User Name -->
-                                                            <h6><%= users[i].name %></h6>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Total Amount Ordered by User -->
-                                                    <div>
-                                                        <p> <%= topUsers[i].totalProductsOrdered %></p>
-                                                    </div>
-                                                    <div>
-                                                        <p>Rs.<%= topUsers[i].totalAmountPurchased %></p>
-                                                    </div>
-                                                </div>
-                                            <% } %>
-                                        </div>
-                                    </article>
-                                </div>
-                            </div>
-                            
-                            <div class="col-lg-7">
-                                <div class="card mb-4">
-                                    <article class="card-body">
-                                        <h5 class="card-title">Revenue Based on Categories</h5>
-                                        <!-- Loop through top selling categories and their percentages -->
-                                        <% for (let i = 0; i < bestSellingCategories.length; i++) { %>
-                                            <span class="text-muted font-xs"><%= bestSellingCategories[i].categoryName %></span>
-                                            <div class="progress mb-3">
-                                                <!-- Use the percentage from your backend data -->
-                                                <div class="progress-bar" role="progressbar"  aria-valuemin='0' aria-valuemax='100'style="width:<%= (bestSellingCategories[i].percentage.toFixed(2)) %>%;"><%= bestSellingCategories[i].percentage.toFixed(2) %>%</div>
-                                            </div>
-                                        <% } %>
-                                    </article>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xl-4 col-lg-12">
-                        <div class="card mb-4">
-                            <article class="card-body">
-                                <h5 class="card-title">Top 10 Best Selling Products</h5>
-                                <ul class="list-unstyled font-sm">
-                                    <% for (let i = 0; i < bestSellingProducts.length; i++) { %>
-                                    <li class="event-list mt-3">
-                                        <div class="media">
-                                            <!-- Product position -->
-                                            <div class="me-3">
-                                                <div><%= i + 1 %></div>
-                                            </div>
-                                            <!-- Product image -->
-                                            <div class="me-3">
-                                                <img src="<%= products[i].image[0].url %>" alt="Product Image" class="img-fluid" style="max-width: 25px;">
-                                            </div>
-                                            <div class="me-3" style="width: 150px;">
-                                                <!-- Product name -->
-                                                <h6><%= products[i].name %></h6>
-                                            </div>
-                                            <div class="me-3">
-                                                <!-- Product quantity -->
-                                                <div><%= bestSellingProducts[i].totalQuantity %></div>
-                                            </div>
-                                            <div class="me-3">
-                                                <!-- Product total amount -->
-                                                <div>Rs.<%= (products[i].price * bestSellingProducts[i].totalQuantity).toFixed(2) %> </div>
+                </article>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-8 col-lg-12">
+            <div class="card mb-4">
+                <article class="card-body">
+                    <h5 class="card-title">Sale statistics</h5>
+                    <canvas id="myChart" height="120px"></canvas>
+                </article>
+            </div>
+            <div class="row">
+                <div class="col-lg-5">
+                    <div class="card mb-4">
+                        <article class="card-body">
+                            <h5 class="card-title">Top 10 Users</h5>
+                            <div class="new-member-list">
+                                <% for (let i = 0; i < topUsers.length; i++) { %>
+                                    <div class="d-flex align-items-center justify-content-between mb-4">
+                                        <div class="d-flex align-items-center">
+                                            <!-- User Avatar -->
+                                            <img src="assets/imgs/people/avatar-<%= i + 1 %>.png" alt="" class="avatar" />
+                                            <div>
+                                                <!-- User Name -->
+                                                <h6><%= users[i].name %></h6>
                                             </div>
                                         </div>
-                                    </li>
-                                    <% } %>
-                                </ul>
-                            </article>
-                        </div>
+                                        <!-- Total Amount Ordered by User -->
+                                        <div>
+                                            <p><%= topUsers[i].totalProductsOrdered %></p>
+                                        </div>
+                                        <div>
+                                            <p>Rs.<%= topUsers[i].totalAmountPurchased %></p>
+                                        </div>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </article>
                     </div>
                 </div>
                 
-            </section>
-            <%- include('../layouts/admin/footer', { path: '/home' }) %>
-            
+                <div class="col-lg-7">
+                    <div class="card mb-4">
+                        <article class="card-body">
+                            <h5 class="card-title">Revenue Based on Categories</h5>
+                            <!-- Loop through top selling categories and their percentages -->
+                            <% for (let i = 0; i < bestSellingCategories.length; i++) { %>
+                                <span class="text-muted font-xs"><%= bestSellingCategories[i].categoryName %></span>
+                                <div class="progress mb-3">
+                                    <!-- Use the percentage from your backend data -->
+                                    <div class="progress-bar" role="progressbar"  aria-valuemin='0' aria-valuemax='100'style="width:<%= (bestSellingCategories[i].percentage.toFixed(2)) %>%;">
+                                        <%= bestSellingCategories[i].percentage.toFixed(2) %>%
+                                    </div>
+                                </div>
+                            <% } %>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-lg-12">
+            <div class="card mb-4">
+                <article class="card-body">
+                    <h5 class="card-title">Top 10 Best Selling Products</h5>
+                    <ul class="list-unstyled font-sm">
+                        <% for (let i = 0; i < bestSellingProducts.length; i++) { %>
+                        <li class="event-list mt-3">
+                            <div class="media">
+                                <!-- Product position -->
+                                <div class="me-3">
+                                    <div><%= i + 1 %></div>
+                                </div>
+                                <!-- Product image -->
+                                <div class="me-3">
+                                    <img src="<%= products[i].image[0].url %>" alt="Product Image" class="img-fluid" style="max-width: 25px;">
+                                </div>
+                                <div class="me-3" style="width: 150px;">
+                                    <!-- Product name -->
+                                    <h6><%= products[i].name %></h6>
+                                </div>
+                                <div class="me-3">
+                                    <!-- Product quantity -->
+                                    <div><%= bestSellingProducts[i].totalQuantity %></div>
+                                </div>
+                                <div class="me-3">
+                                    <!-- Product total amount -->
+                                    <div>Rs.<%= (products[i].price * bestSellingProducts[i].totalQuantity).toFixed(2) %></div>
+                                </div>
+                            </div>
+                        </li>
+                        <% } %>
+                    </ul>
+                </article>
+            </div>
+        </div>
+    </div>
+</section>
+
+<%- include('../layouts/admin/footer', { path: '/home' }) %>

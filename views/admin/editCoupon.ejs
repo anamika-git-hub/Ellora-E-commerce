@@ -1,60 +1,59 @@
-<%- include('../layouts/admin/header', { title: 'Admin Panel', path: '/editCoupon'}) %>
+<%- include('../layouts/admin/header', { title: 'Admin Panel', path: '/coupon'}) %>
 
-            <section class="content-main">
-                <form action="/admin/addCoupon" method="post" enctype="multipart/form-data">
-                <div class="row">
-                    <div class="col-9">
-                        <div class="content-header">
-                            <h2 class="content-title">Edit the  Coupon</h2>
+<section class="content-main">
+    <form action="/admin/addCoupon" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-9">
+                <div class="content-header">
+                    <h2 class="content-title">Edit the Coupon</h2>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <label for="product_title" class="form-label">Product title</label>
+                            <input type="text" name="name" value="<%= couponData.name %>" placeholder="Type here" class="form-control" id="product_title" />
                         </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <div class="mb-4">
-                                    <label for="product_title"  class="form-label">Product title</label>
-                                    <input type="text" name="name" value="<%= couponData.name %>" placeholder="Type here" class="form-control" id="product_title" />
-                                </div>
-                                <div class="row gx-3">
-                                    <div class="col-md-4 mb-3">
-                                        <label for="product_sku" class="form-label">Validity Date</label>
-                                            <input type="date" value="<%= couponData.expiryDate %>" name="expiryDate"  class="form-control" />
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label for="product_color" class="form-label">Offer Price</label>
-                                        <input type="text"  value="<%= couponData.offerPrice %>"name="offerPrice" placeholder="Type here" class="form-control" id="product_color" />
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label for="product_size" class="form-label">Minimum limit</label>
-                                        <input type="text" value="<%= couponData.minimumLimit %>" name="minimumLimit" placeholder="Type here" class="form-control" id="product_size" />
-                                    </div>
-                                </div>
-                                <div class="mb-4">
-                                    <label for="product_brand" class="form-label">CouponId</label>
-                                    <input value="<%= couponData.couponCode %>" placeholder="Type here" class="form-control" id="product_brand" />
-                                </div>
+                        <div class="row gx-3">
+                            <div class="col-md-4 mb-3">
+                                <label for="product_sku" class="form-label">Validity Date</label>
+                                <input type="date" value="<%= couponData.expiryDate %>" name="expiryDate" class="form-control" />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="product_color" class="form-label">Offer Price</label>
+                                <input type="text" value="<%= couponData.offerPrice %>" name="offerPrice" placeholder="Type here" class="form-control" id="product_color" />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="product_size" class="form-label">Minimum limit</label>
+                                <input type="text" value="<%= couponData.minimumLimit %>" name="minimumLimit" placeholder="Type here" class="form-control" id="product_size" />
                             </div>
                         </div>
-                        <!-- card end// -->
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <div>
-                                    <label class="form-label">Images</label>
-                                    <input class="form-control" name="image" type="file" />
-                                </div>
-                            </div>
+                        <div class="mb-4">
+                            <label for="product_brand" class="form-label">CouponId</label>
+                            <input value="<%= couponData.couponCode %>" placeholder="Type here" class="form-control" id="product_brand" />
                         </div>
-                        <!-- card end// -->
                     </div>
                 </div>
-                 <!-- row end// -->
-                 <div class="row">
-                    <div >
-                        <button class="btn btn-primary" type="submit">Add Coupon</button>
+                <!-- card end// -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div>
+                            <label class="form-label">Images</label>
+                            <input class="form-control" name="image" type="file" />
+                        </div>
                     </div>
                 </div>
-            </form>
-          
-            </section>
+                <!-- card end// -->
+            </div>
+        </div>
+        <!-- row end// -->
+        <div class="row">
+            <div>
+                <button class="btn btn-primary" type="submit">Add Coupon</button>
+            </div>
+        </div>
+    </form>
+</section>
 
-            <%- include('../layouts/admin/footer', { path: '/editCoupon' }) %>
+<%- include('../layouts/admin/footer', { path: '/editCoupon' }) %>
