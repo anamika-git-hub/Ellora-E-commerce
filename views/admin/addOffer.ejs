@@ -1,128 +1,99 @@
 <%- include('../layouts/admin/header', { title: 'Admin Panel', path: '/addOffer'}) %>
 
-            <section class="content-main">
-                <form action="/admin/addOffer" method="post" >
-                <div class="row">
-                    <div class="col-9">
-                        <div class="content-header">
-                            <h2 class="content-title">Add New Offer</h2>
+<section class="content-main">
+    <form action="/admin/addOffer" method="post">
+        <div class="row">
+            <div class="col-9">
+                <div class="content-header">
+                    <h2 class="content-title">Add New Offer</h2>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <label for="product_title" class="form-label">Offer name</label>
+                            <input type="text" name="name" placeholder="Type here" class="form-control" id="product_title" />
+                        </div>
+                        <div class="row gx-3">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Validity Date</label>
+                                <input type="date" name="ValidityDate" class="form-control" />
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="product_color" class="form-label">Offer Price</label>
+                                <input type="text" name="offerPrice" placeholder="Type here" class="form-control" id="product_color" />
+                            </div>
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                    <div class="mb-4">
-                                        <label for="product_title"  class="form-label">Offer name</label>
-                                        <input type="text" name="name" placeholder="Type here" class="form-control" id="product_title" />
-                                    </div>
-                                    <div class="row gx-3">
-                                        <div class="col-md-4 mb-3">
-                                            <label  class="form-label">Validity Date</label>
-                                                <input type="date" name="ValidityDate"  class="form-control" />
-                                        </div>
-                                        <div class="col-md-4 mb-3">
-                                            <label for="product_color" class="form-label">Offer Price</label>
-                                            <input type="text" name="offerPrice" placeholder="Type here" class="form-control" id="product_color" />
-                                        </div>
-                                    
-                                    </div>
-                            </div><!-- card end// -->
-                                <div class="card-body">
-                                <div class="row gx-3">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="product_sku" class="form-label">Offer Type</label>
-                                        <div class="ms-auto text-md-end">
-                                            <select class="form-select d-inline-block" name="offerTypeName" id="offerType">
-                                                <option>select</option>
-                                                <option>Product</option>
-                                                <option>Category</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-3" id="category" hidden>
-                                        <label for="product_sku" class="form-label">Categories</label>
-                                        <div class="ms-auto text-md-end">
-                                            <select class="form-select" name="offerType" id="categorySelect">
-                                                <% categoryData.forEach(element => {  %>
-                                                    <option value="<%= element._id%>"><%= element.name %></option>
-                                                <% }); %>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-3" id="productsDiv" hidden>
-                                        <label for="product_sku" class="form-label">Products</label>
-                                        <div class="ms-auto text-md-end">
-                                            <select class="form-select" name="offerType" id="productSelect">
-                                                <% productData.forEach(element => {  %>
-                                                    <option value="<%= element._id %>"><%= element.name %></option>
-                                                <% }); %>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    
-                                    
+                    <div class="card-body">
+                        <div class="row gx-3">
+                            <div class="col-md-6 mb-3">
+                                <label for="offerType" class="form-label">Offer Type</label>
+                                <div class="ms-auto text-md-end">
+                                    <select class="form-select d-inline-block" name="offerTypeName" id="offerType">
+                                        <option>select</option>
+                                        <option>Product</option>
+                                        <option>Category</option>
+                                    </select>
                                 </div>
-                            </div><!-- card end// -->
+                            </div>
+                            <div class="col-md-6 mb-3" id="category" hidden>
+                                <label for="categorySelect" class="form-label">Categories</label>
+                                <div class="ms-auto text-md-end">
+                                    <select class="form-select" name="offerType" id="categorySelect">
+                                        <% categoryData.forEach(element => { %>
+                                            <option value="<%= element._id %>"><%= element.name %></option>
+                                        <% }); %>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3" id="productsDiv" hidden>
+                                <label for="productSelect" class="form-label">Products</label>
+                                <div class="ms-auto text-md-end">
+                                    <select class="form-select" name="offerType" id="productSelect">
+                                        <% productData.forEach(element => { %>
+                                            <option value="<%= element._id %>"><%= element.name %></option>
+                                        <% }); %>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
-                </div>
-                 <!-- row end// -->
-                 <div class="row">
-                    <div >
-                        <button class="btn btn-primary" type="submit">Add Offer</button>
                     </div>
                 </div>
-            </form>
-            </section>
-            <footer class="main-footer font-xs">
-                <div class="row pb-30 pt-15">
-                    <div class="col-sm-6">
-                        <script>
-                            document.write(new Date().getFullYear());
-                        </script>
-                        &copy; Nest - HTML Ecommerce Template .
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="text-sm-end">All rights reserved</div>
-                    </div>
+            </div>
+            <div class="row">
+                <div>
+                    <button class="btn btn-primary" type="submit">Add Offer</button>
                 </div>
-            </footer>
-        </main>
-        <script>
-            const selectElements = document.getElementById('offerType');
-            selectElements.addEventListener('change', handleChange);
-        
-            function handleChange(event) {
-                const selectedValue = event.target.value;
-                const productsDiv = document.getElementById("productsDiv");
-                const categoryDiv = document.getElementById("category");
-        
-                if (selectedValue === 'Product') {
-                    console.log('Showing Products');
-                    productsDiv.hidden = false;
-                    categoryDiv.hidden = true;
-                    // Set name attribute for the visible select element
-                    document.getElementById("categorySelect").removeAttribute("name");
-                    document.getElementById("productSelect").setAttribute("name", "offerType");
-                } else if (selectedValue === 'Category') {
-                    console.log('Showing Categories');
-                    productsDiv.hidden = true;
-                    categoryDiv.hidden = false;
-                    // Set name attribute for the visible select element
-                    document.getElementById("productSelect").removeAttribute("name");
-                    document.getElementById("categorySelect").setAttribute("name", "offerType");
-                }
-            }
-        
-            document.getElementById("submitButton").addEventListener("click", function(event) {
-            });
-        </script>
-        <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
-        <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
-        <script src="assets/js/vendors/select2.min.js"></script>
-        <script src="assets/js/vendors/perfect-scrollbar.js"></script>
-        <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
-        <!-- Main Script -->
-        <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
-        
-    </body>
-</html>
+            </div>
+        </div>
+    </form>
+</section>
+           
+<script>
+    const selectElements = document.getElementById('offerType');
+    selectElements.addEventListener('change', handleChange);
+    
+    function handleChange(event) {
+        const selectedValue = event.target.value;
+        const productsDiv = document.getElementById("productsDiv");
+        const categoryDiv = document.getElementById("category");
+    
+        if (selectedValue === 'Product') {
+            productsDiv.hidden = false;
+            categoryDiv.hidden = true;
+
+            document.getElementById("categorySelect").removeAttribute("name");
+            document.getElementById("productSelect").setAttribute("name", "offerType");
+        } else if (selectedValue === 'Category') {
+            productsDiv.hidden = true;
+            categoryDiv.hidden = false;
+
+            document.getElementById("productSelect").removeAttribute("name");
+            document.getElementById("categorySelect").setAttribute("name", "offerType");
+        }
+    }
+</script>
+
+<%- include('../layouts/admin/footer', { path: '/addOffer' }) %>

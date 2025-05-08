@@ -1,96 +1,71 @@
 <%- include('../layouts/admin/header', { title: 'Admin Panel', path: '/addCoupon'}) %>
 
-            <section class="content-main">
-                <form action="/admin/addCoupon" method="post">
-                <div class="row">
-                    <div class="col-9">
-                        <div class="content-header">
-                            <h2 class="content-title">Add New Coupon</h2>
+<section class="content-main">
+    <form action="/admin/addCoupon" method="post">
+        <div class="row">
+            <div class="col-9">
+                <div class="content-header">
+                    <h2 class="content-title">Add New Coupon</h2>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <label for="product_title" class="form-label">Coupon name</label>
+                            <input type="text" name="name" value="<%= formData.name %>" placeholder="Type here" class="form-control" id="product_title" />
+                            <span class="error-message" style="color: red;"><%= messages.name %></span>
                         </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="card mb-4">
-                            <div class="card-body">
-                                <div class="mb-4">
-                                    <label for="product_title"  class="form-label">Coupon name</label>
-                                    <input type="text" name="name" value="<%= formData.name %>" placeholder="Type here" class="form-control" id="product_title" />
-                                    <span class="error-message" style="color: red;"><%= messages.name %></span>
-                                </div>
-                                <div class="row gx-3">
-                                    <div class="col-md-4 mb-3">
-                                        <label for="product_sku" class="form-label">Validity Date</label>
-                                        <input type="date" name="expiryDate" value="<%= formData.expiryDate %>" class="form-control" />
-                                        <span class="error-message" style="color: red;"><%= messages.expiryDate %></span>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label for="product_color" class="form-label">Offer Price</label>
-                                        <input type="text" name="offerPrice" value="<%= formData.offerPrice %>" placeholder="Type here" class="form-control" id="product_color" />
-                                        <span class="error-message" style="color: red;"><%= messages.offerPrice %></span>
-                                    </div>
-                                    <div class="col-md-4 mb-3">
-                                        <label for="product_size" class="form-label">Minimum limit</label>
-                                        <input type="text" name="minimumLimit" value="<%= formData.minimumLimit %>" placeholder="Type here" class="form-control" id="product_size" />
-                                        <span class="error-message" style="color: red;"><%= messages.minimumLimit %></span>
-                                    </div>
-                                </div>
-                                <div class="mb-4">
-                                    <label for="product_brand" class="form-label">Coupon code</label>
-                                    <input  placeholder="Type here" name="couponCode" value="<%= formData.couponCode %>" class="form-control" id="product_brand" />
-                                    <span class="error-message" style="color: red;"><%= messages.couponCode %></span>
-                                </div>
+                        <div class="row gx-3">
+                            <div class="col-md-4 mb-3">
+                                <label for="product_sku" class="form-label">Validity Date</label>
+                                <input type="date" name="expiryDate" value="<%= formData.expiryDate %>" class="form-control" />
+                                <span class="error-message" style="color: red;"><%= messages.expiryDate %></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="product_color" class="form-label">Offer Price</label>
+                                <input type="text" name="offerPrice" value="<%= formData.offerPrice %>" placeholder="Type here" class="form-control" id="product_color" />
+                                <span class="error-message" style="color: red;"><%= messages.offerPrice %></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="product_size" class="form-label">Minimum limit</label>
+                                <input type="text" name="minimumLimit" value="<%= formData.minimumLimit %>" placeholder="Type here" class="form-control" id="product_size" />
+                                <span class="error-message" style="color: red;"><%= messages.minimumLimit %></span>
                             </div>
                         </div>
-                        <!-- card end// -->
-                        
+                        <div class="mb-4">
+                            <label for="product_brand" class="form-label">Coupon code</label>
+                            <input placeholder="Type here" name="couponCode" value="<%= formData.couponCode %>" class="form-control" id="product_brand" />
+                            <span class="error-message" style="color: red;"><%= messages.couponCode %></span>
+                        </div>
                     </div>
                 </div>
-                 <!-- row end// -->
-                 <div class="row">
-                    <div >
-                        <button class="btn btn-primary" type="submit">Add Coupon</button>
-                    </div>
-                </div>
-            </form>
-            </section>
-            <footer class="main-footer font-xs">
-                <div class="row pb-30 pt-15">
-                    <div class="col-sm-6">
-                        <script>
-                            document.write(new Date().getFullYear());
-                        </script>
-                        &copy; Nest - HTML Ecommerce Template .
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="text-sm-end">All rights reserved</div>
-                    </div>
-                </div>
-            </footer>
-        </main>
-        <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
-        <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
-        <script src="assets/js/vendors/select2.min.js"></script>
-        <script src="assets/js/vendors/perfect-scrollbar.js"></script>
-        <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
-        <!-- Main Script -->
-        <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
-        <script>
-            function generateCouponId() {
-    let couponId = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const length = 10;
+            </div>
+        </div>
+        <div class="row">
+            <div>
+                <button class="btn btn-primary" type="submit">Add Coupon</button>
+            </div>
+        </div>
+    </form>
+</section>
+            
+<script>
+    function generateCouponId() {
+        let couponId = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const length = 10;
 
-    for (let i = 0; i < length; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        couponId += characters.charAt(randomIndex);
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            couponId += characters.charAt(randomIndex);
+        }
+
+        return couponId;
     }
 
-    return couponId;
-}
+    const newCouponId = generateCouponId();
+    console.log(newCouponId);
+</script>
 
-// Example usage
-const newCouponId = generateCouponId();
-console.log(newCouponId); // Outputs something like "aB3C7EzK9h"
-
-        </script>
-    </body>
-</html>
+<%- include('../layouts/admin/footer', { path: '/addCoupon' }) %>

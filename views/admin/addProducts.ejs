@@ -1,122 +1,122 @@
 <%- include('../layouts/admin/header', { title: 'Ellora Admin', path: '/addProducts'}) %>
 
-<section class="content-main">
-    <div class="row">
-        <div class="col-12">
-            <div class="content-header">
-                <h2 class="content-title">Add New Product</h2>
+    <section class="content-main">
+        <div class="row">
+            <div class="col-12">
+                <div class="content-header">
+                    <h2 class="content-title">Add New Product</h2>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <form action="/admin/addProducts" method="post" enctype="multipart/form-data">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <% if (typeof message !== 'undefined') { %>
-                                    <h4><%= message %></h4>
-                                <% } %>
-                                <h6>1. General info</h6>
-                            </div>
-                            <div class="col-md-9">
-                                <div class="mb-4">
-                                    <label class="form-label">Product title</label>
-                                    <input type="text" value="<%= formData.name %>" placeholder="Type here" name="name" class="form-control">
-                                    <span class="error-message" style="color: red;"><%= messages.name %></span>
-                                </div>
-                                <div class="mb-4">
-                                    <label class="form-label">Description</label>
-                                    <textarea placeholder="Type here" name="description" class="form-control" rows="4"><%formData.description %></textarea>
-                                    <span class="error-message" style="color: red;"><%= messages.description %></span>
-                                </div>
-                                <div class="mb-4">
-                                    <label class="form-label">Category</label>
-                                    <select class="form-select" value="<%= formData.categories %>" name="categories">
-                                        <% for (let i = 0; i < categoryData.length; i++) { %>
-                                            <option value="<%= categoryData[i]._id %>"><%= categoryData[i].name %></option>
-                                        <% } %>
-                                    </select>
-                                    <span class="error-message" style="color: red;"><%= messages.categories %></span>
-                                </div>
-                            </div>
-                        </div>
-                        <hr class="mb-4 mt-0">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <h6>2. Pricing</h6>
-                            </div>
-                            <div class="col-md-9">
-                                <div class="mb-4">
-                                    <label class="form-label">Cost in USD</label>
-                                    <input type="text" value="<%= formData.price %>" placeholder="Rs.00.0" class="form-control" name="price">
-                                    <span class="error-message" style="color: red;"><%= messages.price %></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-3">
-                                <h6>3. Stock</h6>
-                            </div>
-                            <div class="col-md-9">
-                                <div class="mb-4">
-                                    <input type="number" value="<%= formData.stock %>" class="form-control" name="stock">
-                                    <span class="error-message" style="color: red;"><%= messages.stock %></span>
-                                </div>
-                            </div>
-                        </div>
-                        <hr class="mb-4 mt-0">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <h6>4. Media</h6>
-                            </div>
-                            <div class="col-md-9">
-                                <span class="error-message" style="color: red;"><%= messages.image %></span>
-                                <div class="row">
-                                    <% for (let i = 0; i <= 3; i++) { %>
-                                        <div class="col-lg-3 col-md-6 mb-3 rounded-image-preview">
-                                            <label for="imageInput<%= i %>" class="image-label">Image <%= i+1 %>
-                                                <div class="rounded-image-preview" style="max-width: 100px; max-height: auto;">
-                                                    <img src="" id="imagePreview<%= i %>" alt="Preview">
-                                                </div>
-                                                <input name="image" type="file" accept="image/*" id="imageInput<%= i %>" class="imageInput" onchange="previewImage(this, 'imagePreview<%= i %>')">
-                                            </label>
-                                        </div>
+        <div class="row">
+            <div class="col-12">
+                <form action="/admin/addProducts" method="post" enctype="multipart/form-data">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <% if (typeof message !== 'undefined') { %>
+                                        <h4><%= message %></h4>
                                     <% } %>
+                                    <h6>1. General info</h6>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label class="form-label">Product title</label>
+                                        <input type="text" value="<%= formData.name %>" placeholder="Type here" name="name" class="form-control">
+                                        <span class="error-message" style="color: red;"><%= messages.name %></span>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Description</label>
+                                        <textarea placeholder="Type here" name="description" class="form-control" rows="4"><%formData.description %></textarea>
+                                        <span class="error-message" style="color: red;"><%= messages.description %></span>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Category</label>
+                                        <select class="form-select" value="<%= formData.categories %>" name="categories">
+                                            <% for (let i = 0; i < categoryData.length; i++) { %>
+                                                <option value="<%= categoryData[i]._id %>"><%= categoryData[i].name %></option>
+                                            <% } %>
+                                        </select>
+                                        <span class="error-message" style="color: red;"><%= messages.categories %></span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row mt-3">
-                            <div class="col-12">
-                                <div class="d-grid">
-                                    <button class="btn btn-primary" type="submit">Add Product</button>
+                            <hr class="mb-4 mt-0">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>2. Pricing</h6>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <label class="form-label">Cost in USD</label>
+                                        <input type="text" value="<%= formData.price %>" placeholder="Rs.00.0" class="form-control" name="price">
+                                        <span class="error-message" style="color: red;"><%= messages.price %></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>3. Stock</h6>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="mb-4">
+                                        <input type="number" value="<%= formData.stock %>" class="form-control" name="stock">
+                                        <span class="error-message" style="color: red;"><%= messages.stock %></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="mb-4 mt-0">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <h6>4. Media</h6>
+                                </div>
+                                <div class="col-md-9">
+                                    <span class="error-message" style="color: red;"><%= messages.image %></span>
+                                    <div class="row">
+                                        <% for (let i = 0; i <= 3; i++) { %>
+                                            <div class="col-lg-3 col-md-6 mb-3 rounded-image-preview">
+                                                <label for="imageInput<%= i %>" class="image-label">Image <%= i+1 %>
+                                                    <div class="rounded-image-preview" style="max-width: 100px; max-height: auto;">
+                                                        <img src="" id="imagePreview<%= i %>" alt="Preview">
+                                                    </div>
+                                                    <input name="image" type="file" accept="image/*" id="imageInput<%= i %>" class="imageInput" onchange="previewImage(this, 'imagePreview<%= i %>')">
+                                                </label>
+                                            </div>
+                                        <% } %>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <div class="d-grid">
+                                        <button class="btn btn-primary" type="submit">Add Product</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
-</section>
-<script>
-    function previewImage(input, imageId) {
-        const preview = document.getElementById(imageId);
-        const file = input.files[0];
+    </section>
+    <script>
+        function previewImage(input, imageId) {
+            const preview = document.getElementById(imageId);
+            const file = input.files[0];
 
-        if (file) {
-            const reader = new FileReader();
+            if (file) {
+                const reader = new FileReader();
 
-            reader.onload = function (e) {
-                preview.src = e.target.result;
-            };
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                };
 
-            reader.readAsDataURL(file);
-        } else {
-            preview.src = "/assets/images/add Image.jpg";
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "/assets/images/add Image.jpg";
+            }
         }
-    }
-</script>
+    </script>
 
 <%- include('../layouts/admin/footer', { path: '/addProducts' }) %>

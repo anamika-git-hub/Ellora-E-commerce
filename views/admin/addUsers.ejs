@@ -1,73 +1,51 @@
 <%- include('../layouts/admin/header', { title: 'Admin Panel', path: '/addUsers'}) %>
 
-            <section class="content-main">
-                <div class="content-header">
-                    <div>
-                        <h2 class="content-title card-title">Users</h2>
-                        <p>Add, edit or delete a users</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <form action="" method="post">
-                                    <div class="mb-4">
-                                        <% if (typeof message !== 'undefined') { %>
-                                            <p style="color: red; display: flex; justify-content: center; align-items: center;">
-                                              <%= message %>
-                                            </p>
-                                            
-                                          <% } %>
-                                        <label for="product_name" class="form-label">Name</label>
-                                        <input type="text" value="<%= formData.name %>"  placeholder="Type here" name="name" class="form-control" id="product_name" />
-                                        <span class="error-message" style="color: red;"><%= messages.name %></span>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label class="form-label">Email</label>
-                                        <input type="email" value="<%= formData.email %>"  placeholder="Type here"  name="email" class="form-control"></input>
-                                        <span class="error-message" style="color: red;"><%= messages.email %></span>
-                                    </div>
-                                    <div class="mb-4">
-                                        <label class="form-label">Mobile</label>
-                                        <input type="text" value="<%= formData.mobile %>"  placeholder="Type here" name="mobile" class="form-control"></input>
-                                        <span class="error-message" style="color: red;"><%= messages.mobile %></span>
-                                    </div>
-                                    <div class="d-grid">
-                                        <button class="btn btn-primary" type="submit">Create User</button>
-                                    </div>
-                                </form>
+    <section class="content-main">
+        <div class="content-header">
+            <div>
+                <h2 class="content-title card-title">Users</h2>
+                <p>Add, edit or delete a users</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <form action="" method="post">
+                            <div class="mb-4">
+                                <% if (typeof message !== 'undefined') { %>
+                                    <p style="color: red; display: flex; justify-content: center; align-items: center;">
+                                        <%= message %>
+                                    </p> 
+                                <% } %>
+                                <label for="product_name" class="form-label">Name</label>
+                                <input type="text" value="<%= formData.name %>"  placeholder="Type here" name="name" class="form-control" id="product_name" />
+                                <span class="error-message" style="color: red;"><%= messages.name %></span>
                             </div>
-                            
-                            <!-- .col// -->
-                        </div>
-                        <!-- .row // -->
-                    </div>
-                    <!-- card body .// -->
+                            <div class="mb-4">
+                                <label class="form-label">Email</label>
+                                <input type="email" value="<%= formData.email %>"  placeholder="Type here"  name="email" class="form-control"></input>
+                                <span class="error-message" style="color: red;"><%= messages.email %></span>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Mobile</label>
+                                <input type="text" value="<%= formData.mobile %>"  placeholder="Type here" name="mobile" class="form-control"></input>
+                                <span class="error-message" style="color: red;"><%= messages.mobile %></span>
+                            </div>
+                            <div class="d-grid">
+                                <button class="btn btn-primary" type="submit">Create User</button>
+                            </div>
+                        </form>
+                    </div> 
+                    <!-- .col// -->
                 </div>
-                <!-- card .// -->
-            </section>
-            <!-- content-main end// -->
-            <footer class="main-footer font-xs">
-                <div class="row pb-30 pt-15">
-                    <div class="col-sm-6">
-                        <script>
-                            document.write(new Date().getFullYear());
-                        </script>
-                        &copy; Nest - HTML Ecommerce Template .
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="text-sm-end">All rights reserved</div>
-                    </div>
-                </div>
-            </footer>
-        </main>
-        <script src="assets/js/vendors/jquery-3.6.0.min.js"></script>
-        <script src="assets/js/vendors/bootstrap.bundle.min.js"></script>
-        <script src="assets/js/vendors/select2.min.js"></script>
-        <script src="assets/js/vendors/perfect-scrollbar.js"></script>
-        <script src="assets/js/vendors/jquery.fullscreen.min.js"></script>
-        <!-- Main Script -->
-        <script src="assets/js/main.js?v=1.1" type="text/javascript"></script>
-    </body>
-</html>
+                <!-- .row // -->
+            </div>
+            <!-- card body .// -->
+        </div>
+        <!-- card .// -->
+    </section>
+            
+<%- include('../layouts/admin/footer', { path: '/addUsers' }) %>
+
+
