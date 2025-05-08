@@ -1253,7 +1253,7 @@ function toaccountDetails() {
           });
   
           if (result.isConfirmed) {
-              const response = await axios.post('/deleteAddress', { addressId });
+              const response = await axios.delete('/deleteAddress', { data: {addressId} });
               if (response.data.success) {
                   const deletedElement = document.getElementById(`cardId${addressId}`).parentNode;
                   deletedElement.parentNode.removeChild(deletedElement);

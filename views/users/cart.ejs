@@ -183,7 +183,7 @@
   async function updateQuantity(tag, productId) {
     const productQuantity = parseInt(tag.value, 10);
     
-    axios.post('/cartUpdate', { productQuantity, productId })
+    axios.put('/cartUpdate', { productQuantity, productId })
         .then(function(response) {
             console.log(response.data);
             const { totalPrice, subTotal } = response.data;
@@ -228,7 +228,7 @@
             if (result.isConfirmed) {
                 const element = document.getElementById(`cartDelete${index}`);
                 element.remove();
-                axios.post('/deleteCartItem', { productId: productId })
+                axios.delete('/deleteCartItem', {data:{productId: productId }})
                     .then(function(response) {
                         console.log(response.data);
                         if (response.data.success) {

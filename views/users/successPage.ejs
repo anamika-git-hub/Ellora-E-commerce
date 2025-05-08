@@ -32,7 +32,7 @@
 <script>
   async function addToCart (tag,productId){
     const productQuantity = tag.value
-        axios.post('/cartUpdate', { productQuantity,productId })
+        axios.put('/cartUpdate', { productQuantity,productId })
             .then(function(response){
                 console.log(response.data);
                 const {totalPrice,subTotal} = response.data
@@ -51,7 +51,7 @@
                 const element = document.getElementById(`cartDelete${index}`);
                  element.remove();
                  window.location.reload();
-        axios.post('/deleteCartItem', { productId })
+        axios.delete('/deleteCartItem', {data:{productId} })
             .then(function(response){
                 console.log(response.data);
                 

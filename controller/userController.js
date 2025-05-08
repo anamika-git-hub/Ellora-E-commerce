@@ -35,7 +35,6 @@ const loadHome = async(req,res)=>{
     }
 }
 
-
 const loadLogin=async(req,res)=>{
     try{
         const userId = req.session.user_id;
@@ -63,30 +62,29 @@ const insertUser =async(req,res)=>{
         const { error } = joiRegistrationSchema.validate(req.body,{password:2}, {
             abortEarly: false
           });
-    if(error){ 
-        const errorMessages = error.details.reduce((acc, cur) => {
-            acc[cur.context.key] = cur.message;
-            return acc;
-        }, {});
-        req.flash('messages', errorMessages);
-        req.flash('formData', req.body);
-        res.redirect('/signUp')
-    }
+        if(error){ 
+            const errorMessages = error.details.reduce((acc, cur) => {
+                acc[cur.context.key] = cur.message;
+                return acc;
+            }, {});
+            req.flash('messages', errorMessages);
+            req.flash('formData', req.body);
+            res.redirect('/signUp')
+        }
         const value = await joiRegistrationSchema.validateAsync(req.body)
        
         const {name,email,mobile,password,confirmPassword} = value;
             const emailCheck = await User.findOne({email});
             if(!emailCheck){
-                    const spassword= await securePassword(password);
+                const spassword= await securePassword(password);
                     
-                  const user = await User.create( {name:name,email:email,mobile:mobile,password:spassword})
+                const user = await User.create( {name:name,email:email,mobile:mobile,password:spassword})
                  
                 sendOTPverificationEmail(user,res);
-              }else{
-                
-              req.flash('exist', 'User already exists with this email');
-               return res.redirect('/signUp')
-              }
+            }else{
+                req.flash('exist', 'User already exists with this email');
+                return res.redirect('/signUp')
+            }
              
     }catch (error) {
         console.log(error.message);
@@ -95,7 +93,6 @@ const insertUser =async(req,res)=>{
 
 const sendOTPverificationEmail=async ({email},res)=>{
     try {
-
         let transporter=nodemailer.createTransport({
               service:'gmail',
               host:'smtp.gmail.com',
@@ -122,12 +119,10 @@ const sendOTPverificationEmail=async ({email},res)=>{
         await newOtpVerification.save();
         await transporter.sendMail(mailOptions);
         res.redirect(`/otp?email=${email}`);
-        
     } catch (error) {
         console.log(error.message)
     }
 }
-
 
 const loadOtp =async(req,res)=>{
     try {
@@ -393,9 +388,6 @@ const showWalletHistory = async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 }
-
-
-
 
 const editProfile = async(req,res)=>{
     try {

@@ -44,7 +44,7 @@ userRouter.post('/profile',isLogin,userController.editProfile);
 userRouter.post('/profile',isLogin,userController.resetPasswithOld);
 userRouter.post('/addAddress',isLogin,userController.addAddress);
 userRouter.put('/editAddress',isLogin,userController.editAddress);
-userRouter.post('/deleteAddress',isLogin,userController.deleteAddress);
+userRouter.delete('/deleteAddress',isLogin,userController.deleteAddress);
 
 userRouter.get('/products',productController.productPage);
 userRouter.get('/filterProduct',isLogin,productController.filterProduct);
@@ -53,13 +53,13 @@ userRouter.get('/productDetail',productController.productDetails);
 
 userRouter.get('/wishlist',isLogin,wishlistController.loadWishlist);
 userRouter.post('/addWishlist',isLogin,wishlistController.addtoWishlist);
-userRouter.post('/deleteWishlistItem',isLogin,wishlistController.deleteWishlistItem);
+userRouter.delete('/deleteWishlistItem',isLogin,wishlistController.deleteWishlistItem);
 
 
 userRouter.get('/cart',isLogin,cartController.loadCart);
 userRouter.post('/addcart',isLogin,cartController.addtoCart);
-userRouter.post('/cartUpdate',isLogin,cartController.updateQuantity);
-userRouter.post('/deleteCartItem',isLogin,cartController.deleteCartItem);
+userRouter.put('/cartUpdate',isLogin,cartController.updateQuantity);
+userRouter.delete('/deleteCartItem',isLogin,cartController.deleteCartItem);
 userRouter.get('/availableCoupons',isLogin,couponController.availableCoupons);
 userRouter.post('/applyCoupon',isLogin,couponController.applyCoupon);
 
