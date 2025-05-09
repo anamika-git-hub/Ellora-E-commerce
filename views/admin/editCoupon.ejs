@@ -18,7 +18,7 @@
                         <div class="row gx-3">
                             <div class="col-md-4 mb-3">
                                 <label for="product_sku" class="form-label">Validity Date</label>
-                                <input type="date" value="<%= couponData.expiryDate %>" name="expiryDate" class="form-control" />
+                                <input type="date" value="<%= new Date(couponData.expiryDate).toISOString().slice(0, 10) %>" name="expiryDate" class="form-control" />
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label for="product_color" class="form-label">Offer Price</label>
@@ -30,21 +30,11 @@
                             </div>
                         </div>
                         <div class="mb-4">
-                            <label for="product_brand" class="form-label">CouponId</label>
+                            <label for="product_brand" class="form-label">Coupon code</label>
                             <input value="<%= couponData.couponCode %>" placeholder="Type here" class="form-control" id="product_brand" />
                         </div>
                     </div>
                 </div>
-                <!-- card end// -->
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <div>
-                            <label class="form-label">Images</label>
-                            <input class="form-control" name="image" type="file" />
-                        </div>
-                    </div>
-                </div>
-                <!-- card end// -->
             </div>
         </div>
         <!-- row end// -->

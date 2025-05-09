@@ -157,10 +157,12 @@ const loadCheckOut = async (req, res) => {
                 is_listed: true,
                 'usedUsers.userId': { $ne: req.session.user_id }
             });
-
-            const discountAmount = 0; 
-            const totalAfterDiscount = subTotal+shippingCost; 
-
+            
+            const discountAmount = req.flash('discountAmount'); 
+            let totalAfterDiscount = subTotal+shippingCost;
+            if(discountAmount.length !== 0){
+                totalAfterDiscount = totalAfterDiscount-discountAmount[0]; 
+            }
             const errorMessages = req.flash('error');
 
             res.render('checkout', {
