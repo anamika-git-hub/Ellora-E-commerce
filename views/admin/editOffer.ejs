@@ -1,7 +1,7 @@
 <%- include('../layouts/admin/header', { title: 'Admin Panel', path: '/offer'}) %>
 
 <section class="content-main">
-    <form action="/admin/editOffer" method="post">
+    <form action="/admin/editOffer?offerId=<%= offerData._id %>" method="post">
         <div class="row">
             <div class="col-9">
                 <div class="content-header">
@@ -17,11 +17,12 @@
                         </div>
                         <div class="row gx-3">
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">Validity Date</label>
-                                <input type="date" value="<%= offerData.ValidityDate %>" name="ValidityDate" class="form-control" />
+                              <label class="form-label">Validity Date</label>
+                              <input type="date" value="<%= new Date(offerData.expiredAt).toISOString().slice(0, 10) %>" name="ValidityDate" class="form-control" />
+                              
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label for="product_color" class="form-label">Offer Price</label>
+                                <label for="product_color" class="form-label">Offer Price (%)</label>
                                 <input type="text" value="<%= offerData.offerPrice %>" name="offerPrice" placeholder="Type here" class="form-control" id="product_color" />
                             </div>
                         </div>
@@ -34,8 +35,8 @@
                                 <div class="ms-auto text-md-end">
                                     <select class="form-select d-inline-block" name="offerTypeName" id="offerType">
                                         <option>select</option>
-                                        <option>Product</option>
-                                        <option>Category</option>
+                                        <option value="Product" <%= offerData.offerTypeName ==='Product' ? "selected":""  %>>Product</option>
+                                        <option value="Category" <%= offerData.offerTypeName ==='Category' ? "selected":""  %>>Category</option>
                                     </select>
                                 </div>
                             </div>
@@ -54,7 +55,7 @@
                                 <div class="ms-auto text-md-end">
                                     <select class="form-select" name="offerType" id="productSelect">
                                         <% productData.forEach(element => { %>
-                                            <option value="<%= element._id %>"><%= element.name %></option>
+                                            <option value="<%= element._id %>" <%= element._id.toString() === offerData.product ? "selected" : "" %>><%= element.name %></option>
                                         <% }); %>
                                     </select>
                                 </div>
@@ -100,8 +101,7 @@
         }
     }
 
-    document.getElementById("submitButton").addEventListener("click", function(event) {
-    });
+    handleChange({ target: selectElements });
 </script>
 
 <%- include('../layouts/admin/footer', { path: '/editOffer' }) %>

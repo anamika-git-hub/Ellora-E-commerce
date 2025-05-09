@@ -74,14 +74,11 @@ const loadEditOffer = async(req,res)=>{
 
 const editOffer = async(req,res)=>{
     try {
-        const {OfferId} = req.query
-        console.log('offerId:',OfferId);
+        const {offerId} = req.query
         const value = await joiOfferSchema.validateAsync(req.body);
-        console.log('value:',value);
         const {name,ValidityDate,offerPrice,offerTypeName,offerType} = value;
-        const OfferData = await Offer.findOneAndUpdate({_id:OfferId},{$set:{name:name,offerPrice:offerPrice,offerTypeName:offerTypeName,product:offerTypeName === 'Product'? offerType:undefined,category:offerTypeName === 'Category'?offerType:undefined,expiredAt:ValidityDate}})
+        await Offer.findOneAndUpdate({_id:offerId},{$set:{name:name,offerPrice:offerPrice,offerTypeName:offerTypeName,product:offerTypeName === 'Product'? offerType:undefined,category:offerTypeName === 'Category'?offerType:undefined,expiredAt:ValidityDate}})
 
-        console.log('offerData:',OfferData);
         res.redirect('/admin/OfferList')
     } catch (error) {
         console.log(error.message);
