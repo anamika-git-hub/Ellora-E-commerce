@@ -1,133 +1,143 @@
-<%- include('../layouts/users/header', { title: 'Ellora Store', path: '/login',userId:userId, wishlistData:null, cartData: null }) %>
+<%- include('../layouts/users/header', { title: 'Ellora Store', path: '/login', userId: userId, wishlistData: null, cartData: null }) %>
 
-        <main class="main">
-            <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
-                <div class="container">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Login</li>
-                    </ol>
-                </div><!-- End .container -->
-            </nav><!-- End .breadcrumb-nav -->
+<main class="main">
+    <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Login</li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
 
-            <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17" style="background-image: url('assets/images/backgrounds/login-bg.jpg')">
-            	<div class="container">
-            		<div class="form-box">
-            			<div class="form-tab">
-	            			<ul class="nav nav-pills nav-fill" role="tablist">
-							    <li class="nav-item">
-							        <a class="nav-link active" id="signin-tab-2" data-toggle="tab" href="#signin-2" role="tab" aria-controls="signin-2" aria-selected="false">Sign In</a>
-							    </li>
-							    <li class="nav-item">
-							        <a class="nav-link " id="register-tab-2"  href="/signUp" role="tab" aria-controls="register-2" aria-selected="true">Register</a>
-							    </li>
-							</ul>
-							<div class="tab-content">
-							    <div class="tab-pane fade" id="signin-2" role="tabpanel" aria-labelledby="signin-tab-2">
-                                   
-							    	<form action="/login" method="post">
-                                     
-							    		<div class="form-group">
-							    			<label for="singin-email-2">Username or email addres</label>
-							    			<input type="text" class="form-control" id="singin-email-2" name="email" required>
-							    		</div><!-- End .form-group -->
+    <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17" 
+         style="background-image: url('assets/images/backgrounds/login-bg.jpg')">
+        <div class="container">
+            <div class="form-box">
+                <div class="form-tab">
+                    <ul class="nav nav-pills nav-fill" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="signin-tab-2" data-toggle="tab" href="#signin-2" 
+                               role="tab" aria-controls="signin-2" aria-selected="false">Sign In</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="register-tab-2" href="/signUp" 
+                               role="tab" aria-controls="register-2" aria-selected="true">Register</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade" id="signin-2" role="tabpanel" aria-labelledby="signin-tab-2">
+                            <form action="/login" method="post">
+                                <div class="form-group">
+                                    <label for="singin-email-2">Username or email address</label>
+                                    <input type="text" class="form-control" id="singin-email-2" name="email" required>
+                                </div><!-- End .form-group -->
 
-							    		<div class="form-group">
-							    			<label for="singin-password-2">Password </label>
-							    			<input type="password" class="form-control" id="singin-password-2" name="password" required>
-							    		</div><!-- End .form-group -->
+                                <div class="form-group">
+                                    <label for="singin-password-2">Password</label>
+                                    <input type="password" class="form-control" id="singin-password-2" name="password" required>
+                                </div><!-- End .form-group -->
 
-							    		<div class="form-footer">
-							    			<button type="submit" class="btn btn-outline-primary-2">
-			                					<span>LOG IN</span>
-			            						<i class="icon-long-arrow-right"></i>
-			                				</button>
+                                <div class="form-footer">
+                                    <button type="submit" class="btn btn-outline-primary-2">
+                                        <span>LOG IN</span>
+                                        <i class="icon-long-arrow-right"></i>
+                                    </button>
 
-			                				<div class="custom-control custom-checkbox">
-												<input type="checkbox" class="custom-control-input" id="signin-remember-2">
-												<label class="custom-control-label" for="signin-remember-2">Remember Me</label>
-											</div><!-- End .custom-checkbox -->
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="signin-remember-2">
+                                        <label class="custom-control-label" for="signin-remember-2">Remember Me</label>
+                                    </div><!-- End .custom-checkbox -->
 
-											<a href="#" class="forgot-link">Forgot Your Password?</a>
-							    		</div><!-- End .form-footer -->
-							    	</form>
-                                   
-							    	<div class="form-choice">
-								    	<p class="text-center">or sign in with</p>
-								    	<div class="row">
-								    		<div class="col-sm-6">
-								    			<a href="#" class="btn btn-login btn-g">
-								    				<i class="icon-google"></i>
-								    				Login With Google
-								    			</a>
-								    		</div><!-- End .col-6 -->
-								    		<div class="col-sm-6">
-								    			<a href="#" class="btn btn-login btn-f">
-								    				<i class="icon-facebook-f"></i>
-								    				Login With Facebook
-								    			</a>
-								    		</div><!-- End .col-6 -->
-								    	</div><!-- End .row -->
-							    	</div><!-- End .form-choice -->
-							    </div><!-- .End .tab-pane -->
-							    <div class="tab-pane fade show active" id="register-2" role="tabpanel" aria-labelledby="register-tab-2">
-							    	<form action="/login" method="post">
-                                        <% if (messages && messages.login) { %>
-                                            <div class="alert alert-danger d-flex align-items-center" role="alert" id="existAlert">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2 " viewBox="0 0 16 16" role="img" aria-label="Warning:">
-                                                  <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-                                                </svg>
-                                                <div >
-                                                    <strong>!!!</strong>
-                                                  <%= messages.login %>
-                                                </div>
-                                              </div>
-                                        <% } %>
-							    		<div class="form-group">
-							    			<label for="register-email-2">Your email address </label>
-							    			<input type="email" class="form-control" id="register-email-2" value="anamika@gmail.com" name="email" required>
-							    		</div><!-- End .form-group -->
+                                    <a href="#" class="forgot-link">Forgot Your Password?</a>
+                                </div><!-- End .form-footer -->
+                            </form>
 
-							    		<div class="form-group">
-							    			<label for="register-password-2" >Password </label>
-							    			<input type="password" class="form-control" id="register-password-2" value="123456" name="password" required>
-							    		</div><!-- End .form-group -->
+                            <div class="form-choice">
+                                <p class="text-center">or sign in with</p>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <a href="#" class="btn btn-login btn-g">
+                                            <i class="icon-google"></i>
+                                            Login With Google
+                                        </a>
+                                    </div><!-- End .col-6 -->
+                                    <div class="col-sm-6">
+                                        <a href="#" class="btn btn-login btn-f">
+                                            <i class="icon-facebook-f"></i>
+                                            Login With Facebook
+                                        </a>
+                                    </div><!-- End .col-6 -->
+                                </div><!-- End .row -->
+                            </div><!-- End .form-choice -->
+                        </div><!-- .End .tab-pane -->
+                        
+                        <div class="tab-pane fade show active" id="register-2" role="tabpanel" aria-labelledby="register-tab-2">
+                            <form action="/login" method="post">
+                                <% if (messages && messages.login) { %>
+                                <div class="alert alert-danger d-flex align-items-center" role="alert" id="existAlert">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" 
+                                         class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" 
+                                         role="img" aria-label="Warning:">
+                                        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                                    </svg>
+                                    <div>
+                                        <strong>!!!</strong> <%= messages.login %>
+                                    </div>
+                                </div>
+                                <% } %>
+                                
+                                <div class="form-group">
+                                    <label for="register-email-2">Your email address</label>
+                                    <input type="email" class="form-control" id="register-email-2" 
+                                           value="anamika@gmail.com" name="email" required>
+                                </div><!-- End .form-group -->
 
-							    		<div class="form-footer">
-							    			<button type="submit" class="btn btn-outline-primary-2">
-			                					<span>SIGN IN</span>
-			            						<i class="icon-long-arrow-right"></i>
-			                				</button>
+                                <div class="form-group">
+                                    <label for="register-password-2">Password</label>
+                                    <input type="password" class="form-control" id="register-password-2" 
+                                           value="123456" name="password" required>
+                                </div><!-- End .form-group -->
 
-			                				<div class="custom-control custom-checkbox ">
-												<input type="checkbox" class="custom-control-input "  id="register-policy-2" checked="" required>
-												<label class="custom-control-label" for="register-policy-2">I agree to the <a href="#">privacy policy</a> *</label>
-											</div><!-- End .custom-checkbox -->
-							    		</div><!-- End .form-footer -->
-							    	</form>
-							    	<div class="form-choice">
-								    	<p class="text-center">or sign in with</p>
-								    	<div class="row">
-								    		<div class="col-sm-6">
-								    			<a href="/google" class="btn btn-login btn-g">
-								    				<i class="icon-google"></i>
-								    				Login With Google
-								    			</a>
-								    		</div><!-- End .col-6 -->
-								    		<div class="col-sm-6">
-								    			<a href="#" class="btn btn-login  btn-f">
-								    				<i class="icon-facebook-f"></i>
-								    				Login With Facebook
-								    			</a>
-								    		</div><!-- End .col-6 -->
-								    	</div><!-- End .row -->
-							    	</div><!-- End .form-choice -->
-							     </div><!--.End .tab-pane -->
-							</div><!-- End .tab-content -->
-						</div><!-- End .form-tab -->
-            		</div><!-- End .form-box -->
-            	</div><!-- End .container -->
-            </div><!-- End .login-page section-bg -->
-        </main><!-- End .main -->
+                                <div class="form-footer">
+                                    <button type="submit" class="btn btn-outline-primary-2">
+                                        <span>SIGN IN</span>
+                                        <i class="icon-long-arrow-right"></i>
+                                    </button>
 
-    <%- include('../layouts/users/footer', { path: '/login' }) %>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" 
+                                               id="register-policy-2" checked="" required>
+                                        <label class="custom-control-label" for="register-policy-2">
+                                            I agree to the <a href="#">privacy policy</a> *
+                                        </label>
+                                    </div><!-- End .custom-checkbox -->
+                                </div><!-- End .form-footer -->
+                            </form>
+                            
+                            <div class="form-choice">
+                                <p class="text-center">or sign in with</p>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <a href="/google" class="btn btn-login btn-g">
+                                            <i class="icon-google"></i>
+                                            Login With Google
+                                        </a>
+                                    </div><!-- End .col-6 -->
+                                    <div class="col-sm-6">
+                                        <a href="#" class="btn btn-login btn-f">
+                                            <i class="icon-facebook-f"></i>
+                                            Login With Facebook
+                                        </a>
+                                    </div><!-- End .col-6 -->
+                                </div><!-- End .row -->
+                            </div><!-- End .form-choice -->
+                        </div><!--.End .tab-pane -->
+                    </div><!-- End .tab-content -->
+                </div><!-- End .form-tab -->
+            </div><!-- End .form-box -->
+        </div><!-- End .container -->
+    </div><!-- End .login-page section-bg -->
+</main><!-- End .main -->
+
+<%- include('../layouts/users/footer', { path: '/login' }) %>

@@ -1,234 +1,232 @@
-<%- include('../layouts/users/header', { title: 'Ellora Store', path: '/signUp',userId:userId,wishlistData:null, cartData: null }) %>
+<%- include('../layouts/users/header', { title: 'Ellora Store', path: '/signUp', userId: userId, wishlistData: null, cartData: null }) %>
 
-        <main class="main">
-            <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
-                <div class="container">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Register</li>
-                    </ol>
-                </div><!-- End .container -->
-            </nav><!-- End .breadcrumb-nav -->
+<main class="main">
+    <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Register</li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
 
-            <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17" style="background-image: url('assets/images/backgrounds/login-bg.jpg')">
-            	<div class="container">
-            		<div class="form-box">
-            			<div class="form-tab">
-	            			<ul class="nav nav-pills nav-fill" role="tablist">
-							    <li class="nav-item">
-							        <a class="nav-link " id="signin-tab-2"  href="/login" role="tab" aria-controls="signin-2" aria-selected="false">Sign In</a>
-							    </li>
-							    <li class="nav-item">
-							        <a class="nav-link active " id="register-tab-2" data-toggle="tab" href="#register-2" role="tab" aria-controls="register-2" aria-selected="true">Register</a>
-							    </li>
-							</ul>
-							<div class="tab-content">
-							    <div class="tab-pane fade show active" id="register-2" role="tabpanel" aria-labelledby="register-tab-2">
-							    	<form action="/signUp" method="post">
-							    		<div class="form-group">
-							    			<label for="register-email-2">Your name</label>
-							    			<input type="text" class="form-control" id="name-field" value="<%= formData.name %>"  name="name" required>
-                                            <span class="error-message" style="color: red;"><%= messages.name %></span>
-							    		</div><!-- End .form-group -->
-                                        <div class="form-group">
-							    			<label for="register-email-2">Your email address </label>
-							    			<input type="email" class="form-control" id="email-field" value="<%= formData.email %>"  name="email" required>
-                                            <span class="error-message" style="color: red;"><%= messages.email %></span>
-							    		</div><!-- End .form-group -->
-                                        <div class="form-group">
-							    			<label for="register-email-2">Your mobile</label>
-							    			<input type="text" class="form-control" id="mobile-field" value="<%= formData.mobile %>"  name="mobile"  required>
-                                            <span class="error-message" style="color: red;"><%= messages.mobile %></span>
-							    		</div><!-- End .form-group -->
-							    		<div class="form-group">
-							    			<label for="register-password-2">Password </label>
-							    			<input type="password" class="form-control" id="register-password-2"   name="password" required>
-                                            <span class="error-message"style="color: red;" ><%= messages.password %></span>
-							    		</div><!-- End .form-group -->
-                                        <div class="form-group">
-							    			<label for="register-password-2">Confirm Password </label>
-							    			<input type="password" class="form-control" id="register-password-2"   name="confirmPassword" required>
-                                            <span class="error-message" style="color: red;"><%= messages.confirmPassword %></span>
+    <div class="login-page bg-image pt-8 pb-8 pt-md-12 pb-md-12 pt-lg-17 pb-lg-17" style="background-image: url('assets/images/backgrounds/login-bg.jpg')">
+        <div class="container">
+            <div class="form-box">
+                <div class="form-tab">
+                    <ul class="nav nav-pills nav-fill" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link" id="signin-tab-2" href="/login" role="tab" aria-controls="signin-2" aria-selected="false">Sign In</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" id="register-tab-2" data-toggle="tab" href="#register-2" role="tab" aria-controls="register-2" aria-selected="true">Register</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="register-2" role="tabpanel" aria-labelledby="register-tab-2">
+                            <form action="/signUp" method="post">
+                                <div class="form-group">
+                                    <label for="register-email-2">Your name</label>
+                                    <input type="text" class="form-control" id="name-field" value="<%= formData.name %>" name="name" required>
+                                    <span class="error-message" style="color: red;"><%= messages.name %></span>
+                                </div><!-- End .form-group -->
+                                <div class="form-group">
+                                    <label for="register-email-2">Your email address</label>
+                                    <input type="email" class="form-control" id="email-field" value="<%= formData.email %>" name="email" required>
+                                    <span class="error-message" style="color: red;"><%= messages.email %></span>
+                                </div><!-- End .form-group -->
+                                <div class="form-group">
+                                    <label for="register-email-2">Your mobile</label>
+                                    <input type="text" class="form-control" id="mobile-field" value="<%= formData.mobile %>" name="mobile" required>
+                                    <span class="error-message" style="color: red;"><%= messages.mobile %></span>
+                                </div><!-- End .form-group -->
+                                <div class="form-group">
+                                    <label for="register-password-2">Password</label>
+                                    <input type="password" class="form-control" id="register-password-2" name="password" required>
+                                    <span class="error-message" style="color: red;"><%= messages.password %></span>
+                                </div><!-- End .form-group -->
+                                <div class="form-group">
+                                    <label for="register-password-2">Confirm Password</label>
+                                    <input type="password" class="form-control" id="register-password-2" name="confirmPassword" required>
+                                    <span class="error-message" style="color: red;"><%= messages.confirmPassword %></span>
+                                </div><!-- End .form-group -->
+                                
+                                <div class="form-footer">
+                                    <button type="submit" class="btn btn-outline-primary-2">
+                                        <span>SIGN UP</span>
+                                        <i class="icon-long-arrow-right"></i>
+                                    </button>
 
-							    		</div><!-- End .form-group -->
-                                        
-							    		<div class="form-footer">
-							    			<button type="submit" class="btn btn-outline-primary-2">
-			                					<span>SIGN UP</span>
-			            						<i class="icon-long-arrow-right"></i>
-			                				</button>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="register-policy-2" required>
+                                        <label class="custom-control-label" for="register-policy-2">I agree to the <a href="#">privacy policy</a> *</label>
+                                    </div><!-- End .custom-checkbox -->
+                                </div><!-- End .form-footer -->
+                            </form>
+                            <div class="form-choice">
+                                <p class="text-center">or sign in with</p>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <a href="#" class="btn btn-login btn-g">
+                                            <i class="icon-google"></i>
+                                            Login With Google
+                                        </a>
+                                    </div><!-- End .col-6 -->
+                                    <div class="col-sm-6">
+                                        <a href="#" class="btn btn-login btn-f">
+                                            <i class="icon-facebook-f"></i>
+                                            Login With Facebook
+                                        </a>
+                                    </div><!-- End .col-6 -->
+                                </div><!-- End .row -->
+                            </div><!-- End .form-choice -->
+                        </div><!--.End .tab-pane -->
+                    </div><!-- End .tab-content -->
+                </div><!-- End .form-tab -->
+            </div><!-- End .form-box -->
+        </div><!-- End .container -->
+    </div><!-- End .login-page section-bg -->
+</main><!-- End .main -->
 
-			                				<div class="custom-control custom-checkbox">
-												<input type="checkbox" class="custom-control-input" id="register-policy-2" required>
-												<label class="custom-control-label" for="register-policy-2">I agree to the <a href="#">privacy policy</a> *</label>
-											</div><!-- End .custom-checkbox -->
-							    		</div><!-- End .form-footer -->
-							    	</form>
-							    	<div class="form-choice">
-								    	<p class="text-center">or sign in with</p>
-								    	<div class="row">
-								    		<div class="col-sm-6">
-								    			<a href="#" class="btn btn-login btn-g">
-								    				<i class="icon-google"></i>
-								    				Login With Google
-								    			</a>
-								    		</div><!-- End .col-6 -->
-								    		<div class="col-sm-6">
-								    			<a href="#" class="btn btn-login  btn-f">
-								    				<i class="icon-facebook-f"></i>
-								    				Login With Facebook
-								    			</a>
-								    		</div><!-- End .col-6 -->
-								    	</div><!-- End .row -->
-							    	</div><!-- End .form-choice -->
-							     </div><!--.End .tab-pane -->
-							</div><!-- End .tab-content -->
-						</div><!-- End .form-tab -->
-            		</div><!-- End .form-box -->
-            	</div><!-- End .container -->
-            </div><!-- End .login-page section-bg -->
-        </main><!-- End .main -->
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const name = urlParams.get('name');
+    const email = urlParams.get('email');
+    const mobile = urlParams.get('mobile');
+</script>
 
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const name = urlParams.get('name');
-        const email = urlParams.get('email');
-        const mobile = urlParams.get('mobile');
-    </script>
-
-	<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('form[action="/signUp"]');
-    const nameField = document.getElementById('name-field');
-    const emailField = document.getElementById('email-field');
-    const mobileField = document.getElementById('mobile-field');
-    const passwordField = document.getElementById('register-password-2');
-    const confirmPasswordField = document.getElementsByName('confirmPassword')[0];
-    const policyCheckbox = document.getElementById('register-policy-2');
-    
-    // Function to show error message
-    function showError(field, message) {
-        const errorElement = field.nextElementSibling;
-        errorElement.textContent = message;
-        return false;
-    }
-    
-    // Function to clear error message
-    function clearError(field) {
-        const errorElement = field.nextElementSibling;
-        errorElement.textContent = '';
-    }
-    
-    // Validate name
-    nameField.addEventListener('blur', function() {
-        if (this.value.trim() === '') {
-            showError(this, 'Name is required');
-        } else if (this.value.length < 3) {
-            showError(this, 'Name must be at least 3 characters');
-        } else {
-            clearError(this);
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.querySelector('form[action="/signUp"]');
+        const nameField = document.getElementById('name-field');
+        const emailField = document.getElementById('email-field');
+        const mobileField = document.getElementById('mobile-field');
+        const passwordField = document.getElementById('register-password-2');
+        const confirmPasswordField = document.getElementsByName('confirmPassword')[0];
+        const policyCheckbox = document.getElementById('register-policy-2');
+        
+        // Function to show error message
+        function showError(field, message) {
+            const errorElement = field.nextElementSibling;
+            errorElement.textContent = message;
+            return false;
         }
-    });
-    
-    // Validate email
-    emailField.addEventListener('blur', function() {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (this.value.trim() === '') {
-            showError(this, 'Email is required');
-        } else if (!emailRegex.test(this.value)) {
-            showError(this, 'Please enter a valid email address');
-        } else {
-            clearError(this);
+        
+        // Function to clear error message
+        function clearError(field) {
+            const errorElement = field.nextElementSibling;
+            errorElement.textContent = '';
         }
-    });
-    
-    // Validate mobile
-    mobileField.addEventListener('blur', function() {
-        const mobileRegex = /^[6-9]\d{9}$/;
-        if (this.value.trim() === '') {
-            showError(this, 'Mobile number is required');
-        } else if (!mobileRegex.test(this.value)) {
-            showError(this, 'Please enter a valid 10-digit mobile number');
-        } else {
-            clearError(this);
-        }
-    });
-    
-    // Validate password
-    passwordField.addEventListener('blur', function() {
-        if (this.value.trim() === '') {
-            showError(this, 'Password is required');
-        } else if (this.value.length < 6) {
-            showError(this, 'Password must be at least 6 characters long');
-        } else {
-            clearError(this);
-        }
-    });
-    
-    // Validate confirm password
-    confirmPasswordField.addEventListener('blur', function() {
-        if (this.value.trim() === '') {
-            showError(this, 'Please confirm your password');
-        } else if (this.value !== passwordField.value) {
-            showError(this, 'Passwords do not match');
-        } else {
-            clearError(this);
-        }
-    });
-    
-    // Form submission
-    form.addEventListener('submit', function(event) {
-        let isValid = true;
         
         // Validate name
-        if (nameField.value.trim() === '') {
-            isValid = showError(nameField, 'Name is required');
-        } else if (nameField.value.length < 3) {
-            isValid = showError(nameField, 'Name must be at least 3 characters');
-        }
+        nameField.addEventListener('blur', function() {
+            if (this.value.trim() === '') {
+                showError(this, 'Name is required');
+            } else if (this.value.length < 3) {
+                showError(this, 'Name must be at least 3 characters');
+            } else {
+                clearError(this);
+            }
+        });
         
         // Validate email
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (emailField.value.trim() === '') {
-            isValid = showError(emailField, 'Email is required');
-        } else if (!emailRegex.test(emailField.value)) {
-            isValid = showError(emailField, 'Please enter a valid email address');
-        }
+        emailField.addEventListener('blur', function() {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (this.value.trim() === '') {
+                showError(this, 'Email is required');
+            } else if (!emailRegex.test(this.value)) {
+                showError(this, 'Please enter a valid email address');
+            } else {
+                clearError(this);
+            }
+        });
         
         // Validate mobile
-        const mobileRegex = /^[6-9]\d{9}$/;
-        if (mobileField.value.trim() === '') {
-            isValid = showError(mobileField, 'Mobile number is required');
-        } else if (!mobileRegex.test(mobileField.value)) {
-            isValid = showError(mobileField, 'Please enter a valid 10-digit mobile number');
-        }
+        mobileField.addEventListener('blur', function() {
+            const mobileRegex = /^[6-9]\d{9}$/;
+            if (this.value.trim() === '') {
+                showError(this, 'Mobile number is required');
+            } else if (!mobileRegex.test(this.value)) {
+                showError(this, 'Please enter a valid 10-digit mobile number');
+            } else {
+                clearError(this);
+            }
+        });
         
         // Validate password
-        if (passwordField.value.trim() === '') {
-            isValid = showError(passwordField, 'Password is required');
-        } else if (passwordField.value.length < 6) {
-            isValid = showError(passwordField, 'Password must be at least 6 characters long');
-        }
+        passwordField.addEventListener('blur', function() {
+            if (this.value.trim() === '') {
+                showError(this, 'Password is required');
+            } else if (this.value.length < 6) {
+                showError(this, 'Password must be at least 6 characters long');
+            } else {
+                clearError(this);
+            }
+        });
         
         // Validate confirm password
-        if (confirmPasswordField.value.trim() === '') {
-            isValid = showError(confirmPasswordField, 'Please confirm your password');
-        } else if (confirmPasswordField.value !== passwordField.value) {
-            isValid = showError(confirmPasswordField, 'Passwords do not match');
-        }
+        confirmPasswordField.addEventListener('blur', function() {
+            if (this.value.trim() === '') {
+                showError(this, 'Please confirm your password');
+            } else if (this.value !== passwordField.value) {
+                showError(this, 'Passwords do not match');
+            } else {
+                clearError(this);
+            }
+        });
         
-        // Validate policy checkbox
-        if (!policyCheckbox.checked) {
-            alert('Please agree to the privacy policy');
-            isValid = false;
-        }
-        
-        if (!isValid) {
-            event.preventDefault(); 
-        }
+        // Form submission
+        form.addEventListener('submit', function(event) {
+            let isValid = true;
+            
+            // Validate name
+            if (nameField.value.trim() === '') {
+                isValid = showError(nameField, 'Name is required');
+            } else if (nameField.value.length < 3) {
+                isValid = showError(nameField, 'Name must be at least 3 characters');
+            }
+            
+            // Validate email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (emailField.value.trim() === '') {
+                isValid = showError(emailField, 'Email is required');
+            } else if (!emailRegex.test(emailField.value)) {
+                isValid = showError(emailField, 'Please enter a valid email address');
+            }
+            
+            // Validate mobile
+            const mobileRegex = /^[6-9]\d{9}$/;
+            if (mobileField.value.trim() === '') {
+                isValid = showError(mobileField, 'Mobile number is required');
+            } else if (!mobileRegex.test(mobileField.value)) {
+                isValid = showError(mobileField, 'Please enter a valid 10-digit mobile number');
+            }
+            
+            // Validate password
+            if (passwordField.value.trim() === '') {
+                isValid = showError(passwordField, 'Password is required');
+            } else if (passwordField.value.length < 6) {
+                isValid = showError(passwordField, 'Password must be at least 6 characters long');
+            }
+            
+            // Validate confirm password
+            if (confirmPasswordField.value.trim() === '') {
+                isValid = showError(confirmPasswordField, 'Please confirm your password');
+            } else if (confirmPasswordField.value !== passwordField.value) {
+                isValid = showError(confirmPasswordField, 'Passwords do not match');
+            }
+            
+            // Validate policy checkbox
+            if (!policyCheckbox.checked) {
+                alert('Please agree to the privacy policy');
+                isValid = false;
+            }
+            
+            if (!isValid) {
+                event.preventDefault(); 
+            }
+        });
     });
-});
-	</script>
+</script>
 
-  
 <%- include('../layouts/users/footer', { path: '/signUp' }) %>

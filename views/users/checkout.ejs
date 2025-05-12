@@ -1,361 +1,349 @@
-<%- include('../layouts/users/header', { title: 'Ellora Store', path: '/cart',userId:userId,wishlistData:wishlistData,cartData:cartData }) %>
-    <style>
-        /* General styling */
-        .row {
-            display: flex;
-            flex-wrap: wrap;
-            margin-right: -15px;
-            margin-left: -15px;
-        }
+<%- include('../layouts/users/header', { title: 'Ellora Store', path: '/cart', userId: userId, wishlistData: wishlistData, cartData: cartData }) %>
+<style>
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: -15px;
+        margin-left: -15px;
+    }
 
-        .col-lg-9 {
-            position: relative;
-            width: 100%;
-            min-height: 1px;
-            padding-right: 15px;
-            padding-left: 15px;
-        }
+    .col-lg-9 {
+        position: relative;
+        width: 100%;
+        min-height: 1px;
+        padding-right: 15px;
+        padding-left: 15px;
+    }
 
-        /* Radio button styles */
-        ._3DAmyP {
-            display: none;
-        }
+    ._3DAmyP {
+        display: none;
+    }
 
-        ._1XFPmK {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 2px solid #2874f0;
-            position: relative;
-            vertical-align: middle;
-            margin-right: 10px;
-        }
+    ._1XFPmK {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        border: 2px solid #2874f0;
+        position: relative;
+        vertical-align: middle;
+        margin-right: 10px;
+    }
 
-        ._3DAmyP:checked + ._1XFPmK::after {
-            content: "";
-            display: block;
-            width: 12px;
-            height: 12px;
-            background-color: #2874f0;
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
+    ._3DAmyP:checked + ._1XFPmK::after {
+        content: "";
+        display: block;
+        width: 12px;
+        height: 12px;
+        background-color: #2874f0;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
 
-        /* Address container styles */
-        ._2jIO64 {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
+    ._2jIO64 {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
 
-        /* Name, type, and mobile styles */
-        .rPNEXT {
-            margin-bottom: 6px;
-            font-size: 14px;
-            color: #000;
-        }
+    .rPNEXT {
+        margin-bottom: 6px;
+        font-size: 14px;
+        color: #000;
+    }
 
-        ._2XilLp {
-            margin-left: 5px;
-            padding: 3px 6px;
-            background-color: #e0e0e0;
-            border-radius: 3px;
-            font-size: 12px;
-            color: #212121;
-        }
+    ._2XilLp {
+        margin-left: 5px;
+        padding: 3px 6px;
+        background-color: #e0e0e0;
+        border-radius: 3px;
+        font-size: 12px;
+        color: #212121;
+    }
 
-        /* Address details styles */
-        .Br27Zz {
-            font-size: 14px;
-            color: #212121;
-        }
+    .Br27Zz {
+        font-size: 14px;
+        color: #212121;
+    }
 
-        /* Landmark style */
-        ._3mmRDy {
-            color: #999;
-            font-size: 12px;
-        }
+    ._3mmRDy {
+        color: #999;
+        font-size: 12px;
+    }
 
-        /* Additional styling */
-        .tDHRfA {
-            border-bottom: 1px solid #e0e0e0;
-            padding-bottom: 10px;
-            margin-bottom: 10px;
-        }
+    .tDHRfA {
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 10px;
+        margin-bottom: 10px;
+    }
+</style>
 
-    </style>
+<main class="main">
+    <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        <div class="container">
+            <h1 class="page-title">Checkout<span>Shop</span></h1>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+    <nav aria-label="breadcrumb" class="breadcrumb-nav">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/products">Products</a></li>
+                <li class="breadcrumb-item"><a href="/cart">Shopping Cart</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
 
-        <main class="main">
-        	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
-        		<div class="container">
-        			<h1 class="page-title">Checkout<span>Shop</span></h1>
-        		</div><!-- End .container -->
-        	</div><!-- End .page-header -->
-            <nav aria-label="breadcrumb" class="breadcrumb-nav">
-                <div class="container">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/">Home</a></li>
-                        <li class="breadcrumb-item"><a href="/products">Products</a></li>
-                        <li class="breadcrumb-item"><a href="/cart">Shopping Cart</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Checkout</li>
-                    </ol>
-                </div><!-- End .container -->
-            </nav><!-- End .breadcrumb-nav -->
-
-            <div class="page-content">
-            	<div class="checkout">
-	                <div class="container">
-                        <a href="/availableCoupons?subTotal=<%= subTotal %>"><%= couponData.length %> available coupons</a>
-            			<div class="checkout-discount">
-                            <form action="/applyCoupon" method="post">
-                                <input type="text" name="couponCode" class="form-control" required id="checkout-discount-input">
-                                <label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
-                                
-                                <!-- Error messages will be displayed below the input field -->
-                                <% if (errorMessages.length > 0) { %>
-                                    <div class="" style="background-color: transparent; color: red;">
-                                        <% errorMessages.forEach(function(message) { %>
-                                            <p><%= message %></p>
-                                        <% }) %>
-                                    </div>
-                                <% } %>
-                            </form>
-            			</div><!-- End .checkout-discount -->
-                        <a href="" id="showAddAddress" aria-controls="addAddress" aria-selected="false">Add address <i class="icon-edit"></i></a></p>
-                                <div class="row" >
-                                    <div  class="col-lg-9 " >
-                                        <% if(addresses && addresses.length>0){%>
-                                        <div id="shippingAddress">
-                                            <form>
-                                                <% addresses.forEach((address,index)=>{ %>
-                                                <div  class="col-lg-9 ">
-                                                    <div class="checkout-form">             
-                                                        <input type="radio" name="shippingAddress" id="addressId<%=address._id%>" value="<%=address._id%>" <%=index === 0? 'checked': '' %> >
-                                                            <div class="address-option">
-                                                                <label for="addressId<%=address._id%>">
-                                                                    <h4 class="account-title">Shipping address</h4>
-                                                                    <h6 class="name"><%= address.name  %></h6>
-                                                                    <p>
-                                                                        <%= address.streetAddress %>,<%=address.landMark  %><br />
-                                                                        <%= address.city  %>,<%= address.state %>,<%= address.country %>
-                                                                    </p>
-                                                                    <p>Mobile: <%= address.mobile %></p>
-                                                                </label>
-                                                                <a class="edit-btn" href="#"><i class="fa fa-edit"></i></a>
-                                                            </div>
-                                                    </div>
-                                                </div>
-                                                <%}) %>
-                                            </form>
+    <div class="page-content">
+        <div class="checkout">
+            <div class="container">
+                <a href="/availableCoupons?subTotal=<%= subTotal %>"><%= couponData.length %> available coupons</a>
+                <div class="checkout-discount">
+                    <form action="/applyCoupon" method="post">
+                        <input type="text" name="couponCode" class="form-control" required id="checkout-discount-input">
+                        <label for="checkout-discount-input" class="text-truncate">Have a coupon? <span>Click here to enter your code</span></label>
+                        
+                        <!-- Error messages will be displayed below the input field -->
+                        <% if (errorMessages.length > 0) { %>
+                            <div class="" style="background-color: transparent; color: red;">
+                                <% errorMessages.forEach(function(message) { %>
+                                    <p><%= message %></p>
+                                <% }) %>
+                            </div>
+                        <% } %>
+                    </form>
+                </div><!-- End .checkout-discount -->
+                <a href="" id="showAddAddress" aria-controls="addAddress" aria-selected="false">Add address <i class="icon-edit"></i></a>
+                <div class="row">
+                    <div class="col-lg-9">
+                        <% if(addresses && addresses.length > 0) { %>
+                        <div id="shippingAddress">
+                            <form>
+                                <% addresses.forEach((address, index) => { %>
+                                <div class="col-lg-9">
+                                    <div class="checkout-form">             
+                                        <input type="radio" name="shippingAddress" id="addressId<%= address._id %>" value="<%= address._id %>" <%= index === 0 ? 'checked' : '' %>>
+                                        <div class="address-option">
+                                            <label for="addressId<%= address._id %>">
+                                                <h4 class="account-title">Shipping address</h4>
+                                                <h6 class="name"><%= address.name %></h6>
+                                                <p>
+                                                    <%= address.streetAddress %>, <%= address.landMark %><br>
+                                                    <%= address.city %>, <%= address.state %>, <%= address.country %>
+                                                </p>
+                                                <p>Mobile: <%= address.mobile %></p>
+                                            </label>
+                                            <a class="edit-btn" href="#"><i class="fa fa-edit"></i></a>
                                         </div>
-                                        <%} %>
-                                        <div class="col-lg-9 " id="addAddress"  style="display: none;">
-                                            
-                                            <form action="/addAddress" method="post">
-                                              <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
-                                                
-        
-                                                <label>User Name</label>
-                                                <input name="name" type="text" class="form-control">
-        
-                                                <label>Country </label>
-                                                <input name="country" type="text" class="form-control" required>
-        
-                                                <label>Street address </label>
-                                                <input name="streetName" type="text" class="form-control" placeholder="House number and Street name" required>
-                                                <input name="landMark" type="text" class="form-control" placeholder="Landmark" required>
-        
-                                                <div class="row">
-                                                    <div class="col-sm-6">
-                                                        <label>Town / City </label>
-                                                        <input name="town" type="text" class="form-control" required>
-                                                    </div><!-- End .col-sm-6 -->
-        
-                                                    <div class="col-sm-6">
-                                                        <label>State / County </label>
-                                                        <input name="state" type="text" class="form-control" required>
-                                                    </div><!-- End .col-sm-6 -->
-                                                </div><!-- End .row -->
-        
-                                                <div class="row">
-                                                    <div class="col-sm-6">
-                                                        <label>Postcode / ZIP </label>
-                                                        <input name="pin" type="text" class="form-control" required>
-                                                    </div><!-- End .col-sm-6 -->
-        
-                                                    <div class="col-sm-6">
-                                                        <label>Phone </label>
-                                                        <input name="phone" type="tel" class="form-control" required>
-                                                    </div><!-- End .col-sm-6 -->
-                                                </div><!-- End .row -->
-        
-                                                <label>Email address </label>
-                                                <input name="email" type="email" class="form-control" required>
-
-                                                <button type="submit" class="btn btn-outline-primary-2">
-                                                    <span>Add address</span>
-                                                    <i class="icon-long-arrow-right"></i>
-                                                </button>
-                                            </form>
-                                        </div><!-- End .col-lg-9 -->
                                     </div>
-                                    
-                                        <aside class="col-lg-3">
-                                            <div class="summary">
-                                                <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
-        
-                                                <table class="table table-summary">
-                                                    <% if (typeof subTotal !== 'undefined') { %>
-
-                                                    <tbody>
-                                                        <tr class="summary-subtotal">
-                                                            <td>Subtotal:</td>
-                                                            <td >Rs.<%= subTotal %></td>
-                                                        </tr><!-- End .summary-subtotal -->
-                                                        <% if(subTotal>1000){%>
-                                                           
-                                                        <tr>
-                                                            <td>Shipping:</td>
-                                                            <td><%= shippingMethod %> </td>
-                                                        </tr>
-                                                        <%}else{%>
-                                                            <tr>
-                                                                <td>Shipping:</td>
-                                                                <td>Delivery</td>
-                                                            </tr>
-                                                            <%} %>
-                                                        <tr>
-                                                            <td>Offer Amount:</td>
-                                                            <td>Rs.<%= discountAmount %></td>
-                                                        </tr>
-                                                        <tr class="summary-total">
-                                                            <td>Total:</td>
-                                                            <td>Rs.<%= totalAfterDiscount %></td>
-                                                        </tr><!-- End .summary-total -->
-                                                    </tbody>
-                                                <%}%>
-                                                </table><!-- End .table table-summary -->
-        
-                                                <div class="accordion-summary" id="accordion-payment">
-                                                    <div class="card">
-                                                        <div class="card-header" id="heading-1">
-                                                            <h2 class="card-title">
-                                                                <a role="button" data-toggle="collapse" href="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
-                                                                    Wallet
-                                                                </a>
-                                                            </h2>
-                                                        </div><!-- End .card-header -->
-                                                        <div id="collapse-1" class="collapse show" aria-labelledby="heading-1" data-parent="#accordion-payment">
-                                                            <div class="card-body">
-                                                                Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.
-                                                            </div><!-- End .card-body -->
-                                                        </div><!-- End .collapse -->
-                                                    </div><!-- End .card -->
-        
-                                                    <div class="card">
-                                                        <div class="card-header" id="heading-2">
-                                                            <h2 class="card-title">
-                                                                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-2" aria-expanded="false" aria-controls="collapse-2">
-                                                                    Check payments
-                                                                </a>
-                                                            </h2>
-                                                        </div><!-- End .card-header -->
-                                                        <div id="collapse-2" class="collapse" aria-labelledby="heading-2" data-parent="#accordion-payment">
-                                                            <div class="card-body">
-                                                                Ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. 
-                                                            </div><!-- End .card-body -->
-                                                        </div><!-- End .collapse -->
-                                                    </div><!-- End .card -->
-        
-                                                    <div class="card">
-                                                        <div class="card-header" id="heading-3">
-                                                            <h2 class="card-title">
-                                                                <a  class="collapsed" role="button" data-toggle="collapse" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
-                                                                    Cash on delivery
-                                                                </a>
-                                                            </h2>
-                                                        </div><!-- End .card-header -->
-                                                        <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
-                                                            <div class="card-body">Quisque volutpat mattis eros. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. 
-                                                            </div><!-- End .card-body -->
-                                                        </div><!-- End .collapse -->
-                                                    </div><!-- End .card -->
-        
-                                                    <div class="card">
-                                                        <div class="card-header" id="heading-4">
-                                                            <h2 class="card-title">
-                                                                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
-                                                                    Razorpay 
-                                                                </a>
-                                                            </h2>
-                                                        </div><!-- End .card-header -->
-                                                        <div id="collapse-4" class="collapse" aria-labelledby="heading-4" data-parent="#accordion-payment">
-                                                            <div class="card-body">
-                                                                Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum.
-                                                            </div><!-- End .card-body -->
-                                                        </div><!-- End .collapse -->
-                                                    </div><!-- End .card -->
-        
-                                                    <div class="card">
-                                                        <div class="card-header" id="heading-5">
-                                                            <h2 class="card-title">
-                                                                <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
-                                                                    Credit Card (Stripe)
-                                                                    <img src="assets/images/payments-summary.png" alt="payments cards">
-                                                                </a>
-                                                            </h2>
-                                                        </div><!-- End .card-header -->
-                                                        <div id="collapse-5" class="collapse" aria-labelledby="heading-5" data-parent="#accordion-payment">
-                                                            <div class="card-body"> Donec nec justo eget felis facilisis fermentum.Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Lorem ipsum dolor sit ame.
-                                                            </div><!-- End .card-body -->
-                                                        </div><!-- End .collapse -->
-                                                    </div><!-- End .card -->
-                                                </div><!-- End .accordion -->
-        
-                                                <button onclick="placeOrder('<%= totalAfterDiscount %>')" type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
-                                                    <span class="btn-text">Place Order</span>
-                                                    <span class="btn-hover-text">Place Order</span>
-                                                </button>
-                                            </div><!-- End .summary -->
-                                        </aside><!-- End .col-lg-3 -->
-                                    </div><!-- End .row -->
+                                </div>
+                                <% }) %>
+                            </form>
+                        </div>
+                        <% } %>
+                        <div class="col-lg-9" id="addAddress" style="display: none;">
+                            <form action="/addAddress" method="post">
+                                <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
                                 
-	                </div><!-- End .container -->
-                </div><!-- End .checkout -->
-            </div><!-- End .page-content -->
-        </main><!-- End .main -->
+                                <label>User Name</label>
+                                <input name="name" type="text" class="form-control">
 
+                                <label>Country</label>
+                                <input name="country" type="text" class="form-control" required>
 
-    <% if (locals.error) { %>
-        <div id="errorModal" class="modal">
-            <div class="modal-content">
-              <span class="close">&times;</span>
-              <p id="errorMessage"><%= locals.error %></p>
-            </div>
-        </div>
-        <% } %>
-    
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                                <label>Street address</label>
+                                <input name="streetName" type="text" class="form-control" placeholder="House number and Street name" required>
+                                <input name="landMark" type="text" class="form-control" placeholder="Landmark" required>
 
-    <script>
-        $(document).ready(function() {
-            $('#showAddAddress').click(function(e) {
-                e.preventDefault(); 
-                $('#shippingAddress').hide(); 
-                $('#addAddress').show();
-            });
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label>Town / City</label>
+                                        <input name="town" type="text" class="form-control" required>
+                                    </div><!-- End .col-sm-6 -->
+
+                                    <div class="col-sm-6">
+                                        <label>State / County</label>
+                                        <input name="state" type="text" class="form-control" required>
+                                    </div><!-- End .col-sm-6 -->
+                                </div><!-- End .row -->
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <label>Postcode / ZIP</label>
+                                        <input name="pin" type="text" class="form-control" required>
+                                    </div><!-- End .col-sm-6 -->
+
+                                    <div class="col-sm-6">
+                                        <label>Phone</label>
+                                        <input name="phone" type="tel" class="form-control" required>
+                                    </div><!-- End .col-sm-6 -->
+                                </div><!-- End .row -->
+
+                                <label>Email address</label>
+                                <input name="email" type="email" class="form-control" required>
+
+                                <button type="submit" class="btn btn-outline-primary-2">
+                                    <span>Add address</span>
+                                    <i class="icon-long-arrow-right"></i>
+                                </button>
+                            </form>
+                        </div><!-- End .col-lg-9 -->
+                    </div>
+                    
+                    <aside class="col-lg-3">
+                        <div class="summary">
+                            <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
+
+                            <table class="table table-summary">
+                                <% if (typeof subTotal !== 'undefined') { %>
+                                <tbody>
+                                    <tr class="summary-subtotal">
+                                        <td>Subtotal:</td>
+                                        <td>Rs.<%= subTotal %></td>
+                                    </tr><!-- End .summary-subtotal -->
+                                    <% if(subTotal > 1000) { %>
+                                    <tr>
+                                        <td>Shipping:</td>
+                                        <td><%= shippingMethod %></td>
+                                    </tr>
+                                    <% } else { %>
+                                    <tr>
+                                        <td>Shipping:</td>
+                                        <td>Delivery</td>
+                                    </tr>
+                                    <% } %>
+                                    <tr>
+                                        <td>Offer Amount:</td>
+                                        <td>Rs.<%= discountAmount %></td>
+                                    </tr>
+                                    <tr class="summary-total">
+                                        <td>Total:</td>
+                                        <td>Rs.<%= totalAfterDiscount %></td>
+                                    </tr><!-- End .summary-total -->
+                                </tbody>
+                                <% } %>
+                            </table><!-- End .table table-summary -->
+
+                            <div class="accordion-summary" id="accordion-payment">
+                                <div class="card">
+                                    <div class="card-header" id="heading-1">
+                                        <h2 class="card-title">
+                                            <a role="button" data-toggle="collapse" href="#collapse-1" aria-expanded="true" aria-controls="collapse-1">
+                                                Wallet
+                                            </a>
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-1" class="collapse show" aria-labelledby="heading-1" data-parent="#accordion-payment">
+                                        <div class="card-body">
+                                            Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.
+                                        </div><!-- End .card-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+
+                                <div class="card">
+                                    <div class="card-header" id="heading-2">
+                                        <h2 class="card-title">
+                                            <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-2" aria-expanded="false" aria-controls="collapse-2">
+                                                Check payments
+                                            </a>
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-2" class="collapse" aria-labelledby="heading-2" data-parent="#accordion-payment">
+                                        <div class="card-body">
+                                            Ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis.
+                                        </div><!-- End .card-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+
+                                <div class="card">
+                                    <div class="card-header" id="heading-3">
+                                        <h2 class="card-title">
+                                            <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-3" aria-expanded="false" aria-controls="collapse-3">
+                                                Cash on delivery
+                                            </a>
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
+                                        <div class="card-body">
+                                            Quisque volutpat mattis eros. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros.
+                                        </div><!-- End .card-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+
+                                <div class="card">
+                                    <div class="card-header" id="heading-4">
+                                        <h2 class="card-title">
+                                            <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-4" aria-expanded="false" aria-controls="collapse-4">
+                                                Razorpay
+                                            </a>
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-4" class="collapse" aria-labelledby="heading-4" data-parent="#accordion-payment">
+                                        <div class="card-body">
+                                            Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum.
+                                        </div><!-- End .card-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+
+                                <div class="card">
+                                    <div class="card-header" id="heading-5">
+                                        <h2 class="card-title">
+                                            <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-5" aria-expanded="false" aria-controls="collapse-5">
+                                                Credit Card (Stripe)
+                                                <img src="assets/images/payments-summary.png" alt="payments cards">
+                                            </a>
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-5" class="collapse" aria-labelledby="heading-5" data-parent="#accordion-payment">
+                                        <div class="card-body">
+                                            Donec nec justo eget felis facilisis fermentum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Lorem ipsum dolor sit ame.
+                                        </div><!-- End .card-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+                            </div><!-- End .accordion -->
+
+                            <button onclick="placeOrder('<%= totalAfterDiscount %>')" type="submit" class="btn btn-outline-primary-2 btn-order btn-block">
+                                <span class="btn-text">Place Order</span>
+                                <span class="btn-hover-text">Place Order</span>
+                            </button>
+                        </div><!-- End .summary -->
+                    </aside><!-- End .col-lg-3 -->
+                </div><!-- End .row -->
+            </div><!-- End .container -->
+        </div><!-- End .checkout -->
+    </div><!-- End .page-content -->
+</main><!-- End .main -->
+
+<% if (locals.error) { %>
+<div id="errorModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p id="errorMessage"><%= locals.error %></p>
+    </div>
+</div>
+<% } %>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#showAddAddress').click(function(e) {
+            e.preventDefault(); 
+            $('#shippingAddress').hide(); 
+            $('#addAddress').show();
         });
-    </script>
-    
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script>
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
     async function placeOrder(subTotal) {
         const shippingAddress = document.querySelector('input[name="shippingAddress"]:checked').value;
         const selectedPaymentMethod = document.querySelector('.accordion-summary .card-header a[aria-expanded="true"]');
@@ -387,7 +375,7 @@
                         razorpayObject.open();
                     } else if (res.data.deliverySuccess == true) {
                         const orderId = res.data.orderId
-                        console.log('order',orderId);
+                        console.log('order', orderId);
                         window.location = `/successPage?orderId=${orderId}`;
                     }
                 } else {
@@ -402,12 +390,11 @@
                 console.error('Error:', error);
             });
     }
-    </script>
-    
+</script>
 
-  <script>
-   function verifyPayment(orderId,paymentId,signature, order){
-        console.log('ord',order);
+<script>
+    function verifyPayment(orderId, paymentId, signature, order) {
+        console.log('ord', order);
         const requestBody = {
             paymentId: paymentId,
             orderId: orderId,
@@ -433,17 +420,17 @@
         .then(data => {
             if(data.message === 'Payment Success'){
                 Swal.fire({
-                        title: "Success",
-                        text: "Your order has been placed successfully.",
-                        icon: "success",
-                        timer: 1500,
-                        buttons: false
-                    })
+                    title: "Success",
+                    text: "Your order has been placed successfully.",
+                    icon: "success",
+                    timer: 1500,
+                    buttons: false
+                });
                 setTimeout(function() {
-                    console.log("ssss",order);
+                    console.log("ssss", order);
                     window.location.href = `/successPage?orderId=${order}`;
-                    },500);            
-                }else{
+                }, 500);            
+            } else {
                 Swal.fire({
                     position: "center",
                     icon: "error",
@@ -452,8 +439,8 @@
                     timer: 1500,
                 });
                 setTimeout(function() {
-                    window.location.href =  `/failedPage?orderId=${order}`;
-                    },500);  
+                    window.location.href = `/failedPage?orderId=${order}`;
+                }, 500);  
             }
         })
         .catch(error => {
@@ -466,42 +453,7 @@
                 timer: 1500,
             });
         });
-
     }
-  </script>
+</script>
 
-<!-- <script>
-    document.addEventListener("DOMContentLoaded", function() {
-    // Your modal script here
-    
-    // Get the modal
-    var modal = document.getElementById("errorModal");
-    console.log("Modal element:", modal);
-
-    
-    // Get the <span> element that closes the modal
-    var span = document.getElementsByClassName("close")[0];
-    
-    // Function to show the modal with error message
-    function showModal() {
-      modal.style.display = "block";
-    }
-    
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function() {
-      modal.style.display = "none";
-    }
-    
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-      if (event.target == modal) {
-        modal.style.display = "none";
-      }
-    }
-    
-    // Show modal if there's an error
-    showModal();
-});
-
-    </script> -->
-    <%- include('../layouts/users/footer', { path: '/checkout' }) %>
+<%- include('../layouts/users/footer', { path: '/checkout' }) %>

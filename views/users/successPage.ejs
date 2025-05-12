@@ -1,70 +1,64 @@
-<%- include('../layouts/users/header', { title: 'Ellora Store', path: '/successPage',userId:userId,wishlistData:wishlistData,cartData:cartData }) %>
+<%- include('../layouts/users/header', { title: 'Ellora Store', path: '/successPage', userId: userId, wishlistData: wishlistData, cartData: cartData }) %>
 
-        <main class="main">
-        	
-            <nav aria-label="breadcrumb" class="breadcrumb-nav">
-                <div class="container">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/">Home</a></li>
-                        <li class="breadcrumb-item"><a href="/products">Products</a></li>
-                        <li class="breadcrumb-item "><a href="/cart">Shopping Cart</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">success</li>
-
-                    </ol>
-                </div><!-- End .container -->
-            </nav><!-- End .breadcrumb-nav -->
-             <div class="page-content justify-content-center align-items-center" >
-                   <div class="text-center">
-                   <h1>Payment Successful!</h1>
-                   <p>Thank you for your payment.</p>
-                  <button> <a href="#"  onclick="toOrderDetails('<%= orderId%>')">Order Details</a></button>
-                  <button><a href="/products">Continue shopping</a></button>
-                </div>
-                
-             </div>
-            
-        </main><!-- End .main -->
-
-        
+<main class="main">
+    <nav aria-label="breadcrumb" class="breadcrumb-nav">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/products">Products</a></li>
+                <li class="breadcrumb-item"><a href="/cart">Shopping Cart</a></li>
+                <li class="breadcrumb-item active" aria-current="page">success</li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
     
+    <div class="page-content justify-content-center align-items-center">
+        <div class="text-center">
+            <h1>Payment Successful!</h1>
+            <p>Thank you for your payment.</p>
+            <button><a href="#" onclick="toOrderDetails('<%= orderId%>')">Order Details</a></button>
+            <button><a href="/products">Continue shopping</a></button>
+        </div>
+    </div>
+</main><!-- End .main -->
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-  async function addToCart (tag,productId){
-    const productQuantity = tag.value
-        axios.put('/cartUpdate', { productQuantity,productId })
-            .then(function(response){
+    async function addToCart(tag, productId) {
+        const productQuantity = tag.value;
+        axios.put('/cartUpdate', { productQuantity, productId })
+            .then(function(response) {
                 console.log(response.data);
-                const {totalPrice,subTotal} = response.data
-                            console.log(subTotal);
-                            document.getElementById(`totalPrice${productId}`).innerHTML = `Rs.${totalPrice}`
-                            document.getElementById('subTotal').innerHTML = `Rs.${subTotal}`
-                            document.getElementById('Total').innerHTML = `Rs.${subTotal}`
-                           
-            }).catch(function(error){
+                const { totalPrice, subTotal } = response.data;
+                console.log(subTotal);
+                document.getElementById(`totalPrice${productId}`).innerHTML = `Rs.${totalPrice}`;
+                document.getElementById('subTotal').innerHTML = `Rs.${subTotal}`;
+                document.getElementById('Total').innerHTML = `Rs.${subTotal}`;
+            }).catch(function(error) {
                 console.error('Error:', error);
-        });
+            });
     }
 </script>
+
 <script>
-  async function deleteCartItem (index,productId){
-                const element = document.getElementById(`cartDelete${index}`);
-                 element.remove();
-                 window.location.reload();
-        axios.delete('/deleteCartItem', {data:{productId} })
-            .then(function(response){
+    async function deleteCartItem(index, productId) {
+        const element = document.getElementById(`cartDelete${index}`);
+        element.remove();
+        window.location.reload();
+        axios.delete('/deleteCartItem', { data: { productId } })
+            .then(function(response) {
                 console.log(response.data);
-                
-            }).catch(function(error){
+            }).catch(function(error) {
                 console.error('Error:', error);
-        });
+            });
     }
 </script>
+
 <script>
-    function toOrderDetails(orderId){
-        console.log('orrr',orderId);
-      window.location = `/orderHistory?orderId=${orderId}`
+    function toOrderDetails(orderId) {
+        console.log('orrr', orderId);
+        window.location = `/orderHistory?orderId=${orderId}`;
     }
-  </script>
+</script>
 
 <%- include('../layouts/users/footer', { path: '/successPage' }) %>

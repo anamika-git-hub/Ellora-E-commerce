@@ -1,216 +1,230 @@
-<%- include('../layouts/users/header', { title: 'Ellora Store', path: '/orderHistory',userId:userId,wishlistData:wishlistData,cartData:cartData }) %>
+<%- include('../layouts/users/header', { title: 'Ellora Store', path: '/orderHistory', userId: userId, wishlistData: wishlistData, cartData: cartData }) %>
 
-        <main class="main">
-            <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
-                <div class="container">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/">Home</a></li>
-                        <li class="breadcrumb-item"><a href="/profile">Profile</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Orders</li>
-                    </ol>
-                </div><!-- End .container -->
-            </nav><!-- End .breadcrumb-nav -->
+<main class="main">
+    <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a href="/profile">Profile</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Orders</li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
 
-        	<section class="h-100 gradient-custom">
-                <div class="container py-5 h-100">
-                    <div class="row d-flex justify-content-center align-items-center h-100">
-                        <div class="col-lg-10 col-xl-8">
-                            <div class="card" style="border-radius: 10px;">
-                                <div class="card-header px-4 py-5">
-                                    <h5 class="text-muted mb-0">Thanks for your Order, <span style="color: #cc9966;"><%= orderData.user_name %></span>!</h5>
-                                </div>
+    <section class="h-100 gradient-custom">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-lg-10 col-xl-8">
+                    <div class="card" style="border-radius: 10px;">
+                        <div class="card-header px-4 py-5">
+                            <h5 class="text-muted mb-0">
+                                Thanks for your Order, 
+                                <span style="color: #cc9966;"><%= orderData.user_name %></span>!
+                            </h5>
+                        </div>
+                        
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <p class="lead fw-normal mb-0" style="color: #cc9966;">Receipt</p>
                                 
-                                <div class="card-body p-4">
-                                    <div class="d-flex justify-content-between align-items-center mb-4">
-                                        <p class="lead fw-normal mb-0" style="color: #cc9966;">Receipt</p>
-                                       
-                                        <div class="col-6 col-lg-4 col-xl-2">
-                                            <div class="btn-wrap">
-                                                <a href="#" onclick="orderInvoice('<%=orderData._id %>')" class="btn btn-primary btn-round">View Invoice</a>
-                                            </div><!-- End .btn-wrap -->
-                                        </div><!-- End .col-md-4 col-lg-2 -->
-                                    </div>
-                                    
-                                    <% orderData.products.forEach(product => { %>
-                                        <div class="card shadow-0 border mb-4">
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col-md-2">
-                                                        <img src="<%= product.productId.image[0].url %>" class="img-fluid" alt="Product Image ">
-                                                    </div>
-                                                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                                        <p class="text-muted mb-0"></p> <!-- Update with appropriate value -->
-                                                    </div>
-                                                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                                        <p class="text-muted mb-0 small"><%= product.productId.name %></p> <!-- Product name -->
-                                                    </div>
-                                                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                                        <p class="text-muted mb-0 small">Qty: <%= product.quantity %></p> <!-- Product quantity -->
-                                                    </div>
-                                                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                                        <p class="text-muted mb-0 small">Rs.<%= product.totalPrice %></p> <!-- Product total price -->
-                                                    </div>
-                                                    <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                                            
-                                                        <%if(product.status === 'cancelled'){%>
-                                                            <button type="submit" class="btn btn-outline-primary-2 disabled">
-                                                                <span>Cancelled</span>
-                                                                </button>
-                                                        <%}else if(product.status === 'Delivered'){%>
-                                                            <button type="submit"  class="btn btn-outline-primary-2 " onclick="returnProduct('<%= product.productId._id %>','<%= orderData._id%>')">
-                                                                <span>Return</span>
-                                                                </button>
-                                                        <%}else if(product.status == 'Return Approved'){%>
-                                                            <button type="submit"  class="btn btn-outline-primary-2 " onclick="cancelOrder(this,'<%= product.productId._id %>','<%= orderData._id%>')">
-                                                                <span>Return Approved</span>
-                                                                </button>
-                                                        <%}else{%>
-                                                            <button type="submit"  class="btn btn-outline-primary-2 " onclick="cancelOrder(this,'<%= product.productId._id %>','<%= orderData._id%>')">
-                                                                <span>Cancel</span>
-                                                                </button>
-                                                        <%}%>
-                                                        
-                                                    </div>
-                                                </div>
-                                            </div>
+                                <div class="col-6 col-lg-4 col-xl-2">
+                                    <div class="btn-wrap">
+                                        <a href="#" onclick="orderInvoice('<%= orderData._id %>')" 
+                                           class="btn btn-primary btn-round">View Invoice</a>
+                                    </div><!-- End .btn-wrap -->
+                                </div><!-- End .col-md-4 col-lg-2 -->
+                            </div>
+                            
+                            <% orderData.products.forEach(product => { %>
+                            <div class="card shadow-0 border mb-4">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <img src="<%= product.productId.image[0].url %>" 
+                                                 class="img-fluid" alt="Product Image">
                                         </div>
-                                    <% }) %>
-                                    
-
-                                    <% if(orderData.status === 'pending'){%>
-                                        <div class="col-6 col-lg-4 col-xl-2">
-                                            <div class="btn-wrap">
-                                                <a href="#" onclick="placeOrder('<%=orderData._id%>')" class="btn btn-primary btn-round">Try Again</a>
-                                            </div><!-- End .btn-wrap -->
-                                        </div><!-- End .col-md-4 col-lg-2 -->
-                                        <%} %>
-	                
-                                    <!-- Additional details from orderData -->
-                                    <div class="d-flex justify-content-between pt-1">
-                                        <p class="fw-bold ">Deliver to</p>
-                                        <% if(orderData.total_amount<1000){%>
-                                        <p class="text-muted "><span class="fw-bold me-4">Delivery Charge : </span>Rs.60</p>
-                                        <%}else{%>
-
-                                        <%} %>
+                                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                            <p class="text-muted mb-0"></p> <!-- Update with appropriate value -->
+                                        </div>
+                                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                            <p class="text-muted mb-0 small"><%= product.productId.name %></p> <!-- Product name -->
+                                        </div>
+                                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                            <p class="text-muted mb-0 small">Qty: <%= product.quantity %></p> <!-- Product quantity -->
+                                        </div>
+                                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                            <p class="text-muted mb-0 small">Rs.<%= product.totalPrice %></p> <!-- Product total price -->
+                                        </div>
+                                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                                            <% if(product.status === 'cancelled') { %>
+                                                <button type="submit" class="btn btn-outline-primary-2 disabled">
+                                                    <span>Cancelled</span>
+                                                </button>
+                                            <% } else if(product.status === 'Delivered') { %>
+                                                <button type="submit" class="btn btn-outline-primary-2" 
+                                                        onclick="returnProduct('<%= product.productId._id %>', '<%= orderData._id %>')">
+                                                    <span>Return</span>
+                                                </button>
+                                            <% } else if(product.status == 'Return Approved') { %>
+                                                <button type="submit" class="btn btn-outline-primary-2" 
+                                                        onclick="cancelOrder(this, '<%= product.productId._id %>', '<%= orderData._id %>')">
+                                                    <span>Return Approved</span>
+                                                </button>
+                                            <% } else { %>
+                                                <button type="submit" class="btn btn-outline-primary-2" 
+                                                        onclick="cancelOrder(this, '<%= product.productId._id %>', '<%= orderData._id %>')">
+                                                    <span>Cancel</span>
+                                                </button>
+                                            <% } %>
+                                        </div>
                                     </div>
-                                    <div class="d-flex justify-content-between pt-1">
-                                        <p class="fw-bold  "><%= orderData.delivery_address.name %></p>
-                                        <p class="text-muted "><span class="fw-bold me-4">Coupon Discount : </span><%= orderData.couponDiscount %></p>
-                                       
-                                    </div>
-                                    <div class="d-flex justify-content-between pt-0">
-                                        <p class="fw-bold  "><%= orderData.delivery_address.streetAddress %></p>
-                                    </div>
-                                    <div class="d-flex justify-content-between pt-0">
-                                        <p class="fw-bold  "><%= orderData.delivery_address.city %>,<%= orderData.delivery_address.pincode %></p>
-                                    </div>
-                                    <div class="d-flex justify-content-between pt-0">
-                                        <p class="fw-bold  "><%= orderData.delivery_address.state %></p>
-                                    </div>
-                                    
-                                    <!-- Add more order details as needed -->
-                                </div>
-                                <div class="card-footer border-0 px-4 py-5" style="background-color: #cc9966; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
-                                    
-                                    <h5 class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0">Total Amount: &nbsp;&nbsp;<span class="h2 mb-0 ms-2">Rs.<%= orderData.total_amount %></span></h5>
                                 </div>
                             </div>
+                            <% }) %>
+                            
+                            <% if(orderData.status === 'pending') { %>
+                            <div class="col-6 col-lg-4 col-xl-2">
+                                <div class="btn-wrap">
+                                    <a href="#" onclick="placeOrder('<%= orderData._id %>')" 
+                                       class="btn btn-primary btn-round">Try Again</a>
+                                </div><!-- End .btn-wrap -->
+                            </div><!-- End .col-md-4 col-lg-2 -->
+                            <% } %>
+                            
+                            <!-- Additional details from orderData -->
+                            <div class="d-flex justify-content-between pt-1">
+                                <p class="fw-bold">Deliver to</p>
+                                <% if(orderData.total_amount < 1000) { %>
+                                <p class="text-muted">
+                                    <span class="fw-bold me-4">Delivery Charge: </span>Rs.60
+                                </p>
+                                <% } %>
+                            </div>
+                            <div class="d-flex justify-content-between pt-1">
+                                <p class="fw-bold"><%= orderData.delivery_address.name %></p>
+                                <p class="text-muted">
+                                    <span class="fw-bold me-4">Coupon Discount: </span><%= orderData.couponDiscount %>
+                                </p>
+                            </div>
+                            <div class="d-flex justify-content-between pt-0">
+                                <p class="fw-bold"><%= orderData.delivery_address.streetAddress %></p>
+                            </div>
+                            <div class="d-flex justify-content-between pt-0">
+                                <p class="fw-bold">
+                                    <%= orderData.delivery_address.city %>, <%= orderData.delivery_address.pincode %>
+                                </p>
+                            </div>
+                            <div class="d-flex justify-content-between pt-0">
+                                <p class="fw-bold"><%= orderData.delivery_address.state %></p>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer border-0 px-4 py-5" 
+                             style="background-color: #cc9966; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                            <h5 class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0">
+                                Total Amount: &nbsp;&nbsp;
+                                <span class="h2 mb-0 ms-2">Rs.<%= orderData.total_amount %></span>
+                            </h5>
                         </div>
                     </div>
                 </div>
-            </section>
-            
-        </main><!-- End .main -->
+            </div>
+        </div>
+    </section>
+</main><!-- End .main -->
 
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    async function placeOrder(orderId) {
+        const paymentMethod = 'Razorpay';
         
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <script>
-        async function placeOrder(orderId) {
-            const paymentMethod = 'Razorpay'
-            
-            axios.patch('/retryRazorpay', {orderId})
-                .then(function (res) {
-                    if (res.data.success) {
-                        if (paymentMethod === 'Razorpay') {
-                            var options = {
-                                "key": "" + res.data.key_id + "",
-                                "amount": "" + res.data.amount + "",
-                                "currency": "INR",
-                                "order_id": "" + res.data.order_id + "",
-                                "handler": function (response) {
-                                    verifyPayment(response.razorpay_order_id, response.razorpay_payment_id, response.razorpay_signature, res.data.razorpayId);
-                                },
-                                "prefill": {
-                                    "name": "" + res.data.name + "",
-                                    "email": "" + res.data.email + ""
-                                },
-                            };
-                            var razorpayObject = new Razorpay(options);
-                            razorpayObject.on('payment.failed', function (response) {
-                                alert("Payment Failed");
-                                window.location = `/failedPage?orderId=${orderId}`;
-                            });
-                            razorpayObject.open();
-                        } else if (res.data.deliverySuccess == true) {
-                            window.location = '/successPage';
-                        }
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: res.data.message,
-                            confirmButtonColor: '#3085d6'
+        axios.patch('/retryRazorpay', { orderId })
+            .then(function(res) {
+                if (res.data.success) {
+                    if (paymentMethod === 'Razorpay') {
+                        var options = {
+                            "key": "" + res.data.key_id + "",
+                            "amount": "" + res.data.amount + "",
+                            "currency": "INR",
+                            "order_id": "" + res.data.order_id + "",
+                            "handler": function(response) {
+                                verifyPayment(
+                                    response.razorpay_order_id, 
+                                    response.razorpay_payment_id, 
+                                    response.razorpay_signature, 
+                                    res.data.razorpayId
+                                );
+                            },
+                            "prefill": {
+                                "name": "" + res.data.name + "",
+                                "email": "" + res.data.email + ""
+                            },
+                        };
+                        var razorpayObject = new Razorpay(options);
+                        razorpayObject.on('payment.failed', function(response) {
+                            alert("Payment Failed");
+                            window.location = `/failedPage?orderId=${orderId}`;
                         });
+                        razorpayObject.open();
+                    } else if (res.data.deliverySuccess == true) {
+                        window.location = '/successPage';
                     }
-                }).catch(function (error) {
-                    console.error('Error:', error);
-                });
-        }
-        </script>
-        
-    
-      <script>
-       function verifyPayment(orderId,paymentId,signature, order){
-            console.log('ord',order);
-            const requestBody = {
-                paymentId: paymentId,
-                orderId: orderId,
-                signature: signature,
-                order: order
-            };
-    
-            const options = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(requestBody)
-            }
-    
-            fetch("/verifyPayment", options)
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: res.data.message,
+                        confirmButtonColor: '#3085d6'
+                    });
+                }
+            }).catch(function(error) {
+                console.error('Error:', error);
+            });
+    }
+</script>
+
+<script>
+    function verifyPayment(orderId, paymentId, signature, order) {
+        console.log('ord', order);
+        const requestBody = {
+            paymentId: paymentId,
+            orderId: orderId,
+            signature: signature,
+            order: order
+        };
+
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestBody)
+        };
+
+        fetch("/verifyPayment", options)
             .then(response => {
-                if(!response.ok){
+                if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
                 return response.json();
             })
             .then(data => {
-                if(data.message === 'Payment Success'){
+                if (data.message === 'Payment Success') {
                     Swal.fire({
-                            title: "Success",
-                            text: "Your order has been placed successfully.",
-                            icon: "success",
-                            timer: 1500,
-                            buttons: false
-                        })
+                        title: "Success",
+                        text: "Your order has been placed successfully.",
+                        icon: "success",
+                        timer: 1500,
+                        buttons: false
+                    });
                     setTimeout(function() {
                         window.location.href = '/successPage';
-                        },500);            
-                    }else{
+                    }, 500);
+                } else {
                     Swal.fire({
                         position: "center",
                         icon: "error",
@@ -220,7 +234,7 @@
                     });
                     setTimeout(function() {
                         window.location.href = '/failedPage';
-                        },500);  
+                    }, 500);
                 }
             })
             .catch(error => {
@@ -233,23 +247,17 @@
                     timer: 1500,
                 });
             });
-    
-        }
-      </script>
-
-
-
-
-    <script>
-        function orderInvoice(orderId){
-            window.location = `/orderInvoice?orderId=${orderId}`;
-        }
-    </script>
-
-
+    }
+</script>
 
 <script>
-    function   returnProduct(productId, orderId) {
+    function orderInvoice(orderId) {
+        window.location = `/orderInvoice?orderId=${orderId}`;
+    }
+</script>
+
+<script>
+    function returnProduct(productId, orderId) {
         Swal.fire({
             title: 'Reason for Return',
             input: 'textarea',
@@ -267,7 +275,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({productId, orderId, reason })
+                    body: JSON.stringify({ productId, orderId, reason })
                 })
                 .then(response => {
                     if (!response.ok) {
@@ -296,12 +304,12 @@
                     });
                 }
             }
-        })
+        });
     }
 </script>
 
 <script>
-    function cancelOrder(tag, productId, orderId){
+    function cancelOrder(tag, productId, orderId) {
         const confirmed = confirm("Are you sure you want to cancel this order?");
         if (confirmed) {
             tag.innerText = 'Cancelled';
@@ -310,4 +318,5 @@
         }
     }
 </script>
+
 <%- include('../layouts/users/footer', { path: '/orderHistory' }) %>

@@ -1,42 +1,40 @@
+<%- include('../layouts/users/header', { title: 'Ellora Store', path: '/failedPage', userId: userId, wishlistData: wishlistData, cartData: cartData }) %>
 
-<%- include('../layouts/users/header', { title: 'Ellora Store', path: '/failedPage',userId:userId,wishlistData:wishlistData,cartData:cartData }) %>
+<main class="main">
+    <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item"><a href="/products">Products</a></li>
+                <li class="breadcrumb-item"><a href="/cart">Cart</a></li>
+                <li class="breadcrumb-item"><a href="/CheckOut">Checkout</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Failed</li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
 
-        <main class="main">
-            <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
-                <div class="container">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-                        <li class="breadcrumb-item"><a href="/products">Products</a></li>
-                        <li class="breadcrumb-item"><a href="/cart">Cart</a></li>
-                        <li class="breadcrumb-item"><a href="/CheckOut">Checkout</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Failed</li>
-                    </ol>
-                </div><!-- End .container -->
-            </nav><!-- End .breadcrumb-nav -->
+    <div class="error-content text-center" style="background-image: url(assets/images/backgrounds/error-bg.jpg)">
+        <div class="container">
+            <h1 class="error-title">Payment Failed</h1><!-- End .error-title -->
+            <p>Hey, seems like there was some trouble. We are there with you. Just hold back.</p>
+            
+            <a href="#" onclick="toOrderDetails('<%= orderId%>')" class="btn btn-outline-primary-2 btn-minwidth-lg">
+                <span>Try Again</span>
+                <i class="icon-long-arrow-right"></i>
+            </a>
 
-        	<div class="error-content text-center" style="background-image: url(assets/images/backgrounds/error-bg.jpg)">
-            	<div class="container">
-            		<h1 class="error-title">Payment Failed</h1><!-- End .error-title -->
-            		<p>Hey,seems like there was some trouble.We are there with you.Just hold back.</p>
-                    
-            		<a href="#" onclick="toOrderDetails('<%= orderId%>')" class="btn btn-outline-primary-2 btn-minwidth-lg">
-            			<span>Try Again</span>
-            			<i class="icon-long-arrow-right"></i>
-            		</a>
+            <a href="/products" class="btn btn-outline-primary-2 btn-minwidth-lg">
+                <span>Continue Shopping</span>
+                <i class="icon-long-arrow-right"></i>
+            </a>
+        </div><!-- End .container -->
+    </div><!-- End .error-content text-center -->
+</main><!-- End .main -->
 
-                    <a href="/products" class="btn btn-outline-primary-2 btn-minwidth-lg">
-                        <span>Continue Shopping</span>
-                        <i class="icon-long-arrow-right"></i>
-                    </a>
-            	</div><!-- End .container -->
-        	</div><!-- End .error-content text-center -->
-        </main><!-- End .main -->
-
-        
-    <script>
-      function toOrderDetails(orderId){
-        window.location = `/orderHistory?orderId=${orderId}`
-      }
-    </script>
+<script>
+    function toOrderDetails(orderId) {
+        window.location = `/orderHistory?orderId=${orderId}`;
+    }
+</script>
 
 <%- include('../layouts/users/footer', { path: '/failedPage' }) %>

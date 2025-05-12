@@ -1,294 +1,283 @@
-<%- include('../layouts/users/header', { title: 'Ellora Store', path: '/products',userId:userId,wishlistData:wishlistData,cartData: cartData }) %>
+<%- include('../layouts/users/header', { title: 'Ellora Store', path: '/products', userId: userId, wishlistData: wishlistData, cartData: cartData }) %>
 
-        <style>
-
-            .btn-product.disabled {
-                pointer-events: none;
-                background-color: #ccc;
-                cursor: not-allowed;
-                color: #fff;
-            }
-            
-            
-            .swal2-cancel.cancel-button-class {
-                color: #333;
-                background-color: transparent; 
-                border-style: solid;
-                border-width: 1px;
-                border-color: #c96;
-            }
-            .swal2-confirm.confirm-button-class { 
-                border-style: solid;
-                border-width: 1px;
-                border-color: #c96;
-            }
-            
-            
-                .dropdown-content {
-                    display: none;
-                    position: absolute;
-                    background-color: #f9f9f9;
-                    min-width: 160px;
-                    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-                    z-index: 1;
-                }
-                
-                .dropdown-content li {
-                    padding: 12px 16px;
-                    text-decoration: none;
-                    display: block;
-                }
-                
-                .dropdown-content li:hover {
-                    background-color: #f1f1f1;
-                    cursor: pointer;
-                }
-            </style>
-
-        <main class="main">
-        	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
-        		<div class="container">
-        			<h1 class="page-title">Shop</h1>
-        		</div><!-- End .container -->
-        	</div><!-- End .page-header -->
-            <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
-                <div class="container">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Products</li>
-                    </ol>
-                </div><!-- End .container -->
-            </nav><!-- End .breadcrumb-nav -->
-
-            <div class="page-content">
-                <div class="container">
-        			<div class="toolbox">   
-        				<div class="toolbox-left">
-                            <a href="#" class="sidebar-toggler"><i class="icon-bars"></i>Filters</a>
-        				</div><!-- End .toolbox-left -->
-
-                        <div class="toolbox-center">
-                            <div class="toolbox-info">
-                                Showing <span>12 of <%= products.length%></span> Products
-                            </div><!-- End .toolbox-info -->
-                        </div><!-- End .toolbox-center -->
-        				<div class="toolbox-right">
-        					<div class="toolbox-sort">
-        						<div class="dropdown">
-                                    <span id="sortby-trigger" class="dropdown-trigger">Sort by <i class="fa fa-caret-down"></i></span>
-
-                                    <ul id="sortby-dropdown" class="dropdown-content">
-                                        <li><a href="/products?sort=Latest">Latest</a></li>
-                                        <li><a href="/products?sort=PriceHighTolow">Price high to low</a></li>
-                                        <li><a href="/products?sort=PriceLowtoHigh">Price low to high</a></li>
-                                        <li><a href="/products?sort=aToz">a to z</a></li>
-                                        <li><a href="/products?sort=zToa">z to a</a></li>
-                                    </ul>
-                                </div>
-                                
-								
-        					</div><!-- End .toolbox-sort -->
-        				</div><!-- End .toolbox-right -->
-        			</div><!-- End .toolbox -->
-        <!-- product details -->
-                    <div class="products">
-                        <div id="productRow" class="row">
-                           
-                            
-                            <% if( products && products.length>0){%>
-                    
-
-                                <% products.forEach((element)=>{ %>
-                                    <% const currentDate = new Date(); %>
-                                <div  class="col-6 col-md-4 col-lg-4 col-xl-3">
-                                    <div class="product">
-                                        <figure class="product-media">
-                                            <% if(element.stock && element.offer && element.offer.status == true && new Date(element.offer.expiredAt) > currentDate) { %>
-                                                <span class="product-label label-primary">Sale</span>
-                                            <% } %>
-                                            <% if(element.stock == 0) { %>
-                                                <span class="product-label label-out">Out of Stock</span>
-                                            <% } %>
-                                            <a href="/productDetail?id=<%= element._id %>">
-                                                <img src="<%= element.image[0].url %>" alt="Product image" class="product-image">
-                                            </a>
-                                        
-                                            <div class="product-action-vertical">
-                                                <a href="#" onclick="addtoWishlist('<%= element._id %>')" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                            </div><!-- End .product-action -->
-                                            <div class="product-action">
-                                                <% if(element.stock == 0) { %>
-                                                    <a class="btn-product btn-cart disabled" style="color: #fff; padding-top: 1.3rem; background-color: #ccc;" aria-disabled="true">Out of Stock</a>
-                                                <% } else { %>
-                                                    <a onclick="addtoCart('<%= element._id %>')" class="btn-product btn-cart" style="color: #fff; padding-top: 1.3rem; background-color: #c96;">add to cart</a>
-                                                <% } %>
-                                            </div>
-                                        </figure><!-- End .product-media -->
-                                        
-
-                                        <div class="product-body">
-                                            <div class="product-cat">
-                                                <a href="#"><%= element.categories.name %></a>
-                                               
-                                            </div><!-- End .product-cat -->
-                                            <h3 class="product-title"> <a class="nameSearch" href="#"><%=element.name%></a></h3>
-                                            <!-- End .product-title -->
-                                            <div class="product-price justify-content-start " style="flex-direction: column; align-items: start;font-size: 1.4rem;">
-                                               
-                                                    
-                                          <% if( element.offer && new Date(element.offer.expiredAt) > currentDate ){%>
-                                            <span class="new-price" >Now Rs.<%=element.price - (element.offer.offerPrice * element.price)/100 %></span>
-                                            <span class="old-price">Was Rs.<%= element.price %></span>
-                                            <%}else{%>
-                                                Rs.<%= element.price %>
-                                                <%} %>
-                                        </div>
-                                          
-                                            <div class="ratings-container">
-                                                <div class="ratings">
-                                                    <div class="ratings-val" style="width: 0%;"></div><!-- End .ratings-val -->
-                                                </div><!-- End .ratings -->
-                                                <span class="ratings-text">( 0 Reviews )</span>
-                                            </div><!-- End .rating-container -->
-
-                                            <div class="product-nav product-nav-dots">
-                                                <a href="#" style="background: #cc9966;"><span class="sr-only">Color name</span></a>
-                                                <a href="#" class="active" style="background: #ebebeb;"><span class="sr-only">Color name</span></a>
-                                            </div><!-- End .product-nav -->
-                                        </div><!-- End .product-body -->
-                                    </div><!-- End .product -->
-                                </div><!-- End .col-sm-6 col-lg-4 col-xl-3 -->
-                                <% })%>
-                            <% }else{ %>
-                                <tr>
-                                     <td colspan="3">Products Not Found</td>
-                                </tr>
-                            <%}%>
-                        </div><!-- End .row -->
-
-                        <div class="pagination-area mt-30 mb-50">
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination justify-content-center">
-                                    <% if (currentPage > 1) { %>
-                                        <li class="page-item">
-                                            <a class="page-link page-link-prev" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
-                                                <span aria-hidden="true"><i class="material-icons md-chevron_left"></i></span>Prev
-                                            </a>
-                                        </li>
-                                    <% } else { %>
-                                        <li class="page-item disabled">
-                                            <a class="page-link page-link-prev" href="#" aria-label="Previous" tabindex="-1" aria-disabled="true">
-                                                <span aria-hidden="true"><i class="material-icons md-chevron_left"></i></span>Prev
-                                            </a>
-                                        </li>
-                                    <% } %>
-                        
-                                    <% if (currentPage > 3) { %>
-                                        <li class="page-item"><a class="page-link" href="?page=1">01</a></li>
-                                        <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
-                                    <% } %>
-                        
-                                    <% for (let j = Math.max(1, currentPage - 2); j <= Math.min(totalPages, currentPage + 2); j++) { %>
-                                        <li class="page-item <%= j === currentPage ? 'active' : '' %>">
-                                            <a class="page-link" href="?page=<%= j %>"><%= j < 10 ? '0' + j : j %></a>
-                                        </li>
-                                    <% } %>
-                        
-                                    <% if (currentPage < totalPages - 2) { %>
-                                        <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
-                                        <li class="page-item"><a class="page-link" href="?page=<%= totalPages %>"><%= totalPages < 10 ? '0' + totalPages : totalPages %></a></li>
-                                    <% } %>
-                        
-                                    <% if (currentPage < totalPages) { %>
-                                        <li class="page-item">
-                                            <a class="page-link page-link-next" href="?page=<%= currentPage + 1 %>" aria-label="Next">
-                                                Next<span aria-hidden="true"><i class="material-icons md-chevron_right"></i></span>
-                                            </a>
-                                        </li>
-                                    <% } else { %>
-                                        <li class="page-item disabled">
-                                            <a class="page-link page-link-next" href="#" aria-label="Next" tabindex="-1" aria-disabled="true">
-                                                Next<span aria-hidden="true"><i class="material-icons md-chevron_right"></i></span>
-                                            </a>
-                                        </li>
-                                    <% } %>
-                                </ul>
-                            </nav>
-                        </div>
-                        
-                        
-                    </div><!-- End .products -->
-                   
-                    <div class="sidebar-filter-overlay"></div><!-- End .sidebar-filter-overlay -->
-                    <aside class="sidebar-shop sidebar-filter">
-                        <div class="sidebar-filter-wrapper">
-                            <div class="widget widget-clean">
-                                <label><i class="icon-close"></i>Filters</label>
-                                <a href="#" class="sidebar-filter-clear">Clean All</a>
-                            </div><!-- End .widget -->
-                            <form id="categoryForm" action="/products" method="GET">
-                                <input type="hidden" name="category" id="categoryInput">
-                            </form>
-                            
-                            <div class="widget widget-collapsible">
-                                <h3 class="widget-title">
-                                    <a data-toggle="collapse" href="#widget-1" role="button" aria-expanded="true" aria-controls="widget-1">
-                                        Category
-                                    </a>
-                                </h3><!-- End .widget-title -->
-                            
-                                <div class="collapse show" id="widget-1">
-                                    <div class="widget-body">
-                                        
-                                        <div id="category" class="filter-items filter-items-count">
-                                            <% categoryData.forEach(category=>{%>
-                                               
-                                            <div class="filter-item">
-                                                <div class="custom-control custom-checkbox">
-                                                    <input type="checkbox" value="<%= category.name %>" class="custom-control-input category-checkbox" id="cat<%= category._id %>">
-                                                    <label class="custom-control-label" for="cat<%= category._id %>"><%= category.name %></label>
-                                                </div><!-- End .custom-checkbox --> 
-                                                <span class="item-count">3</span>
-                                            </div><!-- End .filter-item -->
-                                            <%}) %>
-                                        </div><!-- End .filter-items -->
-                                        
-                                    </div><!-- End .widget-body -->
-                                </div><!-- End .collapse -->
-                            </div><!-- End .widget -->
-
-                            <div class="widget widget-collapsible">
-                                <h3 class="widget-title">
-                                    <a data-toggle="collapse" href="#widget-5" role="button" aria-expanded="true" aria-controls="widget-5">
-                                        Price
-                                    </a>
-                                </h3><!-- End .widget-title -->
-
-                                <div class="collapse show" id="widget-5">
-                                    <div class="widget-body">
-                                        <div class="filter-price">
-                                            <div class="filter-price-text">
-                                                "Price Range:"
-                                                <span id="filter-price-range"></span>
-                                            </div><!-- End .filter-price-text -->
-
-                                            <div id="price-slider"></div><!-- End #price-slider -->
-                                        </div><!-- End .filter-price -->
-                                    </div><!-- End .widget-body -->
-                                </div><!-- End .collapse -->
-                            </div><!-- End .widget -->
-                        </div><!-- End .sidebar-filter-wrapper -->
-                    </aside><!-- End .sidebar-filter -->
-             
-                </div><!-- End .container -->
-            </div><!-- End .page-content -->
-        </main><!-- End .main -->
+<style>
+    .btn-product.disabled {
+        pointer-events: none;
+        background-color: #ccc;
+        cursor: not-allowed;
+        color: #fff;
+    }
     
+    .swal2-cancel.cancel-button-class {
+        color: #333;
+        background-color: transparent; 
+        border-style: solid;
+        border-width: 1px;
+        border-color: #c96;
+    }
+    
+    .swal2-confirm.confirm-button-class { 
+        border-style: solid;
+        border-width: 1px;
+        border-color: #c96;
+    }
+    
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+        z-index: 1;
+    }
+    
+    .dropdown-content li {
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+    
+    .dropdown-content li:hover {
+        background-color: #f1f1f1;
+        cursor: pointer;
+    }
+</style>
+
+<main class="main">
+    <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        <div class="container">
+            <h1 class="page-title">Shop</h1>
+        </div><!-- End .container -->
+    </div><!-- End .page-header -->
+    
+    <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Products</li>
+            </ol>
+        </div><!-- End .container -->
+    </nav><!-- End .breadcrumb-nav -->
+
+    <div class="page-content">
+        <div class="container">
+            <div class="toolbox">   
+                <div class="toolbox-left">
+                    <a href="#" class="sidebar-toggler"><i class="icon-bars"></i>Filters</a>
+                </div><!-- End .toolbox-left -->
+
+                <div class="toolbox-center">
+                    <div class="toolbox-info">
+                        Showing <span>12 of <%= products.length%></span> Products
+                    </div><!-- End .toolbox-info -->
+                </div><!-- End .toolbox-center -->
+                
+                <div class="toolbox-right">
+                    <div class="toolbox-sort">
+                        <div class="dropdown">
+                            <span id="sortby-trigger" class="dropdown-trigger">Sort by <i class="fa fa-caret-down"></i></span>
+                            <ul id="sortby-dropdown" class="dropdown-content">
+                                <li><a href="/products?sort=Latest">Latest</a></li>
+                                <li><a href="/products?sort=PriceHighTolow">Price high to low</a></li>
+                                <li><a href="/products?sort=PriceLowtoHigh">Price low to high</a></li>
+                                <li><a href="/products?sort=aToz">a to z</a></li>
+                                <li><a href="/products?sort=zToa">z to a</a></li>
+                            </ul>
+                        </div>
+                    </div><!-- End .toolbox-sort -->
+                </div><!-- End .toolbox-right -->
+            </div><!-- End .toolbox -->
+            
+            <!-- product details -->
+            <div class="products">
+                <div id="productRow" class="row">
+                    <% if(products && products.length > 0) { %>
+                        <% products.forEach((element) => { %>
+                            <% const currentDate = new Date(); %>
+                            <div class="col-6 col-md-4 col-lg-4 col-xl-3">
+                                <div class="product">
+                                    <figure class="product-media">
+                                        <% if(element.stock && element.offer && element.offer.status == true && new Date(element.offer.expiredAt) > currentDate) { %>
+                                            <span class="product-label label-primary">Sale</span>
+                                        <% } %>
+                                        <% if(element.stock == 0) { %>
+                                            <span class="product-label label-out">Out of Stock</span>
+                                        <% } %>
+                                        <a href="/productDetail?id=<%= element._id %>">
+                                            <img src="<%= element.image[0].url %>" alt="Product image" class="product-image">
+                                        </a>
+                                    
+                                        <div class="product-action-vertical">
+                                            <a href="#" onclick="addtoWishlist('<%= element._id %>')" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
+                                        </div><!-- End .product-action -->
+                                        
+                                        <div class="product-action">
+                                            <% if(element.stock == 0) { %>
+                                                <a class="btn-product btn-cart disabled" style="color: #fff; padding-top: 1.3rem; background-color: #ccc;" aria-disabled="true">Out of Stock</a>
+                                            <% } else { %>
+                                                <a onclick="addtoCart('<%= element._id %>')" class="btn-product btn-cart" style="color: #fff; padding-top: 1.3rem; background-color: #c96;">add to cart</a>
+                                            <% } %>
+                                        </div>
+                                    </figure><!-- End .product-media -->
+                                    
+                                    <div class="product-body">
+                                        <div class="product-cat">
+                                            <a href="#"><%= element.categories.name %></a>
+                                        </div><!-- End .product-cat -->
+                                        
+                                        <h3 class="product-title">
+                                            <a class="nameSearch" href="#"><%= element.name %></a>
+                                        </h3><!-- End .product-title -->
+                                        
+                                        <div class="product-price justify-content-start" style="flex-direction: column; align-items: start; font-size: 1.4rem;">
+                                            <% if(element.offer && new Date(element.offer.expiredAt) > currentDate) { %>
+                                                <span class="new-price">Now Rs.<%= element.price - (element.offer.offerPrice * element.price)/100 %></span>
+                                                <span class="old-price">Was Rs.<%= element.price %></span>
+                                            <% } else { %>
+                                                Rs.<%= element.price %>
+                                            <% } %>
+                                        </div>
+                                      
+                                        <div class="ratings-container">
+                                            <div class="ratings">
+                                                <div class="ratings-val" style="width: 0%;"></div><!-- End .ratings-val -->
+                                            </div><!-- End .ratings -->
+                                            <span class="ratings-text">( 0 Reviews )</span>
+                                        </div><!-- End .rating-container -->
+
+                                        <div class="product-nav product-nav-dots">
+                                            <a href="#" style="background: #cc9966;"><span class="sr-only">Color name</span></a>
+                                            <a href="#" class="active" style="background: #ebebeb;"><span class="sr-only">Color name</span></a>
+                                        </div><!-- End .product-nav -->
+                                    </div><!-- End .product-body -->
+                                </div><!-- End .product -->
+                            </div><!-- End .col-sm-6 col-lg-4 col-xl-3 -->
+                        <% }) %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="3">Products Not Found</td>
+                        </tr>
+                    <% } %>
+                </div><!-- End .row -->
+
+                <div class="pagination-area mt-30 mb-50">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            <% if (currentPage > 1) { %>
+                                <li class="page-item">
+                                    <a class="page-link page-link-prev" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
+                                        <span aria-hidden="true"><i class="material-icons md-chevron_left"></i></span>Prev
+                                    </a>
+                                </li>
+                            <% } else { %>
+                                <li class="page-item disabled">
+                                    <a class="page-link page-link-prev" href="#" aria-label="Previous" tabindex="-1" aria-disabled="true">
+                                        <span aria-hidden="true"><i class="material-icons md-chevron_left"></i></span>Prev
+                                    </a>
+                                </li>
+                            <% } %>
+                
+                            <% if (currentPage > 3) { %>
+                                <li class="page-item"><a class="page-link" href="?page=1">01</a></li>
+                                <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                            <% } %>
+                
+                            <% for (let j = Math.max(1, currentPage - 2); j <= Math.min(totalPages, currentPage + 2); j++) { %>
+                                <li class="page-item <%= j === currentPage ? 'active' : '' %>">
+                                    <a class="page-link" href="?page=<%= j %>"><%= j < 10 ? '0' + j : j %></a>
+                                </li>
+                            <% } %>
+                
+                            <% if (currentPage < totalPages - 2) { %>
+                                <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
+                                <li class="page-item"><a class="page-link" href="?page=<%= totalPages %>"><%= totalPages < 10 ? '0' + totalPages : totalPages %></a></li>
+                            <% } %>
+                
+                            <% if (currentPage < totalPages) { %>
+                                <li class="page-item">
+                                    <a class="page-link page-link-next" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+                                        Next<span aria-hidden="true"><i class="material-icons md-chevron_right"></i></span>
+                                    </a>
+                                </li>
+                            <% } else { %>
+                                <li class="page-item disabled">
+                                    <a class="page-link page-link-next" href="#" aria-label="Next" tabindex="-1" aria-disabled="true">
+                                        Next<span aria-hidden="true"><i class="material-icons md-chevron_right"></i></span>
+                                    </a>
+                                </li>
+                            <% } %>
+                        </ul>
+                    </nav>
+                </div>
+            </div><!-- End .products -->
+           
+            <div class="sidebar-filter-overlay"></div><!-- End .sidebar-filter-overlay -->
+            <aside class="sidebar-shop sidebar-filter">
+                <div class="sidebar-filter-wrapper">
+                    <div class="widget widget-clean">
+                        <label><i class="icon-close"></i>Filters</label>
+                        <a href="#" class="sidebar-filter-clear">Clean All</a>
+                    </div><!-- End .widget -->
+                    
+                    <form id="categoryForm" action="/products" method="GET">
+                        <input type="hidden" name="category" id="categoryInput">
+                    </form>
+                    
+                    <div class="widget widget-collapsible">
+                        <h3 class="widget-title">
+                            <a data-toggle="collapse" href="#widget-1" role="button" aria-expanded="true" aria-controls="widget-1">
+                                Category
+                            </a>
+                        </h3><!-- End .widget-title -->
+                    
+                        <div class="collapse show" id="widget-1">
+                            <div class="widget-body">
+                                <div id="category" class="filter-items filter-items-count">
+                                    <% categoryData.forEach(category => { %>
+                                        <div class="filter-item">
+                                            <div class="custom-control custom-checkbox">
+                                                <input type="checkbox" value="<%= category.name %>" class="custom-control-input category-checkbox" id="cat<%= category._id %>">
+                                                <label class="custom-control-label" for="cat<%= category._id %>"><%= category.name %></label>
+                                            </div><!-- End .custom-checkbox --> 
+                                            <span class="item-count">3</span>
+                                        </div><!-- End .filter-item -->
+                                    <% }) %>
+                                </div><!-- End .filter-items -->
+                            </div><!-- End .widget-body -->
+                        </div><!-- End .collapse -->
+                    </div><!-- End .widget -->
+
+                    <div class="widget widget-collapsible">
+                        <h3 class="widget-title">
+                            <a data-toggle="collapse" href="#widget-5" role="button" aria-expanded="true" aria-controls="widget-5">
+                                Price
+                            </a>
+                        </h3><!-- End .widget-title -->
+
+                        <div class="collapse show" id="widget-5">
+                            <div class="widget-body">
+                                <div class="filter-price">
+                                    <div class="filter-price-text">
+                                        "Price Range:"
+                                        <span id="filter-price-range"></span>
+                                    </div><!-- End .filter-price-text -->
+
+                                    <div id="price-slider"></div><!-- End #price-slider -->
+                                </div><!-- End .filter-price -->
+                            </div><!-- End .widget-body -->
+                        </div><!-- End .collapse -->
+                    </div><!-- End .widget -->
+                </div><!-- End .sidebar-filter-wrapper -->
+            </aside><!-- End .sidebar-filter -->
+        </div><!-- End .container -->
+    </div><!-- End .page-content -->
+</main><!-- End .main -->
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const disabledLinks = document.querySelectorAll('.btn-product.disabled');
@@ -299,441 +288,353 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-<script>
-    $(document).ready(function() {
-        $('#wishlist-link').on('click', function(event) {
-            event.preventDefault();
-
-            $.ajax({
-                url: '/wishlist',
-                method: 'GET',
-                success: function(data) {
-                    window.location.href = '/wishlist';
-                },
-                error: function(xhr) {
-                    if (xhr.status === 401 && xhr.responseJSON && xhr.responseJSON.login) {
-                        Swal.fire({
-                            icon: "warning",
-                            title: "Please Login",
-                            confirmButtonColor: "#c96",
-                            confirmButtonText: "Login",
-                            showCancelButton: true,
-                            cancelButtonColor: "#d33",
-                            text: xhr.responseJSON.message,
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.href = "/login";
-                            }
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: "error",
-                            title: "An Error Occurred",
-                            text: "Please try again later.",
-                            confirmButtonColor: "#c96",
-                        });
-                    }
-                }
-            });
-        });
-    });
-</script>
 
 <script>
-    $(document).ready(function() {
-        $('#cart-link').on('click', function(event) {
-            event.preventDefault();
-
-            $.ajax({
-                url: '/cart',
-                method: 'GET',
-                success: function(data) {
-                    window.location.href = '/cart';
-                },
-                error: function(xhr) {
-                    if (xhr.status === 401 && xhr.responseJSON && xhr.responseJSON.login) {
-                        Swal.fire({
-                            icon: "warning",
-                            title: "Please Login",
-                            confirmButtonColor: "#c96",
-                            confirmButtonText: "Login",
-                            showCancelButton: true,
-                            cancelButtonColor: "#d33",
-                            text: xhr.responseJSON.message,
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                window.location.href = "/login";
-                            }
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: "error",
-                            title: "An Error Occurred",
-                            text: "Please try again later.",
-                            confirmButtonColor: "#c96",
-                        });
-                    }
-                }
-            });
-        });
-    });
-</script>
-
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-<script>
-    async function addtoCart(productId) {
-      const productQuantity = 1;
-      try {
-        const response = await axios.post('/addCart', { productQuantity, productId });
-        console.log(response.data);
-  
-        if (response.data.login) {
-          Swal.fire({
-            icon: "warning",
-            title: "Please Login",
-            confirmButtonColor: "#c96",
-            confirmButtonText: "Login",
-            showCancelButton: true,
-            cancelButtonColor: "#d33",
-            text: response.data.message,
-          }).then((result) => {
-            if (result.isConfirmed) {
-              window.location.href = "/login";
-            }
-          });
-        } else if (response.data.success === true) {
-          Swal.fire({
-            position: "center",
-            title: "Success!",
-            text: "Item added to Cart",
-            icon: "success",
-            showConfirmButton: true,
-            confirmButtonColor: "#c96",
-            confirmButtonText: "View cart",
-            showCancelButton: true,
-            cancelButtonColor: "#fff",
-            cancelButtonText: "Continue Shopping",
-            customClass: {
-              cancelButton: 'cancel-button-class',
-              confirmButton: 'confirm-button-class'
-            }
-          }).then((result) => {
-            if (result.isConfirmed) {
-              window.location.href = "/cart";
-            }
-          });
-        } else if (response.data.success === false) {
-          Swal.fire({
-            position: "center",
-            title: "Failed!",
-            text: "This item is already in the cart",
-            icon: "info",
-            showConfirmButton: true,
-            confirmButtonColor: "#c96",
-            confirmButtonText: "View cart",
-            showCancelButton: true,
-            cancelButtonColor: "#fff",
-            cancelButtonText: "Continue Shopping",
-            customClass: {
-              cancelButton: 'cancel-button-class',
-              confirmButton: 'confirm-button-class'
-            }
-          }).then((result) => {
-            if (result.isConfirmed) {
-              window.location.href = "/cart";
-            }
-          });
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        if (error.response && error.response.status === 401 && error.response.data.login) {
-          Swal.fire({
-            icon: "warning",
-            title: "Please Login",
-            confirmButtonColor: "#c96",
-            confirmButtonText: "Login",
-            showCancelButton: true,
-            cancelButtonColor: "#d33",
-            text: error.response.data.message,
-          }).then((result) => {
-            if (result.isConfirmed) {
-              window.location.href = "/login";
-            }
-          });
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "An Error Occurred",
-            text: "Please try again later.",
-            confirmButtonColor: "#c96",
-          });
-        }
-      }
-    }
-  </script>
-  
-
-<script>
-  async function addtoWishlist(productId) {
-    try {
-      const response = await axios.post('/addWishlist', { productId });
-      console.log(response.data);
-
-      if (response.data.login) {
-        Swal.fire({
-          icon: "warning",
-          title: "Please Login",
-          confirmButtonColor: "#3085d6",
-          confirmButtonText: "Login",
-          showCancelButton: true,
-          cancelButtonColor: "#d33",
-          text: response.data.message,
-        }).then((result) => {
-          if (result.isConfirmed) {
-            window.location.href = "/login";
-          }
-        });
-      } else if (response.data.success === true) {
-        Swal.fire({
-          position: "center",
-          title: "Success!",
-          text: "Item added to wishlist",
-          icon: "success",
-          showConfirmButton: false,
-          timer: 1500
-        });
-      } else if (response.data.success === false) {
-        Swal.fire({
-          position: "center",
-          title: "Failed!",
-          text: "This item is already in the wishlist",
-          icon: "info",
-          showConfirmButton: true,
-          confirmButtonColor: "#3085d6",
-          confirmButtonText: "OK"
-        });
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      if (error.response && error.response.status === 401 && error.response.data.login) {
-        Swal.fire({
-          icon: "warning",
-          title: "Please Login",
-          confirmButtonColor: "#3085d6",
-          confirmButtonText: "Login",
-          showCancelButton: true,
-          cancelButtonColor: "#d33",
-          text: error.response.data.message,
-        }).then((result) => {
-          if (result.isConfirmed) {
-            window.location.href = "/login";
-          }
-        });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "An Error Occurred",
-          text: "Please try again later.",
-          confirmButtonColor: "#3085d6",
-        });
-      }
-    }
-  }
-</script>
-
-
-<script>
-    const checkboxes = document.querySelectorAll('.category-checkbox');
-    const categoryInput = document.getElementById('categoryInput');
-    function handleCheckboxChange(event) {
+$(document).ready(function() {
+    $('#wishlist-link').on('click', function(event) {
         event.preventDefault();
 
-        let selectedCategories = [];
-        checkboxes.forEach(checkbox => {
-            if (checkbox.checked) {
-                selectedCategories.push(checkbox.value);
+        $.ajax({
+            url: '/wishlist',
+            method: 'GET',
+            success: function(data) {
+                window.location.href = '/wishlist';
+            },
+            error: function(xhr) {
+                if (xhr.status === 401 && xhr.responseJSON && xhr.responseJSON.login) {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Please Login",
+                        confirmButtonColor: "#c96",
+                        confirmButtonText: "Login",
+                        showCancelButton: true,
+                        cancelButtonColor: "#d33",
+                        text: xhr.responseJSON.message,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = "/login";
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "An Error Occurred",
+                        text: "Please try again later.",
+                        confirmButtonColor: "#c96",
+                    });
+                }
             }
         });
-
-        categoryInput.value = selectedCategories.join(',');
-
-        const formData = new FormData(document.getElementById('categoryForm'));
-        console.log('fffffffffffff',formData);
-        const xhr = new XMLHttpRequest();
-        console.log('ssssd',xhr);
-       
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-
-                    const responseData = JSON.parse(xhr.responseText);
-                   const filteredData = responseData.data;
-                   const productRow = document.getElementById('productRow');
-                  let filterHTML ="";
-                  console.log('fffffffffffffffffff',filteredData);
-                   filteredData.forEach(element=>{
-                       filterHTML += `<div class="col-6 col-md-4 col-lg-4 col-xl-3">
-                                        <div class="product">
-                                            <figure class="product-media">
-                                                ${element.offer && element.offer.status == true ? `<span class="product-label label-primary">Sale</span>` : ''}
-                                                <a href="/productDetail?id=${element._id}">
-                                                    <img src="${element.image[0].url}" alt="Product image" class="product-image">
-                                                </a>
-                                                <div class="product-action-vertical">
-                                                    <a href="#" onclick="addtoWishlist('${element._id}')" class="btn-product-icon btn-wishlist btn-expandable">
-                                                        <span>add to wishlist</span>
-                                                    </a>
-                                                </div><!-- End .product-action -->
-                                                <div class="product-action">
-                                                    <a onclick="addtoCart('${element._id}')" class="btn-product btn-cart" style="color: #fff;padding-top: 1.3rem;background-color: #c96;">
-                                                        add to cart
-                                                    </a>
-                                                </div><!-- End .product-action -->
-                                            </figure><!-- End .product-media -->
-
-                                            <div class="product-body">
-                                                <div class="product-cat">
-                                                    <a href="#">${element.categories.name}</a>
-                                                </div><!-- End .product-cat -->
-                                                <h3 class="product-title">
-                                                    <a class="nameSearch" href="#">${element.name}</a>
-                                                </h3><!-- End .product-title -->
-
-                                                <div class="product-price justify-content-start" style="flex-direction: column; align-items: start;font-size: 1.4rem;">
-                                                    ${element.offer && element.offer.status == true ? `
-                                                        <span class="new-price">Now Rs.${element.price - (element.offer.offerPrice * element.price) / 100}</span>
-                                                        <span class="old-price">Was Rs.${element.price}</span>
-                                                    ` : `
-                                                        Rs.${element.price}
-                                                    `}
-                                                </div><!-- End .product-price -->
-
-                                                <div class="ratings-container">
-                                                    <div class="ratings">
-                                                        <div class="ratings-val" style="width: 0%;"></div><!-- End .ratings-val -->
-                                                    </div><!-- End .ratings -->
-                                                    <span class="ratings-text">( 0 Reviews )</span>
-                                                </div><!-- End .rating-container -->
-
-                                                <div class="product-nav product-nav-dots">
-                                                    <a href="#" style="background: #cc9966;">
-                                                        <span class="sr-only">Color name</span>
-                                                    </a>
-                                                    <a href="#" class="active" style="background: #ebebeb;">
-                                                        <span class="sr-only">Color name</span>
-                                                    </a>
-                                                </div><!-- End .product-nav -->
-                                            </div><!-- End .product-body -->
-                                        </div><!-- End .product -->
-                                    </div><!-- End .col-6 col-md-4 col-lg-4 col-xl-3 -->`
-                                 })
-
-                   productRow.innerHTML = filterHTML;
-                   
-                   console.log(filteredData);
-                    document.querySelector('#content').innerHTML = xhr.responseText;
-                } else {
-                    // Handle errors
-                }
-            }
-        };
-
-        xhr.open('GET', '/filterProduct?' + new URLSearchParams(formData).toString());
-        xhr.send();
-
-    }
-
-    // Add event listener to each checkbox
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', handleCheckboxChange);
-    });
-</script>
-
-
-  <!-- <script>
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const selectElement = document.querySelector('#category');
-
-        selectElement.addEventListener('change', function() {
-            const selectedValue = selectElement.value;
-
-            console.log('ct',selectedValue);
-           fetch(`/products?categoryName=${selectedValue}`)
-        });
-   });
-  </script> -->
-
-<!-- <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        
-        function handleFilterChange() {
-            const selectedCategories = Array.from(document.querySelectorAll('.custom-control-input:checked')).map(checkbox => checkbox.value);
-           
-
-            console.log('sc',selectedCategories);
-            fetch(`/products?categories=${selectedCategories}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    const products = data.data;
-                    updateUIWithFilteredProducts(products); 
-                } else {
-                    console.error('Error:', data); 
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
-
-        document.querySelectorAll('.custom-control-input').forEach(checkbox => {
-            checkbox.addEventListener('change', handleFilterChange);
-        });
-
-        const clearFiltersLink = document.querySelector('.sidebar-filter-clear');
-        clearFiltersLink.addEventListener('click', function(event) {
-            event.preventDefault();
-
-        document.querySelectorAll('.custom-control-input:checked').forEach(checkbox => {
-            checkbox.checked = false;
-        });
-
-            handleFilterChange();
-        });
-    });
-</script> -->
-<!-- <script>
-const searchInput = document.getElementById('searchInput');
-const suggestionsContainer = document.getElementById('suggestionsContainer');
-
-searchInput.addEventListener('input', async (event) => {
-    const query = event.target.value.trim();
-    if (query.length === 0) {
-        suggestionsContainer.innerHTML = ''; // Clear suggestions if input is empty
-        return;
-    }
-    const products = await fetch(`/search?query=${query}`); // Assuming server endpoint for searching products
-    const productsData = await products.json();
-    suggestionsContainer.innerHTML = ''; // Clear previous suggestions
-    productsData.forEach(product => {
-        const suggestion = document.createElement('div');
-        suggestion.textContent = product.name;
-        suggestionsContainer.appendChild(suggestion);
     });
 });
-</script> -->
+</script>
+
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+$(document).ready(function() {
+    $('#cart-link').on('click', function(event) {
+        event.preventDefault();
+
+        $.ajax({
+            url: '/cart',
+            method: 'GET',
+            success: function(data) {
+                window.location.href = '/cart';
+            },
+            error: function(xhr) {
+                if (xhr.status === 401 && xhr.responseJSON && xhr.responseJSON.login) {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Please Login",
+                        confirmButtonColor: "#c96",
+                        confirmButtonText: "Login",
+                        showCancelButton: true,
+                        cancelButtonColor: "#d33",
+                        text: xhr.responseJSON.message,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = "/login";
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "An Error Occurred",
+                        text: "Please try again later.",
+                        confirmButtonColor: "#c96",
+                    });
+                }
+            }
+        });
+    });
+});
+</script>
+
+<script>
+async function addtoCart(productId) {
+    const productQuantity = 1;
+    try {
+        const response = await axios.post('/addCart', { productQuantity, productId });
+        console.log(response.data);
+
+        if (response.data.login) {
+            Swal.fire({
+                icon: "warning",
+                title: "Please Login",
+                confirmButtonColor: "#c96",
+                confirmButtonText: "Login",
+                showCancelButton: true,
+                cancelButtonColor: "#d33",
+                text: response.data.message,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "/login";
+                }
+            });
+        } else if (response.data.success === true) {
+            Swal.fire({
+                position: "center",
+                title: "Success!",
+                text: "Item added to Cart",
+                icon: "success",
+                showConfirmButton: true,
+                confirmButtonColor: "#c96",
+                confirmButtonText: "View cart",
+                showCancelButton: true,
+                cancelButtonColor: "#fff",
+                cancelButtonText: "Continue Shopping",
+                customClass: {
+                    cancelButton: 'cancel-button-class',
+                    confirmButton: 'confirm-button-class'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "/cart";
+                }
+            });
+        } else if (response.data.success === false) {
+            Swal.fire({
+                position: "center",
+                title: "Failed!",
+                text: "This item is already in the cart",
+                icon: "info",
+                showConfirmButton: true,
+                confirmButtonColor: "#c96",
+                confirmButtonText: "View cart",
+                showCancelButton: true,
+                cancelButtonColor: "#fff",
+                cancelButtonText: "Continue Shopping",
+                customClass: {
+                    cancelButton: 'cancel-button-class',
+                    confirmButton: 'confirm-button-class'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "/cart";
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        if (error.response && error.response.status === 401 && error.response.data.login) {
+            Swal.fire({
+                icon: "warning",
+                title: "Please Login",
+                confirmButtonColor: "#c96",
+                confirmButtonText: "Login",
+                showCancelButton: true,
+                cancelButtonColor: "#d33",
+                text: error.response.data.message,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "/login";
+                }
+            });
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: "An Error Occurred",
+                text: "Please try again later.",
+                confirmButtonColor: "#c96",
+            });
+        }
+    }
+}
+</script>
+
+<script>
+async function addtoWishlist(productId) {
+    try {
+        const response = await axios.post('/addWishlist', { productId });
+        console.log(response.data);
+
+        if (response.data.login) {
+            Swal.fire({
+                icon: "warning",
+                title: "Please Login",
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "Login",
+                showCancelButton: true,
+                cancelButtonColor: "#d33",
+                text: response.data.message,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "/login";
+                }
+            });
+        } else if (response.data.success === true) {
+            Swal.fire({
+                position: "center",
+                title: "Success!",
+                text: "Item added to wishlist",
+                icon: "success",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        } else if (response.data.success === false) {
+            Swal.fire({
+                position: "center",
+                title: "Failed!",
+                text: "This item is already in the wishlist",
+                icon: "info",
+                showConfirmButton: true,
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "OK"
+            });
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        if (error.response && error.response.status === 401 && error.response.data.login) {
+            Swal.fire({
+                icon: "warning",
+                title: "Please Login",
+                confirmButtonColor: "#3085d6",
+                confirmButtonText: "Login",
+                showCancelButton: true,
+                cancelButtonColor: "#d33",
+                text: error.response.data.message,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "/login";
+                }
+            });
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: "An Error Occurred",
+                text: "Please try again later.",
+                confirmButtonColor: "#3085d6",
+            });
+        }
+    }
+}
+</script>
+
+<script>
+const checkboxes = document.querySelectorAll('.category-checkbox');
+const categoryInput = document.getElementById('categoryInput');
+
+function handleCheckboxChange(event) {
+    event.preventDefault();
+
+    let selectedCategories = [];
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            selectedCategories.push(checkbox.value);
+        }
+    });
+
+    categoryInput.value = selectedCategories.join(',');
+
+    const formData = new FormData(document.getElementById('categoryForm'));
+    const xhr = new XMLHttpRequest();
+    console.log('ssssd', xhr);
+   
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                const responseData = JSON.parse(xhr.responseText);
+                const filteredData = responseData.data;
+                const productRow = document.getElementById('productRow');
+                let filterHTML = "";
+                console.log('fffffffffffffffffff', filteredData);
+                
+                filteredData.forEach(element => {
+                    filterHTML += `<div class="col-6 col-md-4 col-lg-4 col-xl-3">
+                        <div class="product">
+                            <figure class="product-media">
+                                ${element.offer && element.offer.status == true ? `<span class="product-label label-primary">Sale</span>` : ''}
+                                <a href="/productDetail?id=${element._id}">
+                                    <img src="${element.image[0].url}" alt="Product image" class="product-image">
+                                </a>
+                                <div class="product-action-vertical">
+                                    <a href="#" onclick="addtoWishlist('${element._id}')" class="btn-product-icon btn-wishlist btn-expandable">
+                                        <span>add to wishlist</span>
+                                    </a>
+                                </div><!-- End .product-action -->
+                                <div class="product-action">
+                                    <a onclick="addtoCart('${element._id}')" class="btn-product btn-cart" style="color: #fff;padding-top: 1.3rem;background-color: #c96;">
+                                        add to cart
+                                    </a>
+                                </div><!-- End .product-action -->
+                            </figure><!-- End .product-media -->
+
+                            <div class="product-body">
+                                <div class="product-cat">
+                                    <a href="#">${element.categories.name}</a>
+                                </div><!-- End .product-cat -->
+                                <h3 class="product-title">
+                                    <a class="nameSearch" href="#">${element.name}</a>
+                                </h3><!-- End .product-title -->
+
+                                <div class="product-price justify-content-start" style="flex-direction: column; align-items: start;font-size: 1.4rem;">
+                                    ${element.offer && element.offer.status == true ? `
+                                        <span class="new-price">Now Rs.${element.price - (element.offer.offerPrice * element.price) / 100}</span>
+                                        <span class="old-price">Was Rs.${element.price}</span>
+                                    ` : `
+                                        Rs.${element.price}
+                                    `}
+                                </div><!-- End .product-price -->
+
+                                <div class="ratings-container">
+                                    <div class="ratings">
+                                        <div class="ratings-val" style="width: 0%;"></div><!-- End .ratings-val -->
+                                    </div><!-- End .ratings -->
+                                    <span class="ratings-text">( 0 Reviews )</span>
+                                </div><!-- End .rating-container -->
+
+                                <div class="product-nav product-nav-dots">
+                                    <a href="#" style="background: #cc9966;">
+                                        <span class="sr-only">Color name</span>
+                                    </a>
+                                    <a href="#" class="active" style="background: #ebebeb;">
+                                        <span class="sr-only">Color name</span>
+                                    </a>
+                                </div><!-- End .product-nav -->
+                            </div><!-- End .product-body -->
+                        </div><!-- End .product -->
+                    </div><!-- End .col-6 col-md-4 col-lg-4 col-xl-3 -->`
+                });
+
+                productRow.innerHTML = filterHTML;
+                console.log(filteredData);
+                document.querySelector('#content').innerHTML = xhr.responseText;
+            } else {
+                // Handle errors
+            }
+        }
+    };
+
+    xhr.open('GET', '/filterProduct?' + new URLSearchParams(formData).toString());
+    xhr.send();
+}
+
+checkboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', handleCheckboxChange);
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
     const dropdownTrigger = document.getElementById("sortby-trigger");
     const dropdownContent = document.getElementById("sortby-dropdown");
 
@@ -741,13 +642,12 @@ searchInput.addEventListener('input', async (event) => {
         dropdownContent.style.display = dropdownContent.style.display === "block" ? "none" : "block";
     });
 
-    // Close the dropdown when clicking outside of it
     document.addEventListener("click", function(event) {
         if (!dropdownTrigger.contains(event.target)) {
             dropdownContent.style.display = "none";
         }
     });
 });
-
 </script>
+
 <%- include('../layouts/users/footer', { path: '/products' }) %>
