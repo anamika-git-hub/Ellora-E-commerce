@@ -60,7 +60,6 @@ userRouter.get('/cart',isLogin,cartController.loadCart);
 userRouter.post('/addcart',isLogin,cartController.addtoCart);
 userRouter.put('/cartUpdate',isLogin,cartController.updateQuantity);
 userRouter.delete('/deleteCartItem',isLogin,cartController.deleteCartItem);
-userRouter.get('/availableCoupons',isLogin,couponController.availableCoupons);
 userRouter.post('/applyCoupon',isLogin,couponController.applyCoupon);
 
 userRouter.get('/CheckOut',isLogin,cartController.loadCheckOut);

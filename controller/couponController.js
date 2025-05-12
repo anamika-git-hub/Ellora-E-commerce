@@ -115,25 +115,6 @@ const applyCoupon = async(req,res)=>{
     }
 }
 
-const availableCoupons= async(req,res)=>{
-    try {
-       const {subTotal}= req.query;
-       const total = Number(subTotal)
-
-        const couponData = await Coupon.find({
-            minimumLimit: { $lte: total },
-            status: 'active',
-            is_listed: true,
-            'usedUsers.userId': { $ne: req.session.user_id }
-         });
-        res.render('availableCoupons',{couponData})
-        
-    } catch (error) {
-        console.log(error.message);
-    }
-}
-
-
 module.exports = {
     loadCouponList,
     loadAddCoupon,
@@ -142,5 +123,4 @@ module.exports = {
     loadEditCoupon,
     editCoupon,
     applyCoupon,
-    availableCoupons
 }

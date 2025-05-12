@@ -1,84 +1,110 @@
 <%- include('../layouts/users/header', { title: 'Ellora Store', path: '/cart', userId: userId, wishlistData: wishlistData, cartData: cartData }) %>
+
 <style>
-    .row {
-        display: flex;
-        flex-wrap: wrap;
-        margin-right: -15px;
-        margin-left: -15px;
-    }
+/* Coupon modal styles */
+#coupon-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 20px;
+}
 
-    .col-lg-9 {
-        position: relative;
-        width: 100%;
-        min-height: 1px;
-        padding-right: 15px;
-        padding-left: 15px;
-    }
+.coupon_card {
+    width: 100%; 
+    max-width: 300px; 
+    padding: 20px;
+    border-radius: 20px;
+    background: rgb(253, 196, 89);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden; 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
 
-    ._3DAmyP {
-        display: none;
-    }
+.coupon_card:hover {
+    transform: translateY(-5px);
+}
 
-    ._1XFPmK {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        border: 2px solid #2874f0;
-        position: relative;
-        vertical-align: middle;
-        margin-right: 10px;
-    }
+.content {
+    z-index: 10;
+    width: 100%;
+    text-align: center;
+}
 
-    ._3DAmyP:checked + ._1XFPmK::after {
-        content: "";
-        display: block;
-        width: 12px;
-        height: 12px;
-        background-color: #2874f0;
-        border-radius: 50%;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
+.coupon_card::before {
+    content: '';
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background-color: #b07727;
+    left: 0px;
+    top: 0px;
+    opacity: 0.4;
+    clip-path: polygon(50% 0%, 90% 20%, 100% 60%, 75% 100%, 25% 100%, 0% 60%, 10% 20%);
+    z-index: 1;
+}
 
-    ._2jIO64 {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
+.coupon-offer {
+    line-height: 1;
+    font-size: 36px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
 
-    .rPNEXT {
-        margin-bottom: 6px;
-        font-size: 14px;
-        color: #000;
-    }
+.coupon-name {
+    font-size: 18px;
+    display: block;
+    margin-bottom: 10px;
+}
 
-    ._2XilLp {
-        margin-left: 5px;
-        padding: 3px 6px;
-        background-color: #e0e0e0;
-        border-radius: 3px;
-        font-size: 12px;
-        color: #212121;
-    }
+.coupon-expiry {
+    font-size: 16px;
+    margin-bottom: 15px;
+}
 
-    .Br27Zz {
-        font-size: 14px;
-        color: #212121;
-    }
+.code {
+    padding: 10px;
+    background-color: #fff;
+    color: rgb(255, 111, 0);
+    font-size: 16px;
+    border-radius: 5px;
+    margin-top: 15px;
+}
 
-    ._3mmRDy {
-        color: #999;
-        font-size: 12px;
-    }
+.copy-btn {
+    margin-top: 10px;
+    background-color: #fff;
+    border-color: #e8a647;
+    color: #e8a647;
+    transition: all 0.3s ease;
+}
 
-    .tDHRfA {
-        border-bottom: 1px solid #e0e0e0;
-        padding-bottom: 10px;
-        margin-bottom: 10px;
-    }
+.copy-btn:hover {
+    background-color: #e8a647;
+    color: #fff;
+}
+.close-btn {
+    background-color: #fff;
+    border-color: #e8a647;
+    color: #e8a647;
+    transition: all 0.3s ease;
+}
+.close-btn:hover {
+    background-color: #e8a647;
+    color: #fff;
+}
+
+/* Success copy animation */
+.copy-success {
+    background-color: #28a745 !important;
+    color: white !important;
+    border-color: #28a745 !important;
+}
 </style>
 
 <main class="main">
@@ -101,7 +127,7 @@
     <div class="page-content">
         <div class="checkout">
             <div class="container">
-                <a href="/availableCoupons?subTotal=<%= subTotal %>"><%= couponData.length %> available coupons</a>
+                <a href="#" id="show-available-coupons" class="coupon-link"><%= couponData.length %> available coupons</a>
                 <div class="checkout-discount">
                     <form action="/applyCoupon" method="post">
                         <input type="text" name="couponCode" class="form-control" required id="checkout-discount-input">
@@ -216,10 +242,12 @@
                                         <td>Delivery</td>
                                     </tr>
                                     <% } %>
+                                    <% if(discountAmount.length !== 0 ){ %>
                                     <tr>
                                         <td>Offer Amount:</td>
                                         <td>Rs.<%= discountAmount %></td>
                                     </tr>
+                                   <% } %>
                                     <tr class="summary-total">
                                         <td>Total:</td>
                                         <td>Rs.<%= totalAfterDiscount %></td>
@@ -310,6 +338,57 @@
                                 <span class="btn-text">Place Order</span>
                                 <span class="btn-hover-text">Place Order</span>
                             </button>
+
+                            <!-- Coupon Modal -->
+                            <div class="modal fade" id="coupon-modal" tabindex="-1" role="dialog" aria-labelledby="couponModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="couponModalLabel">Available Coupons</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="wrapper" id="coupon-container">
+                                                <!-- Coupons will be loaded here dynamically -->
+                                                <% if (couponData && couponData.length > 0) { %>
+                                                    <% couponData.forEach(function(coupon) { %>
+                                                        <div class="coupon_card card mb-3">
+                                                            <div class="content">
+                                                                <div class="text-center text-uppercase">
+                                                                    <h1 class="mt-0 coupon-offer"><%= coupon.offerPrice %></h1>
+                                                                </div>
+                                                                <div class="text-center">
+                                                                    <span class="plus coupon-name"><%= coupon.name %></span>
+                                                                </div>
+                                                                <div class="text-center text-uppercase">
+                                                                    <h3 class="m-0 coupon-expiry">
+                                                                        <% if(coupon.expiryDate) { %>
+                                                                            <%= new Date(coupon.expiryDate).toLocaleDateString() %>
+                                                                        <% } else { %>
+                                                                            No Expiry
+                                                                        <% } %>
+                                                                    </h3>
+                                                                </div>
+                                                                <div class="code text-center mt-4">
+                                                                    <span class="coupon-code-text">Use code: <%= coupon.couponCode %></span>
+                                                                    <button class="copy-btn btn btn-outline-secondary" data-coupon-code="<%= coupon.couponCode %>">Copy Code</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    <% }); %>
+                                                <% } else { %>
+                                                    <div class="alert alert-info">No coupons available at this time.</div>
+                                                <% } %>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-secondary close-btn" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div><!-- End .summary -->
                     </aside><!-- End .col-lg-3 -->
                 </div><!-- End .row -->
@@ -330,6 +409,53 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const showCouponsButton = document.getElementById('show-available-coupons');
+    
+    if (showCouponsButton) {
+        showCouponsButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            $('#coupon-modal').modal('show');
+        });
+    }
+    
+    function setupCopyButtons() {
+        const copyButtons = document.querySelectorAll('.copy-btn');
+        copyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const couponCode = this.dataset.couponCode;
+                
+                const tempInput = document.createElement('input');
+                tempInput.value = couponCode;
+                document.body.appendChild(tempInput);
+                
+                tempInput.select();
+                document.execCommand('copy');
+                
+                document.body.removeChild(tempInput);
+                
+                const originalText = this.textContent;
+                this.textContent = 'Copied!';
+                this.classList.add('copy-success');
+                
+                const couponInput = document.getElementById('checkout-discount-input');
+                if (couponInput) {
+                    couponInput.value = couponCode;
+                    
+                }
+                
+                setTimeout(() => {
+                    this.textContent = originalText;
+                    this.classList.remove('copy-success');
+                }, 2000);
+            });
+        });
+    }
+    
+    setupCopyButtons();
+});
+</script>
 <script>
     $(document).ready(function() {
         $('#showAddAddress').click(function(e) {
