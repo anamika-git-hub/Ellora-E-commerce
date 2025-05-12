@@ -108,7 +108,7 @@ const sendOTPverificationEmail=async ({email},res)=>{
 
         const mailOptions = {
             from:process.env.EMAIL,
-            to:'anamikap6840@gmail.com',
+            to: email,
             subject:'Verify your email',
             html:`Your OTP is:${otp}`
         };
