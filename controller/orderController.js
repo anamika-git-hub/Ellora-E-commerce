@@ -143,7 +143,7 @@ const placeOrder = async (req, res) => {
             const options = {
                 amount: amount,
                 currency: 'INR',
-                receipt: 'anamikap9895@gmail.com'
+                receipt: process.env.EMAIL
             };
 
           const RazorpayInstance =  razorpayInstance.orders.create(options, (err, order) => {
@@ -157,7 +157,7 @@ const placeOrder = async (req, res) => {
                         key_id: RAZORPAY_ID_KEY,
                         contact: '9896754325',
                         name: 'Anamika',
-                        email: 'anamikap9895@gmail.com'
+                        email: process.env.EMAIL
                     });
                 } else {
                     res.status(400).json({ success: false, msg: 'Something went wrong!' });
@@ -184,7 +184,7 @@ const retryRazorpay = async(req,res)=>{
         const options = {
             amount: amount,
             currency: 'INR',
-            receipt: 'anamikap9895@gmail.com'
+            receipt: process.env.EMAIL
         };
 
        razorpayInstance.orders.create(options, (err, order) => {
@@ -198,7 +198,7 @@ const retryRazorpay = async(req,res)=>{
                     key_id: RAZORPAY_ID_KEY,
                     contact: '9896754325',
                     name: 'Anamika',
-                    email: 'anamikap9895@gmail.com'
+                    email: process.env.EMAIL
                 });
             } else {
                 res.status(400).json({ success: false, msg: 'Something went wrong!' });

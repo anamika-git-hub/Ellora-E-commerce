@@ -30,7 +30,7 @@ const verifyLogin=async(req,res)=>{
         const password = req.body.password;
         const admin=await User.findOne({email:email})
         if(admin){
-            if(admin.email==process.env.EMAIL){
+            if(admin.email==process.env.ADMIN_EMAIL){
                 const passwordMatch=await bcrypt.compare(password,admin.password);
                 if(passwordMatch){
                     req.session.admin={
@@ -210,7 +210,7 @@ const orderChart = async (req, res) => {
 
 const loadUserList=async(req,res)=>{
     try {
-        let userQuery;
+        let userQuery = {email:{$ne:process.env.ADMIN_EMAIL}}
         var page = 1;
     if(req.query.page){
         page = req.query.page;
@@ -220,7 +220,7 @@ const loadUserList=async(req,res)=>{
         const searchPattern = new RegExp(req.query.search.trim(), 'i').source;
         console.log('searchPattern:', searchPattern); 
     
-        userQuery = {$and:[{email:{$ne:process.env.EMAIL}},{
+        userQuery = {$and:[{email:{$ne:process.env.ADMIN_EMAIL}},{
                  $or: [{ name: { $regex: searchPattern } }, { description: { $regex: searchPattern } }] }]
         };
     }
@@ -230,8 +230,7 @@ const loadUserList=async(req,res)=>{
       .skip((page-1)* limit)
       .exec();
       
-    const count = await User.find({
-    }).countDocuments();
+    const count = await User.find(userQuery).countDocuments();
     
         
         res.render('userList',{users:userData,totalPages:Math.ceil(count/limit),currentPage:page})
