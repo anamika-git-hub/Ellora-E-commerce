@@ -296,7 +296,7 @@ const loadProfile = async (req, res) => {
         const totalOrders = await Order.countDocuments();
         const totalOrderPages = Math.ceil(totalOrders / limit);
        
-        const couponData = await Coupon.find();
+        const couponData = await Coupon.find({'usedUsers.userId': { $ne: req.session.user_id }});
 
         if(walletData){
             const walletHistory = walletData.walletHistory.sort((a, b) => new Date(b.date) - new Date(a.date));
