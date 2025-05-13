@@ -1,7 +1,7 @@
 <%- include('../layouts/admin/header', { title: 'Admin Panel', path: '/coupon'}) %>
 
 <section class="content-main">
-    <form action="/admin/editCoupon" method="post" enctype="multipart/form-data">
+    <form action="/admin/editCoupon?couponId=<%= couponData._id %>" method="post">
         <div class="row">
             <div class="col-9">
                 <div class="content-header">
